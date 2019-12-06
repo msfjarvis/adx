@@ -6,7 +6,8 @@ use std::error::Error;
 use std::result::Result;
 
 struct MavenPackage {
-    artifact_name: String,
+    group_id: String,
+    artifact_id: String,
     latest_version: String,
 }
 
@@ -67,13 +68,18 @@ pub fn parse_packages() -> Result<(), Box<dyn Error>> {
                         group = i.tag_name().name();
                         is_next_root = false;
                     } else if !group.is_empty() {
-                        let versions = i.attribute("versions").unwrap().split(",").collect::<Vec<&str>>();
+                        let versions = i
+                            .attribute("versions")
+                            .unwrap()
+                            .split(",")
+                            .collect::<Vec<&str>>();
                         packages.push(MavenPackage {
-                            artifact_name: format!("{}:{}", group, i.tag_name().name()),
-                            latest_version: String::from(versions[versions.len() - 1])
+                            group_id: String::from(group),
+                            artifact_id: i.tag_name().name().to_string(),
+                            latest_version: String::from(versions[versions.len() - 1]),
                         })
                     }
-                },
+                }
                 _ => (),
             }
         }
