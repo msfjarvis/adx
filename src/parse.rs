@@ -3,12 +3,23 @@ use roxmltree::Document;
 use roxmltree::NodeType;
 use std::collections::HashMap;
 use std::error::Error;
+use std::fmt;
 use std::result::Result;
 
 struct MavenPackage {
     group_id: String,
     artifact_id: String,
     latest_version: String,
+}
+
+impl fmt::Display for MavenPackage {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}:{}:{}",
+            self.group_id, self.artifact_id, self.latest_version
+        )
+    }
 }
 
 #[cfg(debug_assertions)]
@@ -85,7 +96,7 @@ pub fn parse_packages() -> Result<(), Box<dyn Error>> {
         }
     }
     for package in packages.iter() {
-        println!("{}:{}", package.artifact_name, package.latest_version);
+        println!("{}", package);
     }
     Ok(())
 }
