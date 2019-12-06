@@ -82,7 +82,7 @@ pub fn parse_packages() -> Result<(), Box<dyn Error>> {
                         let versions = i
                             .attribute("versions")
                             .unwrap()
-                            .split(",")
+                            .split(',')
                             .collect::<Vec<&str>>();
                         packages.push(MavenPackage {
                             group_id: String::from(group),
