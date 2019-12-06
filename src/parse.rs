@@ -55,7 +55,7 @@ fn get_group_index(group: &str, _: &str) -> String {
     std::fs::read_to_string(format!("offline-copy/{}/group-index.xml", group)).unwrap()
 }
 
-pub fn parse_packages() -> Result<(), Box<dyn Error>> {
+pub fn parse_packages(search_term: &str) -> Result<(), Box<dyn Error>> {
     let mut groups: HashMap<&str, String> = HashMap::new();
     let mut packages: Vec<MavenPackage> = Vec::new();
     let maven_index = get_maven_index();
@@ -95,8 +95,18 @@ pub fn parse_packages() -> Result<(), Box<dyn Error>> {
             }
         }
     }
-    for package in packages.iter() {
-        println!("{}", package);
+    if search_term.is_empty() {
+        for package in packages.iter() {
+            println!("{}", package);
+        }
+    } else {
+        let filtered: Vec<MavenPackage> = packages
+            .drain(..)
+            .filter(|p| p.artifact_id.contains(search_term))
+            .collect();
+        for package in filtered.iter() {
+            println!("{}", package);
+        }
     }
     Ok(())
 }

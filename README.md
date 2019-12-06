@@ -8,6 +8,6 @@ Clone this repository, then run `cargo run --release` in the directory you clone
 
 ## TODO (planned for future)
 
-- [ ] Allow searching for packages
+- [x] Allow searching for packages
 - [ ] Allow filtering by channel
 - [ ] Add detailed view
