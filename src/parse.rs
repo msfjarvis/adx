@@ -78,7 +78,7 @@ pub fn parse_packages(search_term: &str) -> Result<(), Box<dyn Error>> {
                     if is_next_root {
                         group = i.tag_name().name();
                         is_next_root = false;
-                    } else if !group.is_empty() {
+                    } else if !group.is_empty() && i.tag_name().name().contains(search_term) {
                         let versions = i
                             .attribute("versions")
                             .unwrap()
@@ -95,18 +95,8 @@ pub fn parse_packages(search_term: &str) -> Result<(), Box<dyn Error>> {
             }
         }
     }
-    if search_term.is_empty() {
-        for package in packages.iter() {
-            println!("{}", package);
-        }
-    } else {
-        let filtered: Vec<MavenPackage> = packages
-            .drain(..)
-            .filter(|p| p.artifact_id.contains(search_term))
-            .collect();
-        for package in filtered.iter() {
-            println!("{}", package);
-        }
+    for package in packages.iter() {
+        println!("{}", package);
     }
     Ok(())
 }
