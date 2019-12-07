@@ -1,4 +1,3 @@
-use log::info;
 use roxmltree::Document;
 use roxmltree::NodeType;
 use std::collections::HashMap;
@@ -24,13 +23,11 @@ impl fmt::Display for MavenPackage {
 
 #[cfg(debug_assertions)]
 fn get_maven_index() -> String {
-    info!("Using offline maven index");
     std::fs::read_to_string("offline-copy/master-index.xml").unwrap()
 }
 
 #[cfg(not(debug_assertions))]
 fn get_maven_index() -> String {
-    info!("Fetching maven index from the internet");
     reqwest::get("https://dl.google.com/dl/android/maven2/master-index.xml")?
         .text()
         .unwrap()
@@ -45,13 +42,11 @@ fn get_groups_index_url(group: &str) -> String {
 
 #[cfg(not(debug_assertions))]
 fn get_group_index(group: &str, url: &str) -> String {
-    info!("Fetching group index for {} from the internet", group);
     reqwest::get(url)?.text().unwrap()
 }
 
 #[cfg(debug_assertions)]
 fn get_group_index(group: &str, _: &str) -> String {
-    info!("Fetching group index for {} from local disk", group);
     std::fs::read_to_string(format!("offline-copy/{}/group-index.xml", group)).unwrap()
 }
 

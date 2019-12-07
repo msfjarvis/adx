@@ -16,7 +16,6 @@ publish = false
 [dependencies]
 reqwest = "0.9.22"
 clap = "2.33.0"
-log = "0.4.8"
 roxmltree = "0.7.3"
 
 [badges]

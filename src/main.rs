@@ -1,31 +1,9 @@
 extern crate clap;
-extern crate log;
 extern crate reqwest;
 extern crate roxmltree;
 
 use clap::{App, Arg};
-use log::{Level, Metadata, Record};
 mod parse;
-
-struct SimpleLogger;
-
-impl log::Log for SimpleLogger {
-    fn enabled(&self, metadata: &Metadata) -> bool {
-        if cfg!(debug_assertions) {
-            true
-        } else {
-            metadata.level() <= Level::Info
-        }
-    }
-
-    fn log(&self, record: &Record) {
-        if self.enabled(record.metadata()) {
-            println!("{} - {}", record.level(), record.args());
-        }
-    }
-
-    fn flush(&self) {}
-}
 
 fn main() {
     let matches = App::new("androidx-release-watcher")
