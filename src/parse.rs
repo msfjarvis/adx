@@ -33,7 +33,7 @@ fn get_maven_index() -> String {
         .unwrap()
 }
 
-fn get_groups_index_url(group: &str) -> String {
+fn get_groups_index_url(group: String) -> String {
     format!(
         "https://dl.google.com/dl/android/maven2/{}/group-index.xml",
         group.replace(".", "/")
@@ -50,17 +50,19 @@ fn get_group_index(group: &str, _: &str) -> String {
     std::fs::read_to_string(format!("offline-copy/{}/group-index.xml", group)).unwrap()
 }
 
-pub fn parse_packages(search_term: &str) -> Result<(), Box<dyn Error>> {
-    let mut groups: HashMap<&str, String> = HashMap::new();
-    let mut packages: Vec<MavenPackage> = Vec::new();
-    let maven_index = get_maven_index();
-    let doc = Document::parse(maven_index.as_str()).unwrap();
+fn parse_groups(doc: Document) -> HashMap<String, String> {
+    let mut groups: HashMap<String, String> = HashMap::new();
     for i in doc.descendants() {
         let tag = i.tag_name().name();
         if tag.starts_with("androidx") {
-            groups.insert(tag, get_groups_index_url(tag));
+            groups.insert(tag.to_string(), get_groups_index_url(tag.to_string()));
         }
     }
+    groups
+}
+
+fn parse_packages(groups: HashMap<String, String>, search_term: String) -> Vec<MavenPackage> {
+    let mut packages = Vec::new();
     for (group_name, group_index_url) in groups.iter() {
         let group_index = get_group_index(group_name, group_index_url);
         let doc = Document::parse(group_index.as_str()).unwrap();
@@ -73,7 +75,7 @@ pub fn parse_packages(search_term: &str) -> Result<(), Box<dyn Error>> {
                     if is_next_root {
                         group = i.tag_name().name();
                         is_next_root = false;
-                    } else if !group.is_empty() && i.tag_name().name().contains(search_term) {
+                    } else if !group.is_empty() && i.tag_name().name().contains(&search_term) {
                         let versions = i
                             .attribute("versions")
                             .unwrap()
@@ -90,6 +92,14 @@ pub fn parse_packages(search_term: &str) -> Result<(), Box<dyn Error>> {
             }
         }
     }
+    packages
+}
+
+pub fn parse(search_term: String) -> Result<(), Box<dyn Error>> {
+    let maven_index = get_maven_index();
+    let doc = Document::parse(maven_index.as_str()).unwrap();
+    let groups = parse_groups(doc);
+    let packages = parse_packages(groups, search_term);
     for package in packages.iter() {
         println!("{}", package);
     }

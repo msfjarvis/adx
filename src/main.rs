@@ -18,7 +18,7 @@ fn main() {
             .help("Name of package to filter in the results")
         )
         .get_matches();
-    match crate::parse::parse_packages(matches.value_of("package").unwrap_or("")) {
+    match crate::parse::parse(matches.value_of("package").unwrap_or("").to_string()) {
         Ok(_) => (),
         Err(err) => println!("{}", err),
     }
