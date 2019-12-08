@@ -40,10 +40,8 @@ fn main() {
         .about("Notify about the latest happenings in the Google Maven world")
         .args(&[
             Arg::with_name("package")
-                .short("p")
-                .long("package")
-                .takes_value(true)
-                .help("Name of package to filter in the results"),
+                .help("Name of package to filter in the results")
+                .index(1),
             Arg::with_name("detailed")
                 .short("d")
                 .long("detail")
