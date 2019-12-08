@@ -7,6 +7,7 @@ use std::collections::HashMap;
 use std::fmt;
 use std::result::Result;
 
+/// Struct that represents a Maven package
 struct MavenPackage {
     group_id: String,
     artifact_id: String,
@@ -44,11 +45,14 @@ fn get_maven_index() -> String {
 }
 */
 
+/// Downloads the Maven master index for Google's Maven Repository
+/// and returns the XML as a String
 fn get_maven_index() -> Result<String, Error> {
     info!("Downloading maven index...");
     get("https://dl.google.com/dl/android/maven2/master-index.xml")?.text()
 }
 
+/// Get the group-index.xml URL for a given group
 fn get_groups_index_url(group: String) -> String {
     format!(
         "https://dl.google.com/dl/android/maven2/{}/group-index.xml",
@@ -56,6 +60,9 @@ fn get_groups_index_url(group: String) -> String {
     )
 }
 
+/// Downloads the group index for a given group, from the given URL.
+/// The group parameter is here only for logging purposes and may be removed
+/// at any time.
 fn get_group_index(group: &str, url: &str) -> Result<String, Error> {
     info!("Getting index for {} from {}", group, url);
     get(url)?.text()
@@ -67,7 +74,9 @@ fn get_group_index(group: &str, _: &str) -> String {
 }
 */
 
-fn parse_groups(doc: Document) -> HashMap<String, String> {
+/// Parse a given master-index.xml and separate out the AndroidX packages
+/// from it.
+fn parse_androidx_groups(doc: Document) -> HashMap<String, String> {
     let mut groups: HashMap<String, String> = HashMap::new();
     for i in doc.descendants() {
         let tag = i.tag_name().name();
@@ -78,6 +87,8 @@ fn parse_groups(doc: Document) -> HashMap<String, String> {
     groups
 }
 
+/// Given a list of groups and a search term to filter against, returns a Vec<MavenPackage>
+/// of all artifacts that match the search term.
 fn parse_packages(groups: HashMap<String, String>, search_term: String) -> Vec<MavenPackage> {
     let mut packages = Vec::new();
     for (group_name, group_index_url) in groups.iter() {
@@ -116,10 +127,11 @@ fn parse_packages(groups: HashMap<String, String>, search_term: String) -> Vec<M
     packages
 }
 
+/// The entrypoint for this module which handles outputting the final result.
 pub fn parse(search_term: String, detailed_view: bool) -> Result<(), Box<dyn std::error::Error>> {
     let maven_index = get_maven_index().unwrap();
     let doc = Document::parse(maven_index.as_str()).unwrap();
-    let groups = parse_groups(doc);
+    let groups = parse_androidx_groups(doc);
     let packages = parse_packages(groups, search_term);
     if detailed_view {
         for package in packages.iter() {

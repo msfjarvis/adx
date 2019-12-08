@@ -7,6 +7,9 @@ use clap::{App, Arg};
 use log::{Level, LevelFilter, Metadata, Record};
 mod parse;
 
+/// Simple logger that simply outputs everything using println!()
+/// It prints all levels in debug builds, and Level::Info and below
+/// on release builds.
 struct StdOutLogger;
 
 impl log::Log for StdOutLogger {
