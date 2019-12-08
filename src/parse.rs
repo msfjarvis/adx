@@ -148,4 +148,10 @@ mod test {
         let res = parse(String::from("appcompat")).unwrap();
         assert_eq!(res.len(), 2);
     }
+
+    #[test]
+    fn check_all_packages_are_parsed() {
+        let res = parse(String::new()).unwrap();
+        assert_eq!(res.len(), 211);
+    }
 }
