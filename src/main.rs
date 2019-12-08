@@ -46,7 +46,9 @@ fn main() {
         .get_matches();
     match crate::parse::parse(matches.value_of("package").unwrap_or("").to_string()) {
         Ok(packages) => {
-            if matches.is_present("detailed") {
+            if packages.len() == 0 {
+                println!("No results found!");
+            } else if matches.is_present("detailed") {
                 for package in packages.iter() {
                     println!("{}", package);
                 }
