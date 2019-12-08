@@ -8,7 +8,7 @@ use std::fmt;
 use std::result::Result;
 
 /// Struct that represents a Maven package
-struct MavenPackage {
+pub struct MavenPackage {
     group_id: String,
     artifact_id: String,
     all_versions: Box<Vec<String>>,
@@ -128,19 +128,10 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
 }
 
 /// The entrypoint for this module which handles outputting the final result.
-pub fn parse(search_term: String, detailed_view: bool) -> Result<(), Box<dyn std::error::Error>> {
+pub fn parse(search_term: String) -> Result<Vec<MavenPackage>, Box<dyn std::error::Error>> {
     let maven_index = get_maven_index().unwrap();
     let doc = Document::parse(maven_index.as_str()).unwrap();
     let groups = parse_androidx_groups(doc, search_term);
     let packages = parse_packages(groups);
-    if detailed_view {
-        for package in packages.iter() {
-            println!("{}", package);
-        }
-    } else {
-        for package in packages.iter() {
-            println!("{:?}", package);
-        }
-    }
-    Ok(())
+    Ok(packages)
 }

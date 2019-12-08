@@ -50,11 +50,18 @@ fn main() {
                 .help("Output detailed information on each package"),
         ])
         .get_matches();
-    match crate::parse::parse(
-        matches.value_of("package").unwrap_or("").to_string(),
-        matches.is_present("detailed"),
-    ) {
-        Ok(_) => (),
+    match crate::parse::parse(matches.value_of("package").unwrap_or("").to_string()) {
+        Ok(packages) => {
+            if matches.is_present("detailed") {
+                for package in packages.iter() {
+                    println!("{}", package);
+                }
+            } else {
+                for package in packages.iter() {
+                    println!("{:?}", package);
+                }
+            }
+        }
         Err(err) => println!("{}", err),
     }
 }
