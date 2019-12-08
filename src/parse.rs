@@ -1,5 +1,8 @@
+#[cfg(not(test))]
 use log::info;
+#[cfg(not(test))]
 use reqwest::get;
+#[cfg(not(test))]
 use reqwest::Error;
 use roxmltree::Document;
 use roxmltree::NodeType;
@@ -134,4 +137,15 @@ pub fn parse(search_term: String) -> Result<Vec<MavenPackage>, Box<dyn std::erro
     let groups = parse_androidx_groups(doc, search_term);
     let packages = parse_packages(groups);
     Ok(packages)
+}
+
+#[cfg(test)]
+mod test {
+    use super::parse;
+
+    #[test]
+    fn check_filter_works() {
+        let res = parse(String::from("appcompat")).unwrap();
+        assert_eq!(res.len(), 2);
+    }
 }
