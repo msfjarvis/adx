@@ -111,8 +111,6 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                             .attribute("versions")
                             .unwrap()
                             .split(',')
-                            .collect::<Vec<&str>>()
-                            .iter()
                             .map(|v| v.to_string())
                             .collect();
                         versions.reverse();
