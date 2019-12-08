@@ -25,6 +25,3 @@
 .history
 
 # End of https://www.gitignore.io/api/rust,visualstudiocode
-
-# Offline copy of the files to ease development
-/offline-copy/
