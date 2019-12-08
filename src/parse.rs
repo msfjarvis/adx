@@ -1,7 +1,8 @@
+use reqwest::get;
+use reqwest::Error;
 use roxmltree::Document;
 use roxmltree::NodeType;
 use std::collections::HashMap;
-use std::error::Error;
 use std::fmt;
 use std::result::Result;
 
@@ -36,16 +37,14 @@ impl fmt::Display for MavenPackage {
     }
 }
 
-#[cfg(debug_assertions)]
+/*
 fn get_maven_index() -> String {
     std::fs::read_to_string("offline-copy/master-index.xml").unwrap()
 }
+*/
 
-#[cfg(not(debug_assertions))]
-fn get_maven_index() -> String {
-    reqwest::get("https://dl.google.com/dl/android/maven2/master-index.xml")?
-        .text()
-        .unwrap()
+fn get_maven_index() -> Result<String, Error> {
+    get("https://dl.google.com/dl/android/maven2/master-index.xml")?.text()
 }
 
 fn get_groups_index_url(group: String) -> String {
@@ -55,15 +54,15 @@ fn get_groups_index_url(group: String) -> String {
     )
 }
 
-#[cfg(not(debug_assertions))]
-fn get_group_index(group: &str, url: &str) -> String {
-    reqwest::get(url)?.text().unwrap()
+fn get_group_index(_group: &str, url: &str) -> Result<String, Error> {
+    get(url)?.text()
 }
 
-#[cfg(debug_assertions)]
+/*
 fn get_group_index(group: &str, _: &str) -> String {
     std::fs::read_to_string(format!("offline-copy/{}/group-index.xml", group)).unwrap()
 }
+*/
 
 fn parse_groups(doc: Document) -> HashMap<String, String> {
     let mut groups: HashMap<String, String> = HashMap::new();
@@ -79,7 +78,7 @@ fn parse_groups(doc: Document) -> HashMap<String, String> {
 fn parse_packages(groups: HashMap<String, String>, search_term: String) -> Vec<MavenPackage> {
     let mut packages = Vec::new();
     for (group_name, group_index_url) in groups.iter() {
-        let group_index = get_group_index(group_name, group_index_url);
+        let group_index = get_group_index(group_name, group_index_url).unwrap();
         let doc = Document::parse(group_index.as_str()).unwrap();
         let mut is_next_root = false;
         let mut group: &str = "";
@@ -114,8 +113,8 @@ fn parse_packages(groups: HashMap<String, String>, search_term: String) -> Vec<M
     packages
 }
 
-pub fn parse(search_term: String, detailed_view: bool) -> Result<(), Box<dyn Error>> {
-    let maven_index = get_maven_index();
+pub fn parse(search_term: String, detailed_view: bool) -> Result<(), Box<dyn std::error::Error>> {
+    let maven_index = get_maven_index().unwrap();
     let doc = Document::parse(maven_index.as_str()).unwrap();
     let groups = parse_groups(doc);
     let packages = parse_packages(groups, search_term);
