@@ -4,7 +4,7 @@ extern crate reqwest;
 extern crate roxmltree;
 
 use clap::{App, Arg};
-use log::{Level, LevelFilter, Metadata, Record};
+use log::{LevelFilter, Metadata, Record};
 mod parse;
 
 /// Simple logger that simply outputs everything using println!()
@@ -13,12 +13,8 @@ mod parse;
 struct StdOutLogger;
 
 impl log::Log for StdOutLogger {
-    fn enabled(&self, metadata: &Metadata) -> bool {
-        if cfg!(debug_assertions) {
-            true
-        } else {
-            metadata.level() <= Level::Info
-        }
+    fn enabled(&self, _: &Metadata) -> bool {
+        cfg!(debug_assertions)
     }
 
     fn log(&self, record: &Record) {
