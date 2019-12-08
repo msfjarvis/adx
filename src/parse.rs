@@ -39,14 +39,14 @@ impl fmt::Display for MavenPackage {
     }
 }
 
-/*
-fn get_maven_index() -> String {
-    std::fs::read_to_string("offline-copy/master-index.xml").unwrap()
+#[cfg(test)]
+fn get_maven_index() -> Result<String, std::io::Error> {
+    std::fs::read_to_string("offline-copy/master-index.xml")
 }
-*/
 
 /// Downloads the Maven master index for Google's Maven Repository
 /// and returns the XML as a String
+#[cfg(not(test))]
 fn get_maven_index() -> Result<String, Error> {
     info!("Downloading maven index...");
     get("https://dl.google.com/dl/android/maven2/master-index.xml")?.text()
@@ -63,16 +63,16 @@ fn get_groups_index_url(group: String) -> String {
 /// Downloads the group index for a given group, from the given URL.
 /// The group parameter is here only for logging purposes and may be removed
 /// at any time.
+#[cfg(not(test))]
 fn get_group_index(group: &str, url: &str) -> Result<String, Error> {
     info!("Getting index for {} from {}", group, url);
     get(url)?.text()
 }
 
-/*
-fn get_group_index(group: &str, _: &str) -> String {
-    std::fs::read_to_string(format!("offline-copy/{}/group-index.xml", group)).unwrap()
+#[cfg(test)]
+fn get_group_index(group: &str, _: &str) -> Result<String, std::io::Error> {
+    std::fs::read_to_string(format!("offline-copy/{}/group-index.xml", group))
 }
-*/
 
 /// Parse a given master-index.xml and separate out the AndroidX packages
 /// from it.
