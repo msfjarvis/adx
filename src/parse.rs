@@ -14,7 +14,7 @@ use std::result::Result;
 pub struct MavenPackage {
     group_id: String,
     artifact_id: String,
-    all_versions: Box<Vec<String>>,
+    all_versions: Vec<String>,
 }
 
 impl fmt::Debug for MavenPackage {
@@ -119,7 +119,7 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                         packages.push(MavenPackage {
                             group_id: String::from(group),
                             artifact_id: i.tag_name().name().to_string(),
-                            all_versions: Box::from(versions),
+                            all_versions: versions,
                         })
                     }
                 }
