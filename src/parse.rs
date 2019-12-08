@@ -76,11 +76,11 @@ fn get_group_index(group: &str, _: &str) -> String {
 
 /// Parse a given master-index.xml and separate out the AndroidX packages
 /// from it.
-fn parse_androidx_groups(doc: Document) -> HashMap<String, String> {
+fn parse_androidx_groups(doc: Document, search_term: String) -> HashMap<String, String> {
     let mut groups: HashMap<String, String> = HashMap::new();
     for i in doc.descendants() {
         let tag = i.tag_name().name();
-        if tag.starts_with("androidx") {
+        if tag.starts_with("androidx") && tag.contains(&search_term) {
             groups.insert(tag.to_string(), get_groups_index_url(tag.to_string()));
         }
     }
@@ -89,7 +89,7 @@ fn parse_androidx_groups(doc: Document) -> HashMap<String, String> {
 
 /// Given a list of groups and a search term to filter against, returns a Vec<MavenPackage>
 /// of all artifacts that match the search term.
-fn parse_packages(groups: HashMap<String, String>, search_term: String) -> Vec<MavenPackage> {
+fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
     let mut packages = Vec::new();
     for (group_name, group_index_url) in groups.iter() {
         let group_index = get_group_index(group_name, group_index_url).unwrap();
@@ -103,7 +103,7 @@ fn parse_packages(groups: HashMap<String, String>, search_term: String) -> Vec<M
                     if is_next_root {
                         group = i.tag_name().name();
                         is_next_root = false;
-                    } else if !group.is_empty() && i.tag_name().name().contains(&search_term) {
+                    } else if !group.is_empty() {
                         let mut versions: Vec<String> = i
                             .attribute("versions")
                             .unwrap()
@@ -131,8 +131,8 @@ fn parse_packages(groups: HashMap<String, String>, search_term: String) -> Vec<M
 pub fn parse(search_term: String, detailed_view: bool) -> Result<(), Box<dyn std::error::Error>> {
     let maven_index = get_maven_index().unwrap();
     let doc = Document::parse(maven_index.as_str()).unwrap();
-    let groups = parse_androidx_groups(doc);
-    let packages = parse_packages(groups, search_term);
+    let groups = parse_androidx_groups(doc, search_term);
+    let packages = parse_packages(groups);
     if detailed_view {
         for package in packages.iter() {
             println!("{}", package);
