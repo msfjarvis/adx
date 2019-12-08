@@ -1,9 +1,4 @@
-#[cfg(not(test))]
 use log::info;
-#[cfg(not(test))]
-use reqwest::get;
-#[cfg(not(test))]
-use reqwest::Error;
 use roxmltree::Document;
 use roxmltree::NodeType;
 use std::collections::HashMap;
@@ -44,15 +39,16 @@ impl fmt::Display for MavenPackage {
 
 #[cfg(test)]
 fn get_maven_index() -> Result<String, std::io::Error> {
+    info!("Reading maven index from disk");
     std::fs::read_to_string("offline-copy/master-index.xml")
 }
 
 /// Downloads the Maven master index for Google's Maven Repository
 /// and returns the XML as a String
 #[cfg(not(test))]
-fn get_maven_index() -> Result<String, Error> {
+fn get_maven_index() -> Result<String, reqwest::Error> {
     info!("Downloading maven index...");
-    get("https://dl.google.com/dl/android/maven2/master-index.xml")?.text()
+    reqwest::get("https://dl.google.com/dl/android/maven2/master-index.xml")?.text()
 }
 
 /// Get the group-index.xml URL for a given group
@@ -67,13 +63,14 @@ fn get_groups_index_url(group: String) -> String {
 /// The group parameter is here only for logging purposes and may be removed
 /// at any time.
 #[cfg(not(test))]
-fn get_group_index(group: &str, url: &str) -> Result<String, Error> {
+fn get_group_index(group: &str, url: &str) -> Result<String, reqwest::Error> {
     info!("Getting index for {} from {}", group, url);
-    get(url)?.text()
+    reqwest::get(url)?.text()
 }
 
 #[cfg(test)]
 fn get_group_index(group: &str, _: &str) -> Result<String, std::io::Error> {
+    info!("Reading group index for {} from disk", group);
     std::fs::read_to_string(format!("offline-copy/{}/group-index.xml", group))
 }
 
