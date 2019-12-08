@@ -1,3 +1,4 @@
+use log::info;
 use reqwest::get;
 use reqwest::Error;
 use roxmltree::Document;
@@ -44,6 +45,7 @@ fn get_maven_index() -> String {
 */
 
 fn get_maven_index() -> Result<String, Error> {
+    info!("Downloading maven index...");
     get("https://dl.google.com/dl/android/maven2/master-index.xml")?.text()
 }
 
@@ -54,7 +56,8 @@ fn get_groups_index_url(group: String) -> String {
     )
 }
 
-fn get_group_index(_group: &str, url: &str) -> Result<String, Error> {
+fn get_group_index(group: &str, url: &str) -> Result<String, Error> {
+    info!("Getting index for {} from {}", group, url);
     get(url)?.text()
 }
 
