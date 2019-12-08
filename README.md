@@ -4,7 +4,7 @@ Rust binary that polls Google's Maven repository and extracts the latest version
 
 ## Usage
 
-Clone this repository, then run `cargo run --release` in the directory you cloned into.
+Clone this repository, then run `cargo run -- --help` in the directory you cloned into.
 
 ## TODO (planned for future)
 
