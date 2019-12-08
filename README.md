@@ -10,4 +10,4 @@ Clone this repository, then run `cargo run --release` in the directory you clone
 
 - [x] Allow searching for packages
 - [ ] Allow filtering by channel
-- [ ] Add detailed view
+- [x] Add detailed view

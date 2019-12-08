@@ -8,15 +8,30 @@ use std::result::Result;
 struct MavenPackage {
     group_id: String,
     artifact_id: String,
-    latest_version: String,
+    all_versions: Box<Vec<String>>,
+}
+
+impl fmt::Debug for MavenPackage {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}:{}:{}",
+            self.group_id, self.artifact_id, self.all_versions[0]
+        )
+    }
 }
 
 impl fmt::Display for MavenPackage {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "{}:{}:{}",
-            self.group_id, self.artifact_id, self.latest_version
+            "Group ID: {}\nArtifact ID: {}\nAvailable versions: {}\nLatest: {}:{}:{}\n",
+            self.group_id,
+            self.artifact_id,
+            self.all_versions.join(", "),
+            self.group_id,
+            self.artifact_id,
+            self.all_versions[0]
         )
     }
 }
@@ -76,15 +91,19 @@ fn parse_packages(groups: HashMap<String, String>, search_term: String) -> Vec<M
                         group = i.tag_name().name();
                         is_next_root = false;
                     } else if !group.is_empty() && i.tag_name().name().contains(&search_term) {
-                        let versions = i
+                        let mut versions: Vec<String> = i
                             .attribute("versions")
                             .unwrap()
                             .split(',')
-                            .collect::<Vec<&str>>();
+                            .collect::<Vec<&str>>()
+                            .iter()
+                            .map(|v| v.to_string())
+                            .collect();
+                        versions.reverse();
                         packages.push(MavenPackage {
                             group_id: String::from(group),
                             artifact_id: i.tag_name().name().to_string(),
-                            latest_version: String::from(versions[versions.len() - 1]),
+                            all_versions: Box::from(versions),
                         })
                     }
                 }
@@ -95,13 +114,19 @@ fn parse_packages(groups: HashMap<String, String>, search_term: String) -> Vec<M
     packages
 }
 
-pub fn parse(search_term: String) -> Result<(), Box<dyn Error>> {
+pub fn parse(search_term: String, detailed_view: bool) -> Result<(), Box<dyn Error>> {
     let maven_index = get_maven_index();
     let doc = Document::parse(maven_index.as_str()).unwrap();
     let groups = parse_groups(doc);
     let packages = parse_packages(groups, search_term);
-    for package in packages.iter() {
-        println!("{}", package);
+    if detailed_view {
+        for package in packages.iter() {
+            println!("{}", package);
+        }
+    } else {
+        for package in packages.iter() {
+            println!("{:?}", package);
+        }
     }
     Ok(())
 }
