@@ -1,6 +1,9 @@
 use std::collections::HashMap;
 use std::convert::TryInto;
 use std::fmt;
+use std::fmt::Debug;
+use std::fmt::Display;
+use std::fmt::Formatter;
 use std::result::Result;
 
 use indicatif::ProgressBar;
@@ -15,8 +18,8 @@ pub struct MavenPackage {
     all_versions: Vec<String>,
 }
 
-impl fmt::Debug for MavenPackage {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl Debug for MavenPackage {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(
             f,
             "{}:{}:{}",
@@ -25,8 +28,8 @@ impl fmt::Debug for MavenPackage {
     }
 }
 
-impl fmt::Display for MavenPackage {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl Display for MavenPackage {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(
             f,
             "Group ID: {}\nArtifact ID: {}\nAvailable versions: {}\nLatest: {}:{}:{}\n",
@@ -40,12 +43,6 @@ impl fmt::Display for MavenPackage {
     }
 }
 
-#[cfg(test)]
-fn get_maven_index() -> Result<String, std::io::Error> {
-    info!("Reading maven index from disk");
-    std::fs::read_to_string("offline-copy/master-index.xml")
-}
-
 /// Downloads the Maven master index for Google's Maven Repository
 /// and returns the XML as a String
 #[cfg(not(test))]
@@ -54,6 +51,12 @@ fn get_maven_index() -> Result<String, std::io::Error> {
     ureq::get("https://dl.google.com/dl/android/maven2/master-index.xml")
         .call()
         .into_string()
+}
+
+#[cfg(test)]
+fn get_maven_index() -> Result<String, std::io::Error> {
+    info!("Reading maven index from disk");
+    std::fs::read_to_string("offline-copy/master-index.xml")
 }
 
 /// Get the group-index.xml URL for a given group
