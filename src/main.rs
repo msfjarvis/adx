@@ -6,6 +6,8 @@ extern crate ureq;
 
 use clap::{App, Arg};
 use log::{LevelFilter, Metadata, Record};
+
+mod channel;
 mod parse;
 
 /// Simple logger that simply outputs everything using println!()
