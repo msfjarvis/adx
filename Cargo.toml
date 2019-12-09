@@ -1,6 +1,6 @@
 [package]
 name = "adx"
-version = "0.2.0"
+version = "1.0.0"
 authors = ["Harsh Shandilya <msfjarvis@gmail.com>"]
 edition = "2018"
 description = "Poll Google's Maven repository to fetch the latest versions of AndroidX packages"
@@ -8,8 +8,6 @@ repository = "https://github.com/msfjarvis/androidx-release-watcher"
 keywords = ["maven", "androidx"]
 readme = "README.md"
 license-file = "LICENSE"
-# This has no purpose being on crates.io
-publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
