@@ -14,10 +14,10 @@ publish = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-reqwest = "0.9.22"
 clap = "2.33.0"
 log = "0.4.8"
 roxmltree = "0.7.3"
+ureq = "0.11.2"
 
 [badges]
 maintenance = { status = "actively-developed" }

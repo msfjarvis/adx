@@ -46,9 +46,9 @@ fn get_maven_index() -> Result<String, std::io::Error> {
 /// Downloads the Maven master index for Google's Maven Repository
 /// and returns the XML as a String
 #[cfg(not(test))]
-fn get_maven_index() -> Result<String, reqwest::Error> {
+fn get_maven_index() -> Result<String, std::io::Error> {
     info!("Downloading maven index...");
-    reqwest::get("https://dl.google.com/dl/android/maven2/master-index.xml")?.text()
+    ureq::get("https://dl.google.com/dl/android/maven2/master-index.xml").call().into_string()
 }
 
 /// Get the group-index.xml URL for a given group
@@ -63,9 +63,9 @@ fn get_groups_index_url(group: String) -> String {
 /// The group parameter is here only for logging purposes and may be removed
 /// at any time.
 #[cfg(not(test))]
-fn get_group_index(group: &str, url: &str) -> Result<String, reqwest::Error> {
+fn get_group_index(group: &str, url: &str) -> Result<String, std::io::Error> {
     info!("Getting index for {} from {}", group, url);
-    reqwest::get(url)?.text()
+    ureq::get(url).call().into_string()
 }
 
 #[cfg(test)]

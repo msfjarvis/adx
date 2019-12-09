@@ -1,7 +1,7 @@
 extern crate clap;
 extern crate log;
-extern crate reqwest;
 extern crate roxmltree;
+extern crate ureq;
 
 use clap::{App, Arg};
 use log::{LevelFilter, Metadata, Record};
