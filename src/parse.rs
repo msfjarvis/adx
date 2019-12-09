@@ -1,7 +1,9 @@
 use std::collections::HashMap;
+use std::convert::TryInto;
 use std::fmt;
 use std::result::Result;
 
+use indicatif::ProgressBar;
 use log::info;
 use roxmltree::Document;
 use roxmltree::NodeType;
@@ -94,6 +96,10 @@ fn parse_androidx_groups(doc: Document, search_term: String) -> HashMap<String, 
 /// of all artifacts that match the search term.
 fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
     let mut packages = Vec::new();
+    let pb: Option<ProgressBar> = match cfg!(debug_assertions) {
+        true => None,
+        false => Some(ProgressBar::new(groups.len().try_into().unwrap())),
+    };
     for (group_name, group_index_url) in groups.iter() {
         let group_index = get_group_index(group_name, group_index_url)
             .expect(&format!("Failed to get group index for {}", group_name));
@@ -126,6 +132,12 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                 _ => (),
             }
         }
+        if pb.is_some() {
+            pb.clone().unwrap().inc(1);
+        }
+    }
+    if pb.is_some() {
+        pb.unwrap().finish_and_clear();
     }
     packages
 }

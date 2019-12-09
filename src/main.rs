@@ -1,4 +1,5 @@
 extern crate clap;
+extern crate indicatif;
 extern crate log;
 extern crate roxmltree;
 extern crate ureq;
