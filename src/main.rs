@@ -33,7 +33,7 @@ fn main() {
     let matches = App::new("androidx-release-watcher")
         .version("0.1")
         .author("Harsh Shandilya <msfjarvis@gmail.com>")
-        .about("Notify about the latest happenings in the Google Maven world")
+        .about("Poll Google's Maven repository to fetch the latest versions of AndroidX packages")
         .args(&[
             Arg::with_name("package")
                 .help("Name of package to filter in the results")
