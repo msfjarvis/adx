@@ -8,8 +8,7 @@ use log::{LevelFilter, Metadata, Record};
 mod parse;
 
 /// Simple logger that simply outputs everything using println!()
-/// It prints all levels in debug builds, and Level::Info and below
-/// on release builds.
+/// It prints all levels in debug builds, and nothing on release builds.
 struct StdOutLogger;
 
 impl log::Log for StdOutLogger {
