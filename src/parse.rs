@@ -92,8 +92,8 @@ fn parse_androidx_groups(doc: Document, search_term: String) -> HashMap<String, 
 fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
     let mut packages = Vec::new();
     for (group_name, group_index_url) in groups.iter() {
-        let group_index = get_group_index(group_name, group_index_url).unwrap();
-        let doc = Document::parse(group_index.as_str()).unwrap();
+        let group_index = get_group_index(group_name, group_index_url).expect(format!("Failed to get group index for {}", group_name).as_str());
+        let doc = Document::parse(group_index.as_str()).expect(format!("Failed to parse group index for {}", group_name).as_str());
         let mut is_next_root = false;
         let mut group: &str = "";
         for i in doc.descendants() {
@@ -127,8 +127,8 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
 
 /// The entrypoint for this module which handles outputting the final result.
 pub fn parse(search_term: String) -> Result<Vec<MavenPackage>, Box<dyn std::error::Error>> {
-    let maven_index = get_maven_index().unwrap();
-    let doc = Document::parse(maven_index.as_str()).unwrap();
+    let maven_index = get_maven_index().expect("Failed to get master maven index");
+    let doc = Document::parse(maven_index.as_str()).expect("Failed to parse master maven index");
     let groups = parse_androidx_groups(doc, search_term);
     let packages = parse_packages(groups);
     Ok(packages)
@@ -140,13 +140,13 @@ mod test {
 
     #[test]
     fn check_filter_works() {
-        let res = parse(String::from("appcompat")).unwrap();
+        let res = parse(String::from("appcompat")).expect("Parsing offline copies should always work");
         assert_eq!(res.len(), 2);
     }
 
     #[test]
     fn check_all_packages_are_parsed() {
-        let res = parse(String::new()).unwrap();
+        let res = parse(String::new()).expect("Parsing offline copies should always work");
         assert_eq!(res.len(), 211);
     }
 }
