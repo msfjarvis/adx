@@ -99,15 +99,16 @@ fn parse_androidx_groups(doc: Document, search_term: String) -> HashMap<String, 
 /// of all artifacts that match the search term.
 fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
     let mut packages = Vec::new();
-    let pb: Option<ProgressBar> = match cfg!(debug_assertions) {
-        true => None,
-        false => Some(ProgressBar::new(groups.len().try_into().unwrap())),
+    let pb: Option<ProgressBar> = if cfg!(debug_assertions) {
+        None
+    } else {
+        Some(ProgressBar::new(groups.len().try_into().unwrap()))
     };
     for (group_name, group_index_url) in groups.iter() {
         let group_index = get_group_index(group_name, group_index_url)
-            .expect(&format!("Failed to get group index for {}", group_name));
+            .unwrap_or_else(|_| panic!("Failed to get group index for {}", group_name));
         let doc = Document::parse(&group_index)
-            .expect(&format!("Failed to parse group index for {}", group_name));
+            .unwrap_or_else(|_| panic!("Failed to parse group index for {}", group_name));
         let mut is_next_root = false;
         let mut group: &str = "";
         for i in doc.descendants() {
@@ -139,9 +140,9 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
             pb.clone().unwrap().inc(1);
         }
     }
-    if pb.is_some() {
-        pb.unwrap().finish_and_clear();
-    }
+    if let Some(pb) = pb {
+        pb.finish_and_clear();
+    };
     packages
 }
 
