@@ -6,6 +6,7 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use std::result::Result;
 
+use crate::channel::Channel;
 use indicatif::ProgressBar;
 use log::info;
 use roxmltree::Document;
@@ -16,6 +17,11 @@ pub struct MavenPackage {
     group_id: String,
     artifact_id: String,
     all_versions: Vec<String>,
+    latest_dev: Option<String>,
+    latest_alpha: Option<String>,
+    latest_beta: Option<String>,
+    latest_rc: Option<String>,
+    latest_stable: Option<String>,
 }
 
 impl Debug for MavenPackage {
@@ -126,10 +132,46 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                             .map(|v| v.to_string())
                             .collect();
                         versions.reverse();
+                        let cloned = versions.clone();
+                        let stable = cloned
+                            .iter()
+                            .find(|v| Channel::from_version(v) == Channel::Stable);
+                        let rc = cloned
+                            .iter()
+                            .find(|v| Channel::from_version(v) == Channel::RC);
+                        let beta = cloned
+                            .iter()
+                            .find(|v| Channel::from_version(v) == Channel::Beta);
+                        let alpha = cloned
+                            .iter()
+                            .find(|v| Channel::from_version(v) == Channel::Alpha);
+                        let dev = cloned
+                            .iter()
+                            .find(|v| Channel::from_version(v) == Channel::Dev);
                         packages.push(MavenPackage {
                             group_id: String::from(group),
                             artifact_id: i.tag_name().name().to_string(),
                             all_versions: versions,
+                            latest_dev: match dev {
+                                Some(s) => Some(String::from(s)),
+                                None => None,
+                            },
+                            latest_alpha: match alpha {
+                                Some(s) => Some(String::from(s)),
+                                None => None,
+                            },
+                            latest_beta: match beta {
+                                Some(s) => Some(String::from(s)),
+                                None => None,
+                            },
+                            latest_rc: match rc {
+                                Some(s) => Some(String::from(s)),
+                                None => None,
+                            },
+                            latest_stable: match stable {
+                                Some(s) => Some(String::from(s)),
+                                None => None,
+                            },
                         })
                     }
                 }
@@ -172,5 +214,26 @@ mod test {
     fn check_all_packages_are_parsed() {
         let res = parse(String::new()).expect("Parsing offline copies should always work");
         assert_eq!(res.len(), 211);
+    }
+
+    #[test]
+    fn channels_are_found_correctly() {
+        let mut res =
+            parse(String::from("appcompat")).expect("Parsing offline copies should always work");
+        if let Some(package) = res.get(0) {
+            assert!(package.latest_dev == None);
+            assert!(package.latest_alpha == Some(String::from("1.2.0-alpha01")));
+            assert!(package.latest_beta == Some(String::from("1.1.0-beta01")));
+            assert!(package.latest_rc == Some(String::from("1.1.0-rc01")));
+            assert!(package.latest_stable == Some(String::from("1.1.0")));
+        }
+        res = parse(String::from("compose")).expect("Paring offline copies should always work");
+        if let Some(package) = res.get(0) {
+            assert!(package.latest_dev == Some(String::from("0.1.0-dev03")));
+            assert!(package.latest_alpha == None);
+            assert!(package.latest_beta == None);
+            assert!(package.latest_rc == None);
+            assert!(package.latest_stable == None);
+        }
     }
 }
