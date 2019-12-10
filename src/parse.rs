@@ -107,7 +107,7 @@ fn get_group_index(group: &str, _: &str) -> Result<String, std::io::Error> {
 
 /// Parse a given master-index.xml and separate out the AndroidX packages
 /// from it.
-fn parse_androidx_groups(doc: Document, search_term: String) -> HashMap<String, String> {
+fn parse_androidx_groups(doc: Document, search_term: &str) -> HashMap<String, String> {
     let mut groups: HashMap<String, String> = HashMap::new();
     for i in doc.descendants() {
         let tag = i.tag_name().name();
@@ -206,7 +206,7 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
 }
 
 /// The entrypoint for this module which handles outputting the final result.
-pub fn parse(search_term: String) -> Result<Vec<MavenPackage>, Box<dyn std::error::Error>> {
+pub fn parse(search_term: &str) -> Result<Vec<MavenPackage>, Box<dyn std::error::Error>> {
     let maven_index = get_maven_index().expect("Failed to get master maven index");
     let doc = Document::parse(&maven_index).expect("Failed to parse master maven index");
     let groups = parse_androidx_groups(doc, search_term);
@@ -221,7 +221,7 @@ mod test {
     #[test]
     fn check_filter_works() {
         let res =
-            parse(String::from("appcompat")).expect("Parsing offline copies should always work");
+            parse("appcompat").expect("Parsing offline copies should always work");
         assert_eq!(res.len(), 2);
         assert!(res.get(0).unwrap().group_id.contains("appcompat"));
         assert!(res.get(1).unwrap().group_id.contains("appcompat"));
@@ -229,14 +229,14 @@ mod test {
 
     #[test]
     fn check_all_packages_are_parsed() {
-        let res = parse(String::new()).expect("Parsing offline copies should always work");
+        let res = parse("").expect("Parsing offline copies should always work");
         assert_eq!(res.len(), 211);
     }
 
     #[test]
     fn channels_are_found_correctly() {
         let mut res =
-            parse(String::from("appcompat")).expect("Parsing offline copies should always work");
+            parse("appcompat").expect("Parsing offline copies should always work");
         if let Some(package) = res.get(0) {
             assert!(package.latest_dev == None);
             assert!(package.latest_alpha == Some(String::from("1.2.0-alpha01")));
@@ -244,7 +244,7 @@ mod test {
             assert!(package.latest_rc == Some(String::from("1.1.0-rc01")));
             assert!(package.latest_stable == Some(String::from("1.1.0")));
         }
-        res = parse(String::from("compose")).expect("Parsing offline copies should always work");
+        res = parse("compose").expect("Parsing offline copies should always work");
         if let Some(package) = res.get(0) {
             assert!(package.latest_dev == Some(String::from("0.1.0-dev03")));
             assert!(package.latest_alpha == None);

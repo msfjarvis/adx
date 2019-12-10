@@ -47,7 +47,7 @@ fn main() {
                 .help("Only print the latest version of the package"),
         ])
         .get_matches();
-    match crate::parse::parse(matches.value_of("package").unwrap_or("").to_string()) {
+    match crate::parse::parse(matches.value_of("package").unwrap_or("")) {
         Ok(packages) => {
             if packages.is_empty() {
                 println!("No results found!");
