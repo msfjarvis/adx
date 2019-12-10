@@ -38,13 +38,30 @@ impl Display for MavenPackage {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "Group ID: {}\nArtifact ID: {}\nAvailable versions: {}\nLatest: {}:{}:{}\n",
+            "\nGroup ID: {}\nArtifact ID: {}\nAvailable versions: {}\nLatest dev: {}\nLatest alpha: {}\nLatest beta: {}\nLatest rc: {}\nLatest stable: {}\n",
             self.group_id,
             self.artifact_id,
             self.all_versions.join(", "),
-            self.group_id,
-            self.artifact_id,
-            self.all_versions[0]
+            match &self.latest_dev {
+                Some(v) => &v,
+                None => "none",
+            },
+            match &self.latest_alpha {
+                Some(v) => &v,
+                None => "none",
+            },
+            match &self.latest_beta {
+                Some(v) => &v,
+                None => "none",
+            },
+            match &self.latest_rc {
+                Some(v) => &v,
+                None => "none",
+            },
+            match &self.latest_stable {
+                Some(v) => &v,
+                None => "none",
+            },
         )
     }
 }
