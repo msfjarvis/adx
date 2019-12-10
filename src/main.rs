@@ -39,24 +39,25 @@ fn main() {
         .args(&[
             Arg::with_name("package")
                 .help("Name of package to filter in the results")
+                .required(true)
                 .index(1),
-            Arg::with_name("detailed")
-                .short("d")
-                .long("detail")
-                .help("Output detailed information on each package"),
+            Arg::with_name("condensed")
+                .short("c")
+                .long("condensed")
+                .help("Only print the latest version of the package"),
         ])
         .get_matches();
     match crate::parse::parse(matches.value_of("package").unwrap_or("").to_string()) {
         Ok(packages) => {
             if packages.is_empty() {
                 println!("No results found!");
-            } else if matches.is_present("detailed") {
+            } else if matches.is_present("condensed") {
                 for package in packages.iter() {
-                    println!("{}", package);
+                    println!("{:?}", package);
                 }
             } else {
                 for package in packages.iter() {
-                    println!("{:?}", package);
+                    println!("{}", package);
                 }
             }
         }
