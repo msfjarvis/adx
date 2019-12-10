@@ -244,7 +244,7 @@ mod test {
             assert!(package.latest_rc == Some(String::from("1.1.0-rc01")));
             assert!(package.latest_stable == Some(String::from("1.1.0")));
         }
-        res = parse(String::from("compose")).expect("Paring offline copies should always work");
+        res = parse(String::from("compose")).expect("Parsing offline copies should always work");
         if let Some(package) = res.get(0) {
             assert!(package.latest_dev == Some(String::from("0.1.0-dev03")));
             assert!(package.latest_alpha == None);
