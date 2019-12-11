@@ -8,6 +8,7 @@ use std::result::Result;
 
 use crate::channel::Channel;
 use indicatif::ProgressBar;
+use indicatif::ProgressStyle;
 use log::info;
 use roxmltree::Document;
 use roxmltree::NodeType;
@@ -125,7 +126,12 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
     let pb: Option<ProgressBar> = if cfg!(debug_assertions) {
         None
     } else {
-        Some(ProgressBar::new(groups.len().try_into().unwrap()))
+        let p = ProgressBar::new(groups.len().try_into().unwrap());
+        p.set_style(
+            ProgressStyle::default_spinner()
+                .template("{prefix:.bold.dim} {spinner} Processing {wide_msg}"),
+        );
+        Some(p)
     };
     for (group_name, group_index_url) in groups.iter() {
         let group_index = get_group_index(group_name, group_index_url)
@@ -140,6 +146,11 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                 NodeType::Element => {
                     if is_next_root {
                         group = i.tag_name().name();
+                        if pb.is_some() {
+                            let p = pb.clone().unwrap();
+                            p.set_message(group);
+                            p.inc(1);
+                        }
                         is_next_root = false;
                     } else if !group.is_empty() {
                         let mut versions: Vec<String> = i
@@ -194,9 +205,6 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                 }
                 _ => (),
             }
-        }
-        if pb.is_some() {
-            pb.clone().unwrap().inc(1);
         }
     }
     if let Some(pb) = pb {
