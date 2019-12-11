@@ -59,7 +59,7 @@ fn main() {
         Ok(packages) => {
             if packages.is_empty() {
                 println!("No results found!");
-            } else if matches.is_present("condensed") {
+            } else if matches.is_present("condensed") || matches.is_present("all") {
                 for package in packages.iter() {
                     println!("{:?}", package);
                 }
