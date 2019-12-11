@@ -220,8 +220,7 @@ mod test {
 
     #[test]
     fn check_filter_works() {
-        let res =
-            parse("appcompat").expect("Parsing offline copies should always work");
+        let res = parse("appcompat").expect("Parsing offline copies should always work");
         assert_eq!(res.len(), 2);
         assert!(res.get(0).unwrap().group_id.contains("appcompat"));
         assert!(res.get(1).unwrap().group_id.contains("appcompat"));
@@ -235,8 +234,7 @@ mod test {
 
     #[test]
     fn channels_are_found_correctly() {
-        let mut res =
-            parse("appcompat").expect("Parsing offline copies should always work");
+        let mut res = parse("appcompat").expect("Parsing offline copies should always work");
         if let Some(package) = res.get(0) {
             assert!(package.latest_dev == None);
             assert!(package.latest_alpha == Some(String::from("1.2.0-alpha01")));
