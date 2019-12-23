@@ -237,7 +237,7 @@ mod test {
     #[test]
     fn check_all_packages_are_parsed() {
         let res = parse("").expect("Parsing offline copies should always work");
-        assert_eq!(res.len(), 211);
+        assert_eq!(res.len(), 212);
     }
 
     #[test]
