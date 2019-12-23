@@ -13,7 +13,7 @@ license-file = "LICENSE"
 
 [dependencies]
 clap = "2.33.0"
-log = "0.4.10"
+log = "0.4.8"
 roxmltree = "0.7.3"
 ureq = "0.11.2"
 indicatif = "0.13.0"
