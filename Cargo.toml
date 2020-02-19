@@ -3,8 +3,10 @@ name = "adx"
 version = "1.1.0"
 authors = ["Harsh Shandilya <msfjarvis@gmail.com>"]
 edition = "2018"
+license = "MIT/Apache-2.0"
 description = "Poll Google's Maven repository to fetch the latest versions of AndroidX packages"
 repository = "https://github.com/msfjarvis/androidx-release-watcher"
+homepage = "https://github.com/msfjarvis/androidx-release-watcher"
 keywords = ["maven", "androidx"]
 readme = "README.md"
 
