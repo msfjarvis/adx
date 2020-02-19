@@ -36,6 +36,18 @@ Available versions: 1.2.0-alpha01, 1.1.0, 1.1.0-rc01, 1.1.0-beta01, 1.1.0-alpha0
 Latest: androidx.appcompat:appcompat-resources:1.2.0-alpha01
 ```
 
+### Getting latest version of all packages
+
+```
+$ adx --all
+androidx.media2:media2:1.0.0-alpha04
+androidx.media2:media2-exoplayer:1.0.2
+androidx.media2:media2-player:1.0.2
+androidx.media2:media2-common:1.0.2
+androidx.media2:media2-session:1.0.2
+...
+```
+
 ## TODO
 
 - [ ] Allow filtering by channel
