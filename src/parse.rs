@@ -80,7 +80,7 @@ fn get_maven_index() -> Result<String, std::io::Error> {
 #[cfg(test)]
 fn get_maven_index() -> Result<String, std::io::Error> {
     info!("Reading maven index from disk");
-    std::fs::read_to_string("offline-copy/master-index.xml")
+    std::fs::read_to_string("testdata/master-index.xml")
 }
 
 /// Get the group-index.xml URL for a given group
@@ -103,7 +103,7 @@ fn get_group_index(group: &str, url: &str) -> Result<String, std::io::Error> {
 #[cfg(test)]
 fn get_group_index(group: &str, _: &str) -> Result<String, std::io::Error> {
     info!("Reading group index for {} from disk", group);
-    std::fs::read_to_string(format!("offline-copy/{}/group-index.xml", group))
+    std::fs::read_to_string(format!("testdata/{}/group-index.xml", group))
 }
 
 /// Parse a given master-index.xml and separate out the AndroidX packages
