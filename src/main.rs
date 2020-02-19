@@ -4,7 +4,7 @@ extern crate log;
 extern crate roxmltree;
 extern crate ureq;
 
-use clap::{App, Arg, ArgGroup};
+use clap::{App, Arg, ArgGroup, crate_name, crate_version};
 use log::{LevelFilter, Metadata, Record};
 
 mod channel;
@@ -32,8 +32,8 @@ static LOGGER: StdOutLogger = StdOutLogger;
 
 fn main() {
     let _ = log::set_logger(&LOGGER).map(|()| log::set_max_level(LevelFilter::Info));
-    let matches = App::new("androidx-release-watcher")
-        .version("1.1.0")
+    let matches = App::new(crate_name!())
+        .version(crate_version!())
         .author("Harsh Shandilya <msfjarvis@gmail.com>")
         .about("Poll Google's Maven repository to fetch the latest versions of AndroidX packages")
         .args(&[
