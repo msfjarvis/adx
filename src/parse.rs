@@ -9,7 +9,7 @@ use std::result::Result;
 use crate::channel::Channel;
 use indicatif::ProgressBar;
 use indicatif::ProgressStyle;
-use log::info;
+use log::debug;
 use roxmltree::Document;
 use roxmltree::NodeType;
 
@@ -71,7 +71,7 @@ impl Display for MavenPackage {
 /// and returns the XML as a String
 #[cfg(not(test))]
 fn get_maven_index() -> Result<String, std::io::Error> {
-    info!("Downloading maven index...");
+    debug!("Downloading maven index...");
     ureq::get("https://dl.google.com/dl/android/maven2/master-index.xml")
         .call()
         .into_string()
@@ -79,7 +79,7 @@ fn get_maven_index() -> Result<String, std::io::Error> {
 
 #[cfg(test)]
 fn get_maven_index() -> Result<String, std::io::Error> {
-    info!("Reading maven index from disk");
+    debug!("Reading maven index from disk");
     std::fs::read_to_string("testdata/master-index.xml")
 }
 
@@ -96,13 +96,13 @@ fn get_groups_index_url(group: String) -> String {
 /// at any time.
 #[cfg(not(test))]
 fn get_group_index(group: &str, url: &str) -> Result<String, std::io::Error> {
-    info!("Getting index for {} from {}", group, url);
+    debug!("Getting index for {} from {}", group, url);
     ureq::get(url).call().into_string()
 }
 
 #[cfg(test)]
 fn get_group_index(group: &str, _: &str) -> Result<String, std::io::Error> {
-    info!("Reading group index for {} from disk", group);
+    debug!("Reading group index for {} from disk", group);
     std::fs::read_to_string(format!("testdata/{}/group-index.xml", group))
 }
 
@@ -123,16 +123,11 @@ fn parse_androidx_groups(doc: Document, search_term: &str) -> HashMap<String, St
 /// of all artifacts that match the search term.
 fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
     let mut packages = Vec::new();
-    let pb: Option<ProgressBar> = if cfg!(debug_assertions) {
-        None
-    } else {
-        let p = ProgressBar::new(groups.len().try_into().unwrap());
-        p.set_style(
-            ProgressStyle::default_spinner()
-                .template("{prefix:.bold.dim} {spinner} Processing {wide_msg}"),
-        );
-        Some(p)
-    };
+    let pb = ProgressBar::new(groups.len().try_into().unwrap());
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .template("{prefix:bold.dim} {spinner} Processing {wide_msg}"),
+    );
     for (group_name, group_index_url) in groups.iter() {
         let group_index = get_group_index(group_name, group_index_url)
             .unwrap_or_else(|_| panic!("Failed to get group index for {}", group_name));
@@ -146,11 +141,8 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                 NodeType::Element => {
                     if is_next_root {
                         group = i.tag_name().name();
-                        if pb.is_some() {
-                            let p = pb.clone().unwrap();
-                            p.set_message(group);
-                            p.inc(1);
-                        }
+                        pb.set_message(group);
+                        pb.inc(1);
                         is_next_root = false;
                     } else if !group.is_empty() {
                         let mut versions: Vec<String> = i
@@ -207,9 +199,7 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
             }
         }
     }
-    if let Some(pb) = pb {
-        pb.finish_and_clear();
-    };
+    pb.finish_and_clear();
     packages
 }
 
