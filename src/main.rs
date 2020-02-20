@@ -64,12 +64,10 @@ fn main() {
                     println!("{:?}", package);
                 }
             } else {
-                print!("{}\n", packages[0]);
-                for i in 1..packages.len() {
-                    print!("{}", packages[i]);
-                    print!("\n");
+                println!("{}", packages[0]);
+                for package in packages.iter().skip(1) {
+                    println!("{}", package)
                 }
-                println!(); // Flush buffer to stdout
             }
         }
         Err(err) => println!("{}", err),
