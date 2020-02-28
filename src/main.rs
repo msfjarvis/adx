@@ -4,7 +4,7 @@ extern crate log;
 extern crate roxmltree;
 extern crate ureq;
 
-use clap::{App, Arg, ArgGroup, crate_name, crate_version};
+use clap::{crate_name, crate_version, App, Arg, ArgGroup};
 use log::{LevelFilter, Metadata, Record};
 
 mod channel;
