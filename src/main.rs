@@ -4,11 +4,12 @@ extern crate log;
 extern crate roxmltree;
 extern crate ureq;
 
-use clap::{crate_name, crate_version, App, Arg, ArgGroup};
-use log::{LevelFilter, Metadata, Record};
-
 mod channel;
 mod parse;
+
+use crate::channel::Channel;
+use clap::{crate_name, crate_version, App, Arg, ArgGroup};
+use log::{LevelFilter, Metadata, Record};
 
 /// Simple logger that simply outputs everything using println!()
 /// It prints all levels in debug builds, and nothing on release builds.
@@ -44,6 +45,11 @@ fn main() {
                 .short("a")
                 .long("all")
                 .takes_value(false),
+            Arg::with_name("channel")
+                .long("channel")
+                .takes_value(true)
+                .possible_values(&["stable", "alpha", "beta", "rc", "dev"])
+                .default_value("stable"),
             Arg::with_name("condensed")
                 .short("c")
                 .long("condensed")
@@ -61,7 +67,12 @@ fn main() {
                 println!("No results found!");
             } else if matches.is_present("condensed") || matches.is_present("all") {
                 for package in packages.iter() {
-                    println!("{:?}", package);
+                    println!(
+                        "{}",
+                        package.get_condensed(Channel::from_name(
+                            matches.value_of("channel").unwrap_or("stable")
+                        ))
+                    );
                 }
             } else {
                 println!("{}", packages[0]);

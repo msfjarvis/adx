@@ -32,6 +32,17 @@ impl Channel {
             panic!("Failed to determine channel for {}", version)
         }
     }
+
+    pub fn from_name(name: &str) -> Channel {
+        match name {
+            "stable" => Channel::Stable,
+            "dev" => Channel::Dev,
+            "alpha" => Channel::Alpha,
+            "beta" => Channel::Beta,
+            "rc" => Channel::RC,
+            _ => panic!("Failed to parse channel from '{}'", name),
+        }
+    }
 }
 
 impl Clone for Channel {

@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use std::convert::TryInto;
 use std::fmt;
-use std::fmt::Debug;
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::result::Result;
@@ -25,13 +24,11 @@ pub struct MavenPackage {
     latest_stable: Option<String>,
 }
 
-impl Debug for MavenPackage {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}:{}:{}",
-            self.group_id, self.artifact_id, self.all_versions[0]
-        )
+impl MavenPackage {
+    pub(crate) fn get_condensed(&self, channel: Channel) -> String {
+        let mut result = String::new();
+        result.push_str(&format!("{}:{}:", self.group_id, self.artifact_id));
+        result
     }
 }
 
