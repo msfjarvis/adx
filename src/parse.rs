@@ -25,9 +25,24 @@ pub struct MavenPackage {
 }
 
 impl MavenPackage {
-    pub(crate) fn get_condensed(&self, channel: Channel) -> String {
+    pub(crate) fn get_condensed(&self) -> String {
         let mut result = String::new();
-        result.push_str(&format!("{}:{}:", self.group_id, self.artifact_id));
+        let version = vec![
+            self.latest_stable.as_ref(),
+            self.latest_rc.as_ref(),
+            self.latest_beta.as_ref(),
+            self.latest_alpha.as_ref(),
+            self.latest_dev.as_ref(),
+        ]
+        .iter()
+        .find(|x| x.is_some())
+        .map(|x| x.unwrap());
+        result.push_str(&format!(
+            "{}:{}:{}",
+            self.group_id,
+            self.artifact_id,
+            version.unwrap()
+        ));
         result
     }
 }
