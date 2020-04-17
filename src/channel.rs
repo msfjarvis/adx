@@ -1,13 +1,9 @@
-use std::cmp::Eq;
-use std::cmp::Ord;
-use std::cmp::Ordering;
 use std::cmp::PartialEq;
-use std::cmp::PartialOrd;
 use std::fmt::Display;
 use std::fmt::Formatter;
 
 #[repr(usize)]
-#[derive(Copy, Eq, Debug, PartialEq, Hash)]
+#[derive(Copy, Debug, Hash, PartialEq)]
 pub enum Channel {
     Dev = 0,
     Alpha,
@@ -56,41 +52,6 @@ impl Display for Channel {
         )
     }
 }
-
-impl Ord for Channel {
-    #[inline]
-    fn cmp(&self, other: &Channel) -> Ordering {
-        (*self as usize).cmp(&(*other as usize))
-    }
-}
-
-impl PartialOrd for Channel {
-    #[inline]
-    fn partial_cmp(&self, other: &Channel) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-
-    #[inline]
-    fn lt(&self, other: &Channel) -> bool {
-        (*self as usize) < *other as usize
-    }
-
-    #[inline]
-    fn le(&self, other: &Channel) -> bool {
-        *self as usize <= *other as usize
-    }
-
-    #[inline]
-    fn gt(&self, other: &Channel) -> bool {
-        *self as usize > *other as usize
-    }
-
-    #[inline]
-    fn ge(&self, other: &Channel) -> bool {
-        *self as usize >= *other as usize
-    }
-}
-
 #[cfg(test)]
 mod test {
     use super::Channel;
@@ -108,17 +69,5 @@ mod test {
     #[should_panic]
     fn invalid_version_throws() {
         Channel::from_version("2.0.0-hakuna_matata");
-    }
-
-    #[test]
-    fn channel_ordered_correctly() {
-        // We prefer to go with stable as the latest revision if available, then
-        // cascade in the order Stable => RC => Beta => Alpha => Dev until a
-        // suitable candidate is found. These tests help ensure that we can use
-        // simple comparison statements for the purpose.
-        assert!(Channel::Stable > Channel::RC);
-        assert!(Channel::RC > Channel::Beta);
-        assert!(Channel::Beta > Channel::Alpha);
-        assert!(Channel::Alpha > Channel::Dev);
     }
 }
