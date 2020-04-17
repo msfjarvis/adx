@@ -247,18 +247,18 @@ mod test {
         let mut res = parse("appcompat").expect("Parsing offline copies should always work");
         if let Some(package) = res.get(0) {
             assert!(package.latest_dev == None);
-            assert!(package.latest_alpha == Some(String::from("1.2.0-alpha01")));
-            assert!(package.latest_beta == Some(String::from("1.1.0-beta01")));
-            assert!(package.latest_rc == Some(String::from("1.1.0-rc01")));
-            assert!(package.latest_stable == Some(String::from("1.1.0")));
+            assert_eq!(package.latest_alpha, Some(String::from("1.2.0-alpha01")));
+            assert_eq!(package.latest_beta, Some(String::from("1.1.0-beta01")));
+            assert_eq!(package.latest_rc, Some(String::from("1.1.0-rc01")));
+            assert_eq!(package.latest_stable, Some(String::from("1.1.0")));
         }
         res = parse("compose").expect("Parsing offline copies should always work");
         if let Some(package) = res.get(0) {
-            assert!(package.latest_dev == Some(String::from("0.1.0-dev03")));
-            assert!(package.latest_alpha == None);
-            assert!(package.latest_beta == None);
-            assert!(package.latest_rc == None);
-            assert!(package.latest_stable == None);
+            assert_eq!(package.latest_dev, Some(String::from("0.1.0-dev03")));
+            assert_eq!(package.latest_alpha, None);
+            assert_eq!(package.latest_beta, None);
+            assert_eq!(package.latest_rc, None);
+            assert_eq!(package.latest_stable, None);
         }
     }
 }
