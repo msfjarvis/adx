@@ -1,7 +1,7 @@
 [package]
 name = "adx"
 version = "2.1.1-alpha.0"
-authors = ["Harsh Shandilya <msfjarvis@gmail.com>"]
+authors = ["Harsh Shandilya <me@msfjarvis.dev>"]
 edition = "2018"
 license = "MIT/Apache-2.0"
 description = "Poll Google's Maven repository to fetch the latest versions of AndroidX packages"
