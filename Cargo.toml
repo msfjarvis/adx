@@ -16,7 +16,7 @@ readme = "README.md"
 clap = "2.33.1"
 log = "0.4.8"
 roxmltree = "0.11.0"
-ureq = "1.1.0"
+ureq = "1.1.1"
 indicatif = "0.14.0"
 
 [badges]
