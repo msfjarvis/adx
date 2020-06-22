@@ -15,7 +15,7 @@ readme = "README.md"
 [dependencies]
 clap = "2.33.1"
 log = "0.4.8"
-roxmltree = "0.11.0"
+roxmltree = "0.13.0"
 ureq = "1.2.0"
 indicatif = "0.15.0"
 
