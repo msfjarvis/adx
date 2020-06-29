@@ -28,7 +28,7 @@ fn main() {
     let _ = log::set_logger(&LOGGER).map(|()| log::set_max_level(LevelFilter::Info));
     let matches = App::new(crate_name!())
         .version(crate_version!())
-        .author("Harsh Shandilya <msfjarvis@gmail.com>")
+        .author("Harsh Shandilya <me@msfjarvis.dev>")
         .about("Poll Google's Maven repository to fetch the latest versions of AndroidX packages")
         .args(&[
             Arg::with_name("package")
