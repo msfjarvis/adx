@@ -5,7 +5,6 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use std::result::Result;
 
-use crate::channel::Channel;
 use indicatif::ProgressBar;
 use indicatif::ProgressStyle;
 use log::debug;
@@ -16,32 +15,16 @@ use roxmltree::NodeType;
 pub struct MavenPackage {
     group_id: String,
     artifact_id: String,
+    latest_version: String,
     all_versions: Vec<String>,
-    latest_dev: Option<String>,
-    latest_alpha: Option<String>,
-    latest_beta: Option<String>,
-    latest_rc: Option<String>,
-    latest_stable: Option<String>,
 }
 
 impl MavenPackage {
     pub(crate) fn get_condensed(&self) -> String {
         let mut result = String::new();
-        let version = vec![
-            self.latest_stable.as_ref(),
-            self.latest_rc.as_ref(),
-            self.latest_beta.as_ref(),
-            self.latest_alpha.as_ref(),
-            self.latest_dev.as_ref(),
-        ]
-        .iter()
-        .find(|x| x.is_some())
-        .map(|x| x.unwrap());
         result.push_str(&format!(
             "{}:{}:{}",
-            self.group_id,
-            self.artifact_id,
-            version.unwrap()
+            self.group_id, self.artifact_id, self.latest_version
         ));
         result
     }
@@ -51,30 +34,10 @@ impl Display for MavenPackage {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "Group ID: {}\nArtifact ID: {}\nAvailable versions: {}\nLatest dev: {}\nLatest alpha: {}\nLatest beta: {}\nLatest rc: {}\nLatest stable: {}",
+            "\nGroup ID: {}\nArtifact ID: {}\nAvailable versions: {}",
             self.group_id,
             self.artifact_id,
             self.all_versions.join(", "),
-            match &self.latest_dev {
-                Some(v) => &v,
-                None => "none",
-            },
-            match &self.latest_alpha {
-                Some(v) => &v,
-                None => "none",
-            },
-            match &self.latest_beta {
-                Some(v) => &v,
-                None => "none",
-            },
-            match &self.latest_rc {
-                Some(v) => &v,
-                None => "none",
-            },
-            match &self.latest_stable {
-                Some(v) => &v,
-                None => "none",
-            },
         )
     }
 }
@@ -164,46 +127,11 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                             .map(|v| v.to_string())
                             .collect();
                         versions.reverse();
-                        let cloned = versions.clone();
-                        let stable = cloned
-                            .iter()
-                            .find(|v| Channel::from_version(v) == Channel::Stable);
-                        let rc = cloned
-                            .iter()
-                            .find(|v| Channel::from_version(v) == Channel::RC);
-                        let beta = cloned
-                            .iter()
-                            .find(|v| Channel::from_version(v) == Channel::Beta);
-                        let alpha = cloned
-                            .iter()
-                            .find(|v| Channel::from_version(v) == Channel::Alpha);
-                        let dev = cloned
-                            .iter()
-                            .find(|v| Channel::from_version(v) == Channel::Dev);
                         packages.push(MavenPackage {
                             group_id: String::from(group),
                             artifact_id: i.tag_name().name().to_string(),
+                            latest_version: versions.get(0).unwrap().clone(),
                             all_versions: versions,
-                            latest_dev: match dev {
-                                Some(s) => Some(String::from(s)),
-                                None => None,
-                            },
-                            latest_alpha: match alpha {
-                                Some(s) => Some(String::from(s)),
-                                None => None,
-                            },
-                            latest_beta: match beta {
-                                Some(s) => Some(String::from(s)),
-                                None => None,
-                            },
-                            latest_rc: match rc {
-                                Some(s) => Some(String::from(s)),
-                                None => None,
-                            },
-                            latest_stable: match stable {
-                                Some(s) => Some(String::from(s)),
-                                None => None,
-                            },
                         })
                     }
                 }
@@ -240,25 +168,5 @@ mod test {
     fn check_all_packages_are_parsed() {
         let res = parse("").expect("Parsing offline copies should always work");
         assert_eq!(res.len(), 212);
-    }
-
-    #[test]
-    fn channels_are_found_correctly() {
-        let mut res = parse("appcompat").expect("Parsing offline copies should always work");
-        if let Some(package) = res.get(0) {
-            assert!(package.latest_dev == None);
-            assert_eq!(package.latest_alpha, Some(String::from("1.2.0-alpha01")));
-            assert_eq!(package.latest_beta, Some(String::from("1.1.0-beta01")));
-            assert_eq!(package.latest_rc, Some(String::from("1.1.0-rc01")));
-            assert_eq!(package.latest_stable, Some(String::from("1.1.0")));
-        }
-        res = parse("compose").expect("Parsing offline copies should always work");
-        if let Some(package) = res.get(0) {
-            assert_eq!(package.latest_dev, Some(String::from("0.1.0-dev03")));
-            assert_eq!(package.latest_alpha, None);
-            assert_eq!(package.latest_beta, None);
-            assert_eq!(package.latest_rc, None);
-            assert_eq!(package.latest_stable, None);
-        }
     }
 }

@@ -1,4 +1,3 @@
-mod channel;
 mod parse;
 
 use clap::{crate_name, crate_version, App, Arg, ArgGroup};

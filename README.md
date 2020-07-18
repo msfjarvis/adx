@@ -16,7 +16,7 @@ Clone this repository, then run `cargo install --path .` in the directory you cl
 
 ### Filtering packages by name
 ```
-$ adx enterprise
+$ adx -c enterprise
 androidx.enterprise:enterprise-feedback:1.0.0-rc01
 androidx.enterprise:enterprise-feedback-testing:1.0.0-rc01
 ```
@@ -24,22 +24,20 @@ androidx.enterprise:enterprise-feedback-testing:1.0.0-rc01
 ### Getting detailed information on packages
 
 ```
-$ adx -d appcompat
+$ adx appcompat
 Group ID: androidx.appcompat
 Artifact ID: appcompat
-Available versions: 1.2.0-alpha01, 1.1.0, 1.1.0-rc01, 1.1.0-beta01, 1.1.0-alpha05, 1.1.0-alpha04, 1.1.0-alpha03, 1.1.0-alpha02, 1.1.0-alpha01, 1.0.2, 1.0.1, 1.0.0, 1.0.0-rc02, 1.0.0-rc01, 1.0.0-beta01, 1.0.0-alpha3, 1.0.0-alpha1
-Latest: androidx.appcompat:appcompat:1.2.0-alpha01
+Available versions: 1.3.0-alpha01, 1.2.0-rc01, 1.2.0-beta01, 1.2.0-alpha03, 1.2.0-alpha02, 1.2.0-alpha01, 1.1.0, 1.1.0-rc01, 1.1.0-beta01, 1.1.0-alpha05, 1.1.0-alpha04, 1.1.0-alpha03, 1.1.0-alpha02, 1.1.0-alpha01, 1.0.2, 1.0.1, 1.0.0, 1.0.0-rc02, 1.0.0-rc01, 1.0.0-beta01, 1.0.0-alpha3, 1.0.0-alpha1
 
 Group ID: androidx.appcompat
 Artifact ID: appcompat-resources
-Available versions: 1.2.0-alpha01, 1.1.0, 1.1.0-rc01, 1.1.0-beta01, 1.1.0-alpha05, 1.1.0-alpha04, 1.1.0-alpha03
-Latest: androidx.appcompat:appcompat-resources:1.2.0-alpha01
+Available versions: 1.3.0-alpha01, 1.2.0-rc01, 1.2.0-beta01, 1.2.0-alpha03, 1.2.0-alpha02, 1.2.0-alpha01, 1.1.0, 1.1.0-rc01, 1.1.0-beta01, 1.1.0-alpha05, 1.1.0-alpha04, 1.1.0-alpha03
 ```
 
 ### Getting latest version of all packages
 
 ```
-$ adx --all
+$ adx -c --all
 androidx.media2:media2:1.0.0-alpha04
 androidx.media2:media2-exoplayer:1.0.2
 androidx.media2:media2-player:1.0.2
