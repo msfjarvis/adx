@@ -1,15 +1,11 @@
-use std::collections::HashMap;
-use std::convert::TryInto;
-use std::fmt;
-use std::fmt::Display;
-use std::fmt::Formatter;
-use std::result::Result;
-
 use indicatif::ProgressBar;
 use indicatif::ProgressStyle;
 use log::debug;
 use roxmltree::Document;
 use roxmltree::NodeType;
+use std::collections::HashMap;
+use std::convert::TryInto;
+use std::fmt::{Display, Formatter, Result};
 
 /// Struct that represents a Maven package
 pub struct MavenPackage {
@@ -31,7 +27,7 @@ impl MavenPackage {
 }
 
 impl Display for MavenPackage {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         write!(
             f,
             "\nGroup ID: {}\nArtifact ID: {}\nAvailable versions: {}",
@@ -45,17 +41,19 @@ impl Display for MavenPackage {
 /// Downloads the Maven master index for Google's Maven Repository
 /// and returns the XML as a String
 #[cfg(not(test))]
-fn get_maven_index() -> Result<String, std::io::Error> {
+fn get_maven_index() -> anyhow::Result<String> {
     debug!("Downloading maven index...");
-    ureq::get("https://dl.google.com/dl/android/maven2/master-index.xml")
-        .call()
-        .into_string()
+    Ok(
+        ureq::get("https://dl.google.com/dl/android/maven2/master-index.xml")
+            .call()
+            .into_string()?,
+    )
 }
 
 #[cfg(test)]
-fn get_maven_index() -> Result<String, std::io::Error> {
+fn get_maven_index() -> anyhow::Result<String> {
     debug!("Reading maven index from disk");
-    std::fs::read_to_string("testdata/master-index.xml")
+    Ok(std::fs::read_to_string("testdata/master-index.xml")?)
 }
 
 /// Get the group-index.xml URL for a given group
@@ -70,15 +68,18 @@ fn get_groups_index_url(group: String) -> String {
 /// The group parameter is here only for logging purposes and may be removed
 /// at any time.
 #[cfg(not(test))]
-fn get_group_index(group: &str, url: &str) -> Result<String, std::io::Error> {
+fn get_group_index(group: &str, url: &str) -> anyhow::Result<String> {
     debug!("Getting index for {} from {}", group, url);
-    ureq::get(url).call().into_string()
+    Ok(ureq::get(url).call().into_string()?)
 }
 
 #[cfg(test)]
-fn get_group_index(group: &str, _: &str) -> Result<String, std::io::Error> {
+fn get_group_index(group: &str, _: &str) -> anyhow::Result<String> {
     debug!("Reading group index for {} from disk", group);
-    std::fs::read_to_string(format!("testdata/{}/group-index.xml", group))
+    Ok(std::fs::read_to_string(format!(
+        "testdata/{}/group-index.xml",
+        group
+    ))?)
 }
 
 /// Parse a given master-index.xml and separate out the AndroidX packages
@@ -144,7 +145,7 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
 }
 
 /// The entrypoint for this module which handles outputting the final result.
-pub fn parse(search_term: &str) -> Result<Vec<MavenPackage>, Box<dyn std::error::Error>> {
+pub fn parse(search_term: &str) -> anyhow::Result<Vec<MavenPackage>> {
     let maven_index = get_maven_index().expect("Failed to get master maven index");
     let doc = Document::parse(&maven_index).expect("Failed to parse master maven index");
     let groups = parse_androidx_groups(doc, search_term);
