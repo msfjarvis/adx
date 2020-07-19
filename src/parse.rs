@@ -130,7 +130,7 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                         packages.push(MavenPackage {
                             group_id: String::from(group),
                             artifact_id: i.tag_name().name().to_string(),
-                            latest_version: versions.get(0).unwrap().clone(),
+                            latest_version: versions.get(0).unwrap().to_string(),
                             all_versions: versions,
                         })
                     }
