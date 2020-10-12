@@ -8,6 +8,7 @@ use std::convert::TryInto;
 use std::fmt::{Display, Formatter, Result};
 
 /// Struct that represents a Maven package
+#[derive(std::fmt::Debug)]
 pub struct MavenPackage {
     group_id: String,
     artifact_id: String,
@@ -172,6 +173,7 @@ pub fn parse(search_term: &str) -> anyhow::Result<Vec<MavenPackage>> {
 #[cfg(test)]
 mod test {
     use super::parse;
+    use semver::*;
 
     #[test]
     fn check_filter_works() {
@@ -185,5 +187,14 @@ mod test {
     fn check_all_packages_are_parsed() {
         let res = parse("").expect("Parsing offline copies should always work");
         assert_eq!(res.len(), 212);
+        for package in res {
+            println!("{:#x?}", package);
+            for version in package.all_versions {
+                match Version::parse(&version) {
+                    Ok(result) => println!("{}", result),
+                    Err(e) => panic!(format!("Failed to parse {}, failing with {}", &version, e)),
+                };
+            }
+        }
     }
 }
