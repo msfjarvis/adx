@@ -3,6 +3,7 @@ use indicatif::ProgressStyle;
 use log::debug;
 use roxmltree::Document;
 use roxmltree::NodeType;
+use semver::Version;
 use std::collections::HashMap;
 use std::convert::TryInto;
 use std::fmt::{Display, Formatter, Result};
@@ -13,7 +14,7 @@ pub struct MavenPackage {
     group_id: String,
     artifact_id: String,
     latest_version: String,
-    all_versions: Vec<String>,
+    all_versions: Vec<Version>,
 }
 
 impl MavenPackage {
@@ -34,7 +35,11 @@ impl Display for MavenPackage {
             "\nGroup ID: {}\nArtifact ID: {}\nAvailable versions: {}",
             self.group_id,
             self.artifact_id,
-            self.all_versions.join(", "),
+            self.all_versions
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<String>>()
+                .join(", "),
         )
     }
 }
@@ -122,11 +127,10 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                         pb.inc(1);
                         is_next_root = false;
                     } else if !group.is_empty() {
-                        let mut versions: Vec<String> = i
+                        let mut versions: Vec<Version> = i
                             .attribute("versions")
                             .unwrap()
                             .split(',')
-                            .map(|v| v.to_string())
                             .map(|v| {
                                 // This will appear completely nonsensical at first, but I assure you it is not.
                                 // The semver crate only accepts versions that contain at least 3 decimal points,
@@ -138,13 +142,14 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                                 // in the version string, and adds a '.0' as suffix if there are less than 2 of them.
                                 if v.chars().filter(|c| c == &'.').collect::<Vec<char>>().len() < 2
                                 {
-                                    format!("{}.0", v)
+                                    Version::parse(&format!("{}.0", v))
                                 } else {
-                                    v
+                                    Version::parse(v)
                                 }
+                                .unwrap()
                             })
                             .collect();
-                        versions.reverse();
+                        versions.sort_by(|a, b| b.partial_cmp(a).unwrap());
                         packages.push(MavenPackage {
                             group_id: String::from(group),
                             artifact_id: i.tag_name().name().to_string(),
@@ -173,7 +178,6 @@ pub fn parse(search_term: &str) -> anyhow::Result<Vec<MavenPackage>> {
 #[cfg(test)]
 mod test {
     use super::parse;
-    use semver::*;
 
     #[test]
     fn check_filter_works() {
@@ -187,14 +191,5 @@ mod test {
     fn check_all_packages_are_parsed() {
         let res = parse("").expect("Parsing offline copies should always work");
         assert_eq!(res.len(), 212);
-        for package in res {
-            println!("{:#x?}", package);
-            for version in package.all_versions {
-                match Version::parse(&version) {
-                    Ok(result) => println!("{}", result),
-                    Err(e) => panic!(format!("Failed to parse {}, failing with {}", &version, e)),
-                };
-            }
-        }
     }
 }
