@@ -1,4 +1,5 @@
 mod parse;
+mod stability;
 
 use clap::{crate_name, crate_version, App, Arg, ArgGroup};
 
