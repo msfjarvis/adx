@@ -94,7 +94,7 @@ fn parse_androidx_groups(doc: Document, search_term: &str) -> HashMap<String, St
     let mut groups: HashMap<String, String> = HashMap::new();
     for i in doc.descendants() {
         let tag = i.tag_name().name();
-        if tag.starts_with(&format!("androidx.{}", &search_term)) {
+        if tag.contains(search_term) {
             groups.insert(tag.to_string(), get_groups_index_url(tag.to_string()));
         }
     }
