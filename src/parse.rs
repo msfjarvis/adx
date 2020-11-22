@@ -145,9 +145,15 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                                 } else {
                                     Version::parse(v)
                                 }
-                                .unwrap()
                             })
+                            // Only take values that were correctly parsed
+                            .take_while(|x| x.is_ok())
+                            // Unwrap values that were previously determined to be safe
+                            .map(|x| x.unwrap())
                             .collect();
+                        if versions.is_empty() {
+                            continue;
+                        }
                         versions.sort_by(|a, b| b.partial_cmp(a).unwrap());
                         packages.push(MavenPackage {
                             group_id: String::from(group),
