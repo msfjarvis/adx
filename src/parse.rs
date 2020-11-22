@@ -1,12 +1,12 @@
-use indicatif::ProgressBar;
-use indicatif::ProgressStyle;
+use indicatif::{ProgressBar, ProgressStyle};
 use log::debug;
-use roxmltree::Document;
-use roxmltree::NodeType;
+use roxmltree::{Document, NodeType};
 use semver::Version;
-use std::collections::HashMap;
-use std::convert::TryInto;
-use std::fmt::{Display, Formatter, Result};
+use std::{
+    collections::HashMap,
+    convert::TryInto,
+    fmt::{Display, Formatter, Result},
+};
 
 /// Struct that represents a Maven package
 #[derive(std::fmt::Debug)]
