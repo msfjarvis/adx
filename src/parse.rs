@@ -188,8 +188,7 @@ mod test {
     fn check_filter_works() {
         let res = parse("appcompat").expect("Parsing offline copies should always work");
         assert_eq!(res.len(), 2);
-        assert!(res.get(0).unwrap().group_id.contains("appcompat"));
-        assert!(res.get(1).unwrap().group_id.contains("appcompat"));
+        res.iter().for_each(|r| assert!(r.group_id.contains("appcompat")));
     }
 
     #[test]
