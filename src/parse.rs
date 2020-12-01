@@ -192,6 +192,7 @@ mod test {
     }
 
     #[test]
+    #[ignore = "When the test data was constructed we only picked up the androidx.* libraries"]
     fn check_all_packages_are_parsed() {
         let res = parse("").expect("Parsing offline copies should always work");
         assert_eq!(res.len(), 212);
