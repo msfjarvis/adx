@@ -46,7 +46,6 @@ impl Display for MavenPackage {
 
 /// Downloads the Maven master index for Google's Maven Repository
 /// and returns the XML as a String
-#[cfg(not(test))]
 fn get_maven_index() -> anyhow::Result<String> {
     debug!("Downloading maven index...");
     Ok(
@@ -54,12 +53,6 @@ fn get_maven_index() -> anyhow::Result<String> {
             .call()
             .into_string()?,
     )
-}
-
-#[cfg(test)]
-fn get_maven_index() -> anyhow::Result<String> {
-    debug!("Reading maven index from disk");
-    Ok(std::fs::read_to_string("testdata/master-index.xml")?)
 }
 
 /// Get the group-index.xml URL for a given group
@@ -73,19 +66,9 @@ fn get_groups_index_url(group: String) -> String {
 /// Downloads the group index for a given group, from the given URL.
 /// The group parameter is here only for logging purposes and may be removed
 /// at any time.
-#[cfg(not(test))]
 fn get_group_index(group: &str, url: &str) -> anyhow::Result<String> {
     debug!("Getting index for {} from {}", group, url);
     Ok(ureq::get(url).call().into_string()?)
-}
-
-#[cfg(test)]
-fn get_group_index(group: &str, _: &str) -> anyhow::Result<String> {
-    debug!("Reading group index for {} from disk", group);
-    Ok(std::fs::read_to_string(format!(
-        "testdata/{}/group-index.xml",
-        group
-    ))?)
 }
 
 /// Parse a given master-index.xml and separate out the AndroidX packages
@@ -178,23 +161,4 @@ pub(crate) fn parse(search_term: &str) -> anyhow::Result<Vec<MavenPackage>> {
     let groups = parse_androidx_groups(doc, search_term);
     let packages = parse_packages(groups);
     Ok(packages)
-}
-
-#[cfg(test)]
-mod test {
-    use super::parse;
-
-    #[test]
-    fn check_filter_works() {
-        let res = parse("appcompat").expect("Parsing offline copies should always work");
-        assert_eq!(res.len(), 2);
-        res.iter().for_each(|r| assert!(r.group_id.contains("appcompat")));
-    }
-
-    #[test]
-    #[ignore = "When the test data was constructed we only picked up the androidx.* libraries"]
-    fn check_all_packages_are_parsed() {
-        let res = parse("").expect("Parsing offline copies should always work");
-        assert_eq!(res.len(), 212);
-    }
 }
