@@ -5,16 +5,16 @@ use semver::Version;
 use std::{
     collections::HashMap,
     convert::TryInto,
-    fmt::{Display, Formatter, Result},
+    fmt::{Debug, Display, Formatter, Result},
 };
 
 /// Struct that represents a Maven package
-#[derive(std::fmt::Debug)]
-pub struct MavenPackage {
-    group_id: String,
-    artifact_id: String,
-    latest_version: String,
-    all_versions: Vec<Version>,
+#[derive(Debug)]
+pub(crate) struct MavenPackage {
+    pub(crate) group_id: String,
+    pub(crate) artifact_id: String,
+    pub(crate) latest_version: String,
+    pub(crate) all_versions: Vec<Version>,
 }
 
 impl MavenPackage {
@@ -172,7 +172,7 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
 }
 
 /// The entrypoint for this module which handles outputting the final result.
-pub fn parse(search_term: &str) -> anyhow::Result<Vec<MavenPackage>> {
+pub(crate) fn parse(search_term: &str) -> anyhow::Result<Vec<MavenPackage>> {
     let maven_index = get_maven_index().expect("Failed to get master maven index");
     let doc = Document::parse(&maven_index).expect("Failed to parse master maven index");
     let groups = parse_androidx_groups(doc, search_term);
