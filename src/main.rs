@@ -1,24 +1,26 @@
 mod parse;
 mod stability;
 
-use clap::{crate_name, crate_version, App, Arg, ArgGroup};
+use clap::{crate_description, crate_authors, crate_name, crate_version, AppSettings, Clap};
+
+#[derive(Clap)]
+#[clap(
+    name = crate_name!(),
+    version = crate_version!(),
+    author = crate_authors!(),
+    about = crate_description!(),
+    setting = AppSettings::ColoredHelp,
+    setting = AppSettings::DeriveDisplayOrder,
+)]
+pub(crate) struct Cli {
+    #[clap(default_value = "")]
+    pub(crate) search_term: String,
+}
 
 fn main() {
     pretty_env_logger::init();
-    let matches = App::new(crate_name!())
-        .version(crate_version!())
-        .author("Harsh Shandilya <me@msfjarvis.dev>")
-        .about("Poll Google's Maven repository to fetch the latest versions of AndroidX packages")
-        .args(&[Arg::with_name("package")
-            .help("Name of package to filter in the results")
-            .index(1)])
-        .group(
-            ArgGroup::with_name("search_term")
-                .required(true)
-                .args(&["package", "all"]),
-        )
-        .get_matches();
-    match crate::parse::parse(matches.value_of("package").unwrap_or("")) {
+    let cli = Cli::parse();
+    match crate::parse::parse(&cli.search_term) {
         Ok(packages) => {
             if packages.is_empty() {
                 println!("No results found!");
