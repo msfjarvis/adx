@@ -17,29 +17,12 @@ pub(crate) struct MavenPackage {
     pub(crate) all_versions: Vec<Version>,
 }
 
-impl MavenPackage {
-    pub(crate) fn get_condensed(&self) -> String {
-        let mut result = String::new();
-        result.push_str(&format!(
-            "{}:{}:{}",
-            self.group_id, self.artifact_id, self.latest_version
-        ));
-        result
-    }
-}
-
 impl Display for MavenPackage {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         write!(
             f,
-            "\nGroup ID: {}\nArtifact ID: {}\nAvailable versions: {}",
-            self.group_id,
-            self.artifact_id,
-            self.all_versions
-                .iter()
-                .map(|v| v.to_string())
-                .collect::<Vec<String>>()
-                .join(", "),
+            "{}:{}:{}",
+            self.group_id, self.artifact_id, self.latest_version,
         )
     }
 }
