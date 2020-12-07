@@ -1,7 +1,7 @@
 mod parse;
 mod stability;
 
-use clap::{crate_description, crate_authors, crate_name, crate_version, AppSettings, Clap};
+use clap::{crate_authors, crate_description, crate_name, crate_version, AppSettings, Clap};
 
 #[derive(Clap)]
 #[clap(
