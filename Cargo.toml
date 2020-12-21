@@ -13,7 +13,7 @@ readme = "README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.35"
+anyhow = "1.0.36"
 clap = "3.0.0-beta.2"
 indicatif = "0.15.0"
 log = "0.4.11"
