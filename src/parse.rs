@@ -61,55 +61,52 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
             .unwrap_or_else(|_| panic!("Failed to parse group index for {}", group_name));
         let mut is_next_root = false;
         let mut group: &str = "";
-        for i in doc.descendants() {
-            match i.node_type() {
-                NodeType::Root => is_next_root = true,
-                NodeType::Element => {
-                    if is_next_root {
-                        group = i.tag_name().name();
-                        pb.set_message(group);
-                        pb.inc(1);
-                        is_next_root = false;
-                    } else if !group.is_empty() {
-                        let mut versions: Vec<Version> = i
-                            .attribute("versions")
-                            .unwrap()
-                            .split(',')
-                            .map(|v| {
-                                // This will appear completely nonsensical at first, but I assure you it is not.
-                                // The semver crate only accepts versions that contain at least 3 decimal points,
-                                // because the semver specification says they must be major.minor.patch . However,
-                                // In a critical failure of judgement, the AndroidX team published core-ktx with
-                                // invalid semver for 3 releases: 0.1, 0.2, and 0.3. Since maven artifacts are
-                                // supposed to be set in stone, we can't make them go back and change those, hence
-                                // resorting to this monstrosity that in the end simply counts the number of periods
-                                // in the version string, and adds a '.0' as suffix if there are less than 2 of them.
-                                if v.chars().filter(|c| c == &'.').count() < 2 {
-                                    Version::parse(&format!("{}.0", v))
-                                } else {
-                                    Version::parse(v)
-                                }
-                            })
-                            // Only take values that were correctly parsed
-                            .take_while(|x| x.is_ok())
-                            // Unwrap values that were previously determined to be safe
-                            .map(|x| x.unwrap())
-                            .collect();
-                        if versions.is_empty() {
-                            continue;
-                        }
+        doc.descendants().for_each(|node| match node.node_type() {
+            NodeType::Root => is_next_root = true,
+            NodeType::Element => {
+                if is_next_root {
+                    group = node.tag_name().name();
+                    pb.set_message(group);
+                    pb.inc(1);
+                    is_next_root = false;
+                } else if !group.is_empty() {
+                    let mut versions: Vec<Version> = node
+                        .attribute("versions")
+                        .unwrap()
+                        .split(',')
+                        .map(|v| {
+                            // This will appear completely nonsensical at first, but I assure you it is not.
+                            // The semver crate only accepts versions that contain at least 3 decimal points,
+                            // because the semver specification says they must be major.minor.patch . However,
+                            // In a critical failure of judgement, the AndroidX team published core-ktx with
+                            // invalid semver for 3 releases: 0.1, 0.2, and 0.3. Since maven artifacts are
+                            // supposed to be set in stone, we can't make them go back and change those, hence
+                            // resorting to this monstrosity that in the end simply counts the number of periods
+                            // in the version string, and adds a '.0' as suffix if there are less than 2 of them.
+                            if v.chars().filter(|c| c == &'.').count() < 2 {
+                                Version::parse(&format!("{}.0", v))
+                            } else {
+                                Version::parse(v)
+                            }
+                        })
+                        // Only take values that were correctly parsed
+                        .take_while(|x| x.is_ok())
+                        // Unwrap values that were previously determined to be safe
+                        .map(|x| x.unwrap())
+                        .collect();
+                    if !versions.is_empty() {
                         versions.sort_by(|a, b| b.partial_cmp(a).unwrap());
                         packages.push(MavenPackage {
                             group_id: String::from(group),
-                            artifact_id: i.tag_name().name().to_string(),
+                            artifact_id: node.tag_name().name().to_string(),
                             latest_version: versions.get(0).unwrap().to_string(),
                             all_versions: versions,
                         })
                     }
                 }
-                _ => (),
             }
-        }
+            _ => (),
+        });
     }
     pb.finish_and_clear();
     packages
