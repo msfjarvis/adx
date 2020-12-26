@@ -99,10 +99,9 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
 }
 
 /// The entrypoint for this module which handles outputting the final result.
-pub(crate) fn parse(search_term: &str) -> anyhow::Result<Vec<MavenPackage>> {
+pub(crate) fn parse(search_term: &str) -> Vec<MavenPackage> {
     let maven_index = get_maven_index().expect("Failed to get master maven index");
     let doc = Document::parse(&maven_index).expect("Failed to parse master maven index");
     let groups = parse_androidx_groups(doc, search_term);
-    let packages = parse_packages(groups);
-    Ok(packages)
+    parse_packages(groups)
 }

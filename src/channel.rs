@@ -50,7 +50,7 @@ impl TryFrom<Version> for Channel {
         };
         if let Some(pre) = value.pre.get(0) {
             let pre_str = pre.to_string();
-            return if pre_str.starts_with("alpha") {
+            if pre_str.starts_with("alpha") {
                 Ok(Channel::Alpha)
             } else if pre_str.starts_with("beta") {
                 Ok(Channel::Beta)
@@ -60,9 +60,9 @@ impl TryFrom<Version> for Channel {
                 Ok(Channel::RC)
             } else {
                 Err(ChannelError::FailedToParseVersion(value))
-            };
+            }
         } else {
-            return Ok(Channel::Stable);
+            Ok(Channel::Stable)
         }
     }
 }

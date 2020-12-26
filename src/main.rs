@@ -22,16 +22,12 @@ pub(crate) struct Cli {
 fn main() {
     pretty_env_logger::init();
     let cli = Cli::parse();
-    match crate::parse::parse(&cli.search_term) {
-        Ok(packages) => {
-            if packages.is_empty() {
-                println!("No results found!");
-            } else {
-                for package in packages.iter() {
-                    println!("{}", package);
-                }
-            }
+    let packages = crate::parse::parse(&cli.search_term);
+    if packages.is_empty() {
+        println!("No results found!");
+    } else {
+        for package in packages.iter() {
+            println!("{}", package);
         }
-        Err(err) => println!("{}", err),
-    }
+    };
 }
