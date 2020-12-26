@@ -74,21 +74,7 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                         .attribute("versions")
                         .unwrap()
                         .split(',')
-                        .map(|v| {
-                            // This will appear completely nonsensical at first, but I assure you it is not.
-                            // The semver crate only accepts versions that contain at least 3 decimal points,
-                            // because the semver specification says they must be major.minor.patch . However,
-                            // In a critical failure of judgement, the AndroidX team published core-ktx with
-                            // invalid semver for 3 releases: 0.1, 0.2, and 0.3. Since maven artifacts are
-                            // supposed to be set in stone, we can't make them go back and change those, hence
-                            // resorting to this monstrosity that in the end simply counts the number of periods
-                            // in the version string, and adds a '.0' as suffix if there are less than 2 of them.
-                            if v.chars().filter(|c| c == &'.').count() < 2 {
-                                Version::parse(&format!("{}.0", v))
-                            } else {
-                                Version::parse(v)
-                            }
-                        })
+                        .map(|v| Version::parse(v))
                         // Only take values that were correctly parsed
                         .take_while(|x| x.is_ok())
                         // Unwrap values that were previously determined to be safe
