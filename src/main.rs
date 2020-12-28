@@ -1,7 +1,6 @@
 mod channel;
 mod package;
 mod parse;
-mod stability;
 
 use anyhow::Result;
 use channel::Channel;
