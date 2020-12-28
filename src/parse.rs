@@ -1,13 +1,14 @@
-use crate::package::MavenPackage;
+use crate::{channel::Channel, package::MavenPackage};
+use anyhow::{Context, Result};
 use indicatif::{ProgressBar, ProgressStyle};
 use log::debug;
 use roxmltree::{Document, NodeType};
 use semver::Version;
-use std::{collections::HashMap, convert::TryInto};
+use std::convert::{TryFrom, TryInto};
 
 /// Downloads the Maven master index for Google's Maven Repository
 /// and returns the XML as a String
-fn get_maven_index() -> anyhow::Result<String> {
+fn get_maven_index() -> Result<String> {
     debug!("Downloading maven index...");
     Ok(
         ureq::get("https://dl.google.com/dl/android/maven2/master-index.xml")
@@ -16,49 +17,41 @@ fn get_maven_index() -> anyhow::Result<String> {
     )
 }
 
-/// Get the group-index.xml URL for a given group
-fn get_groups_index_url(group: String) -> String {
-    format!(
+/// Downloads the group index for the given group.
+fn get_group_index(group: &str) -> Result<String> {
+    let url = format!(
         "https://dl.google.com/dl/android/maven2/{}/group-index.xml",
         group.replace(".", "/")
-    )
+    );
+    Ok(ureq::get(&url).call().into_string()?)
 }
 
-/// Downloads the group index for a given group, from the given URL.
-/// The group parameter is here only for logging purposes and may be removed
-/// at any time.
-fn get_group_index(group: &str, url: &str) -> anyhow::Result<String> {
-    debug!("Getting index for {} from {}", group, url);
-    Ok(ureq::get(url).call().into_string()?)
-}
-
-/// Parse a given master-index.xml and separate out the AndroidX packages
-/// from it.
-fn parse_androidx_groups(doc: Document, search_term: &str) -> HashMap<String, String> {
-    let mut groups: HashMap<String, String> = HashMap::new();
+/// Parses a given master-index.xml and filters the found packages based on
+// `search_term`.
+fn filter_groups(doc: Document, search_term: &str) -> Vec<String> {
+    let mut groups = vec![];
     for i in doc.descendants() {
         let tag = i.tag_name().name();
         if tag.contains(search_term) {
-            groups.insert(tag.to_string(), get_groups_index_url(tag.to_string()));
+            groups.push(tag.to_string());
         }
     }
     groups
 }
 
-/// Given a list of groups and a search term to filter against, returns a Vec<MavenPackage>
-/// of all artifacts that match the search term.
-fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
+/// Given a list of groups, returns a `Vec<MavenPackage>` of all artifacts.
+fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<MavenPackage>> {
     let mut packages = Vec::new();
     let pb = ProgressBar::new(groups.len().try_into().unwrap());
     pb.set_style(
         ProgressStyle::default_spinner()
             .template("{prefix:bold.dim} {spinner} Processing {wide_msg}"),
     );
-    for (group_name, group_index_url) in groups.iter() {
-        let group_index = get_group_index(group_name, group_index_url)
-            .unwrap_or_else(|_| panic!("Failed to get group index for {}", group_name));
+    for group_name in groups.iter() {
+        let group_index = get_group_index(group_name)
+            .context(format!("Failed to get group index for {}", group_name))?;
         let doc = Document::parse(&group_index)
-            .unwrap_or_else(|_| panic!("Failed to parse group index for {}", group_name));
+            .context(format!("Failed to parse group index for {}", group_name))?;
         let mut is_next_root = false;
         let mut group: &str = "";
         doc.descendants().for_each(|node| match node.node_type() {
@@ -80,6 +73,23 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
                         // Unwrap values that were previously determined to be safe
                         .map(|x| x.unwrap())
                         .collect();
+                    // TODO(msfjarvis): Replace when drain_filter becomes stable
+                    // https://github.com/rust-lang/rust/issues/43244
+                    let channel_filter = |x: &Version| {
+                        if let Ok(c) = Channel::try_from(x.to_owned()) {
+                            c < channel
+                        } else {
+                            true
+                        }
+                    };
+                    let mut i = 0;
+                    while i != versions.len() {
+                        if channel_filter(&versions[i]) {
+                            versions.remove(i);
+                        } else {
+                            i += 1;
+                        }
+                    }
                     if !versions.is_empty() {
                         versions.sort_by(|a, b| b.partial_cmp(a).unwrap());
                         packages.push(MavenPackage {
@@ -95,13 +105,13 @@ fn parse_packages(groups: HashMap<String, String>) -> Vec<MavenPackage> {
         });
     }
     pb.finish_and_clear();
-    packages
+    Ok(packages)
 }
 
 /// The entrypoint for this module which handles outputting the final result.
-pub(crate) fn parse(search_term: &str) -> Vec<MavenPackage> {
-    let maven_index = get_maven_index().expect("Failed to get master maven index");
-    let doc = Document::parse(&maven_index).expect("Failed to parse master maven index");
-    let groups = parse_androidx_groups(doc, search_term);
-    parse_packages(groups)
+pub(crate) fn parse(search_term: &str, channel: Channel) -> Result<Vec<MavenPackage>> {
+    let maven_index = get_maven_index()?;
+    let doc = Document::parse(&maven_index)?;
+    let groups = filter_groups(doc, search_term);
+    parse_packages(groups, channel)
 }

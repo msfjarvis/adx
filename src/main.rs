@@ -3,6 +3,7 @@ mod package;
 mod parse;
 mod stability;
 
+use anyhow::Result;
 use channel::Channel;
 use clap::{crate_authors, crate_description, crate_name, crate_version, AppSettings, Clap};
 
@@ -24,11 +25,10 @@ pub(crate) struct Cli {
     pub(crate) channel: Channel,
 }
 
-fn main() {
+fn main() -> Result<()> {
     pretty_env_logger::init();
     let cli = Cli::parse();
-    let _ = &cli.channel;
-    let packages = crate::parse::parse(&cli.search_term);
+    let packages = crate::parse::parse(&cli.search_term, cli.channel)?;
     if packages.is_empty() {
         println!("No results found!");
     } else {
@@ -36,4 +36,5 @@ fn main() {
             println!("{}", package);
         }
     };
+    Ok(())
 }
