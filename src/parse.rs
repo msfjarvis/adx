@@ -96,7 +96,6 @@ fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<MavenPack
                             group_id: String::from(group),
                             artifact_id: node.tag_name().name().to_string(),
                             latest_version: versions.get(0).unwrap().to_string(),
-                            all_versions: versions,
                         })
                     }
                 }

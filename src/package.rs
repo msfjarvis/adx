@@ -1,4 +1,3 @@
-use semver::Version;
 use std::fmt::{Debug, Display, Formatter, Result};
 
 /// Struct that represents a Maven package
@@ -7,7 +6,6 @@ pub(crate) struct MavenPackage {
     pub(crate) group_id: String,
     pub(crate) artifact_id: String,
     pub(crate) latest_version: String,
-    pub(crate) all_versions: Vec<Version>,
 }
 
 impl Display for MavenPackage {
