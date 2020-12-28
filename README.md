@@ -1,6 +1,6 @@
 # androidx-release-watcher
 
-Rust binary that polls Google's Maven repository and extracts the latest version of all dependencies, with as few network calls as possible.
+Rust binary that polls Google's Maven repository and finds the latest version of the requested dependencies.
 
 ## Installation
 
@@ -10,42 +10,26 @@ Run `cargo install adx` on a terminal.
 
 ### From source
 
-Clone this repository, then run `cargo install --path .` in the directory you cloned to.
+```shell
+git clone https://github.com/msfjarvis/androidx-release-watcher
+cd androidx-release-watcher
+cargo install --path .
+```
 
 ## Usage
 
-### Filtering packages by name
-```
-$ adx -c enterprise
-androidx.enterprise:enterprise-feedback:1.0.0-rc01
-androidx.enterprise:enterprise-feedback-testing:1.0.0-rc01
-```
+### Find latest release of a package
 
-### Getting detailed information on packages
-
-```
+```shell
 $ adx appcompat
-Group ID: androidx.appcompat
-Artifact ID: appcompat
-Available versions: 1.3.0-alpha01, 1.2.0-rc01, 1.2.0-beta01, 1.2.0-alpha03, 1.2.0-alpha02, 1.2.0-alpha01, 1.1.0, 1.1.0-rc01, 1.1.0-beta01, 1.1.0-alpha05, 1.1.0-alpha04, 1.1.0-alpha03, 1.1.0-alpha02, 1.1.0-alpha01, 1.0.2, 1.0.1, 1.0.0, 1.0.0-rc02, 1.0.0-rc01, 1.0.0-beta01, 1.0.0-alpha3, 1.0.0-alpha1
-
-Group ID: androidx.appcompat
-Artifact ID: appcompat-resources
-Available versions: 1.3.0-alpha01, 1.2.0-rc01, 1.2.0-beta01, 1.2.0-alpha03, 1.2.0-alpha02, 1.2.0-alpha01, 1.1.0, 1.1.0-rc01, 1.1.0-beta01, 1.1.0-alpha05, 1.1.0-alpha04, 1.1.0-alpha03
+androidx.appcompat:appcompat:1.3.0-alpha02
+androidx.appcompat:appcompat-resources:1.3.0-alpha02
 ```
 
-### Getting latest version of all packages
+### Find latest stable version of a package
 
+```shell
+$ adx --channel stable appcompat
+androidx.appcompat:appcompat:1.2.0
+androidx.appcompat:appcompat-resources:1.2.0
 ```
-$ adx -c --all
-androidx.media2:media2:1.0.0-alpha04
-androidx.media2:media2-exoplayer:1.0.2
-androidx.media2:media2-player:1.0.2
-androidx.media2:media2-common:1.0.2
-androidx.media2:media2-session:1.0.2
-...
-```
-
-## TODO
-
-- [ ] Allow filtering by channel
