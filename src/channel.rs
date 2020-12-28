@@ -139,4 +139,22 @@ mod tests {
         assert!(Channel::Beta > Channel::Alpha);
         assert!(Channel::Alpha > Channel::Dev);
     }
+
+    #[test]
+    fn cmp_parsed_versions() {
+        let stable = Channel::try_from(Version::parse("1.1.0").unwrap()).unwrap();
+        let rc = Channel::try_from(Version::parse("1.1.0-rc01").unwrap()).unwrap();
+        let alpha = Channel::try_from(Version::parse("1.1.0-alpha01").unwrap()).unwrap();
+        let beta = Channel::try_from(Version::parse("1.1.0-beta01").unwrap()).unwrap();
+        assert!(Channel::Stable >= stable);
+        assert!(Channel::Stable >= rc);
+        assert!(Channel::Stable >= alpha);
+        assert!(Channel::Stable >= beta);
+        assert!(Channel::RC >= rc);
+        assert!(Channel::RC >= beta);
+        assert!(Channel::RC >= alpha);
+        assert!(Channel::Beta >= beta);
+        assert!(Channel::Beta >= alpha);
+        assert!(Channel::Alpha >= alpha);
+    }
 }
