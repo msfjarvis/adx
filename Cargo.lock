@@ -2,7 +2,7 @@
 # It is not intended for manual editing.
 [[package]]
 name = "adx"
-version = "3.0.0"
+version = "3.0.1-alpha01"
 dependencies = [
  "anyhow",
  "clap",
