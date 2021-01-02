@@ -1,5 +1,5 @@
 use crate::{channel::Channel, package::MavenPackage};
-use anyhow::{Context, Result};
+use color_eyre::{eyre::WrapErr, Result};
 use indicatif::{ProgressBar, ProgressStyle};
 use log::debug;
 use roxmltree::{Document, NodeType};

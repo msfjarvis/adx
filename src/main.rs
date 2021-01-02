@@ -2,9 +2,9 @@ mod channel;
 mod package;
 mod parse;
 
-use anyhow::Result;
 use channel::Channel;
 use clap::{crate_authors, crate_description, crate_name, crate_version, AppSettings, Clap};
+use color_eyre::Result;
 
 #[derive(Clap)]
 #[clap(
@@ -26,6 +26,7 @@ pub(crate) struct Cli {
 
 fn main() -> Result<()> {
     pretty_env_logger::init();
+    color_eyre::install()?;
     let cli = Cli::parse();
     let packages = crate::parse::parse(&cli.search_term, cli.channel)?;
     if packages.is_empty() {
