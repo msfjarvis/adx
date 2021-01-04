@@ -12,7 +12,7 @@ fn get_maven_index() -> Result<String> {
     debug!("Downloading maven index...");
     Ok(
         ureq::get("https://dl.google.com/dl/android/maven2/master-index.xml")
-            .call()
+            .call()?
             .into_string()?,
     )
 }
@@ -23,7 +23,7 @@ fn get_group_index(group: &str) -> Result<String> {
         "https://dl.google.com/dl/android/maven2/{}/group-index.xml",
         group.replace(".", "/")
     );
-    Ok(ureq::get(&url).call().into_string()?)
+    Ok(ureq::get(&url).call()?.into_string()?)
 }
 
 /// Parses a given master-index.xml and filters the found packages based on
