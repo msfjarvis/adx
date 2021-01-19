@@ -1,10 +1,12 @@
 mod channel;
 mod package;
 mod parse;
+mod project;
 
 use channel::Channel;
 use clap::{crate_authors, crate_description, crate_name, crate_version, AppSettings, Clap};
 use color_eyre::Result;
+use std::path::Path;
 
 #[derive(Clap)]
 #[clap(
@@ -17,9 +19,8 @@ use color_eyre::Result;
 )]
 pub(crate) struct Cli {
     #[clap(subcommand)]
-    subcmd: SubCommand
+    subcmd: SubCommand,
 }
-
 
 #[derive(Clap)]
 #[clap(
@@ -32,7 +33,7 @@ pub(crate) struct Cli {
 )]
 pub(crate) enum SubCommand {
     Search(Search),
-    Project(Project)
+    Project(Project),
 }
 
 /// Search individual packages
@@ -50,7 +51,7 @@ pub(crate) struct Search {
 #[derive(Clap)]
 pub(crate) struct Project {
     /// Project path
-    #[clap(required=true)]
+    #[clap(required = true)]
     pub(crate) project_path: String,
     /// the release channel to find packages from
     #[clap(short='c', long="channel", possible_values=&["dev", "alpha", "beta", "rc", "stable"], default_value="alpha")]
@@ -79,7 +80,8 @@ fn search_project(project_path: String, channel: Channel) -> Result<()> {
      * 4. Delete temp dependencies file
      * 5. Pass the list to search_package() along with the channel specified
      */
-    println!("path: {}", project_path);
+    let path = Path::new(&project_path);
+    crate::project::parse(path, channel);
 
     Ok(())
 }
@@ -91,7 +93,7 @@ fn main() -> Result<()> {
 
     match cli.subcmd {
         SubCommand::Search(search) => search_package(search.search_term, search.channel),
-        SubCommand::Project(project) => search_project(project.project_path, project.channel)
+        SubCommand::Project(project) => search_project(project.project_path, project.channel),
     };
 
     Ok(())
