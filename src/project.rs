@@ -14,7 +14,8 @@ fn read_file(path: &str) -> Result<()> {
     Ok(())
 }
 
-fn parse_windows(path: &Path) -> Result<()> {
+#[cfg(windows)]
+fn generate_dependencies(path: &Path) -> Result<()> {
     let output_path = path.canonicalize()?.join("dependencies.txt");
 
     let command = Command::new("cmd")
@@ -23,17 +24,12 @@ fn parse_windows(path: &Path) -> Result<()> {
         .output()
         .expect("failed to execute process");
 
-    if command.status.success() {
-        // read_file(final_path.to_str().unwrap())
-    }
-
-    println!("status : {}", command.status.to_string());
-
     Ok(())
 }
 
-fn parse_linux(path: &Path) -> Result<()> {
-    let final_path = path.canonicalize()?.join("dependencies.txt");
+#[cfg(unix)]
+fn generate_dependencies(path: &Path) -> Result<()> {
+    let output_path = path.canonicalize()?.join("dependencies.txt");
 
     let command = Command::new("sh")
         .current_dir(path)
@@ -42,23 +38,12 @@ fn parse_linux(path: &Path) -> Result<()> {
         .output()
         .expect("failed to execute process");
 
-    if command.status.success() {
-        // read_file(final_path.to_str().unwrap())
-    }
-
-    println!("status : {}", command.status.to_string());
-
     Ok(())
 }
 
 /// The entrypoint for project module which handles returns a list of packages.
 pub(crate) fn parse(path: &Path, channel: Channel) -> Result<()> {
     // TODO: Testing required on windows
-    match std::env::consts::OS {
-        "linux" | "macOS" => parse_linux(path),
-        "windows" => parse_windows(path),
-        _ => Ok(()),
-    };
-
+    generate_dependencies(path);
     Ok(())
 }
