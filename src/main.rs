@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 mod channel;
 mod package;
 mod parse;
@@ -81,7 +82,7 @@ fn search_project(project_path: String, channel: Channel) -> Result<()> {
      * 5. Pass the list to search_package() along with the channel specified
      */
     let path = Path::new(&project_path);
-    crate::project::parse(path, channel);
+    crate::project::parse(path, channel)?;
 
     Ok(())
 }
@@ -92,8 +93,8 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.subcmd {
-        SubCommand::Search(search) => search_package(search.search_term, search.channel),
-        SubCommand::Project(project) => search_project(project.project_path, project.channel),
+        SubCommand::Search(search) => search_package(search.search_term, search.channel)?,
+        SubCommand::Project(project) => search_project(project.project_path, project.channel)?,
     };
 
     Ok(())

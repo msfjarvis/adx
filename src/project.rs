@@ -1,5 +1,7 @@
+#![allow(dead_code)]
+#![allow(unused_variables)]
 use crate::channel::Channel;
-use color_eyre::{Report, Result};
+use color_eyre::Result;
 use std::fs::File;
 use std::io::Read;
 use std::path::Path;
@@ -44,6 +46,6 @@ fn generate_dependencies(path: &Path) -> Result<()> {
 /// The entrypoint for project module which handles returns a list of packages.
 pub(crate) fn parse(path: &Path, channel: Channel) -> Result<()> {
     // TODO: Testing required on windows
-    generate_dependencies(path);
+    generate_dependencies(path)?;
     Ok(())
 }
