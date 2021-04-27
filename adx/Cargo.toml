@@ -1,0 +1,27 @@
+[package]
+name = "adx"
+version = "3.0.1-alpha01"
+authors = ["Harsh Shandilya <me@msfjarvis.dev>"]
+edition = "2018"
+license = "MIT/Apache-2.0"
+description = "Poll Google's Maven repository to fetch the latest versions of AndroidX packages"
+repository = "https://github.com/msfjarvis/androidx-release-watcher"
+homepage = "https://github.com/msfjarvis/androidx-release-watcher"
+keywords = ["maven", "androidx"]
+readme = "README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = "3.0.0-beta.2"
+color-eyre = { version = "0.5.11", default-features = false }
+indicatif = "0.15.0"
+log = "0.4.14"
+pretty_env_logger = "0.4.0"
+roxmltree = { version = "0.14.1", features = ["std"] }
+semver = "0.11.0"
+thiserror = "1.0.24"
+ureq = "2.1.1"
+
+[badges]
+maintenance = { status = "actively-developed" }
