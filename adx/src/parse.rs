@@ -73,23 +73,13 @@ fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<MavenPack
                         // Unwrap values that were previously determined to be safe
                         .map(|x| x.unwrap())
                         .collect();
-                    // TODO(msfjarvis): Replace when drain_filter becomes stable
-                    // https://github.com/rust-lang/rust/issues/43244
-                    let channel_filter = |x: &Version| {
+                    versions.retain(|x| {
                         if let Ok(c) = Channel::try_from(x.to_owned()) {
-                            c < channel
+                            c >= channel
                         } else {
-                            true
+                            false
                         }
-                    };
-                    let mut i = 0;
-                    while i != versions.len() {
-                        if channel_filter(&versions[i]) {
-                            versions.remove(i);
-                        } else {
-                            i += 1;
-                        }
-                    }
+                    });
                     if !versions.is_empty() {
                         versions.sort_by(|a, b| b.partial_cmp(a).unwrap());
                         packages.push(MavenPackage {
