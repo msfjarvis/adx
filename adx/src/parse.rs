@@ -42,7 +42,7 @@ fn filter_groups(doc: Document, search_term: &str) -> Vec<String> {
 /// Given a list of groups, returns a `Vec<MavenPackage>` of all artifacts.
 fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<MavenPackage>> {
     let mut packages = Vec::new();
-    let pb = ProgressBar::new(groups.len().try_into().unwrap());
+    let pb = ProgressBar::new(groups.len().try_into()?);
     pb.set_style(
         ProgressStyle::default_spinner()
             .template("{prefix:bold.dim} {spinner} Processing {wide_msg}"),
