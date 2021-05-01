@@ -2,9 +2,11 @@ mod channel;
 mod package;
 mod parse;
 
+use std::error::Error;
+
 use channel::Channel;
 use clap::{crate_authors, crate_description, crate_name, crate_version, AppSettings, Clap};
-use color_eyre::Result;
+use std::result::Result;
 
 #[derive(Clap)]
 #[clap(
@@ -24,11 +26,10 @@ pub(crate) struct Cli {
     pub(crate) channel: Channel,
 }
 
-fn main() -> Result<()> {
-    pretty_env_logger::init();
-    color_eyre::install()?;
+#[async_std::main]
+async fn main() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
-    let packages = crate::parse::parse(&cli.search_term, cli.channel)?;
+    let packages = crate::parse::parse(&cli.search_term, cli.channel).await?;
     if packages.is_empty() {
         println!("No results found!");
     } else {

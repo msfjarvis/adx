@@ -1,29 +1,27 @@
 use crate::{channel::Channel, package::MavenPackage};
-use color_eyre::{eyre::WrapErr, Result};
-use indicatif::{ProgressBar, ProgressStyle};
-use log::debug;
 use roxmltree::{Document, NodeType};
 use semver::Version;
 use std::convert::{TryFrom, TryInto};
+use std::result::Result;
 
 /// Downloads the Maven master index for Google's Maven Repository
 /// and returns the XML as a String
-fn get_maven_index() -> Result<String> {
-    debug!("Downloading maven index...");
+async fn get_maven_index() -> surf::Result<String> {
     Ok(
-        ureq::get("https://dl.google.com/dl/android/maven2/master-index.xml")
-            .call()?
-            .into_string()?,
+        surf::get("https://dl.google.com/dl/android/maven2/master-index.xml")
+            .recv_string()
+            .await?,
     )
 }
 
 /// Downloads the group index for the given group.
-fn get_group_index(group: &str) -> Result<String> {
-    let url = format!(
+async fn get_group_index(group: &str) -> surf::Result<String> {
+    Ok(surf::get(format!(
         "https://dl.google.com/dl/android/maven2/{}/group-index.xml",
         group.replace(".", "/")
-    );
-    Ok(ureq::get(&url).call()?.into_string()?)
+    ))
+    .recv_string()
+    .await?)
 }
 
 /// Parses a given master-index.xml and filters the found packages based on
@@ -40,27 +38,18 @@ fn filter_groups(doc: Document, search_term: &str) -> Vec<String> {
 }
 
 /// Given a list of groups, returns a `Vec<MavenPackage>` of all artifacts.
-fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<MavenPackage>> {
+async fn parse_packages(groups: Vec<String>, channel: Channel) -> surf::Result<Vec<MavenPackage>> {
     let mut packages = Vec::new();
-    let pb = ProgressBar::new(groups.len().try_into()?);
-    pb.set_style(
-        ProgressStyle::default_spinner()
-            .template("{prefix:bold.dim} {spinner} Processing {wide_msg}"),
-    );
     for group_name in groups.iter() {
-        let group_index = get_group_index(group_name)
-            .context(format!("Failed to get group index for {}", group_name))?;
-        let doc = Document::parse(&group_index)
-            .context(format!("Failed to parse group index for {}", group_name))?;
+        let group_index = get_group_index(group_name).await?;
+        let doc = Document::parse(&group_index)?;
         let mut is_next_root = false;
-        let mut group: &str = "";
+        let mut group = "";
         doc.descendants().for_each(|node| match node.node_type() {
             NodeType::Root => is_next_root = true,
             NodeType::Element => {
                 if is_next_root {
                     group = node.tag_name().name();
-                    pb.set_message(group);
-                    pb.inc(1);
                     is_next_root = false;
                 } else if !group.is_empty() {
                     let mut versions: Vec<Version> = node
@@ -93,14 +82,15 @@ fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<MavenPack
             _ => (),
         });
     }
-    pb.finish_and_clear();
     Ok(packages)
 }
 
-/// The entrypoint for this module which handles outputting the final result.
-pub(crate) fn parse(search_term: &str, channel: Channel) -> Result<Vec<MavenPackage>> {
-    let maven_index = get_maven_index()?;
+pub(crate) async fn parse(
+    search_term: &str,
+    channel: Channel,
+) -> Result<Vec<MavenPackage>, Box<dyn std::error::Error + 'static>> {
+    let maven_index = get_maven_index().await?;
     let doc = Document::parse(&maven_index)?;
     let groups = filter_groups(doc, search_term);
-    parse_packages(groups, channel)
+    Ok(parse_packages(groups, channel).await?)
 }
