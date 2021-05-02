@@ -14,7 +14,7 @@ pub(crate) enum Channel {
     Dev,
     Alpha,
     Beta,
-    RC,
+    Rc,
     Stable,
 }
 
@@ -34,7 +34,7 @@ impl FromStr for Channel {
             "alpha" => Ok(Channel::Alpha),
             "beta" => Ok(Channel::Beta),
             "dev" => Ok(Channel::Dev),
-            "rc" => Ok(Channel::RC),
+            "rc" => Ok(Channel::Rc),
             "stable" => Ok(Channel::Stable),
             _ => Err(ChannelError::NoMatchFound),
         }
@@ -57,7 +57,7 @@ impl TryFrom<Version> for Channel {
             } else if pre_str.starts_with("dev") {
                 Ok(Channel::Dev)
             } else if pre_str.starts_with("rc") {
-                Ok(Channel::RC)
+                Ok(Channel::Rc)
             } else {
                 Err(ChannelError::FailedToParseVersion(value))
             }
@@ -122,7 +122,7 @@ mod tests {
             build: vec![],
         };
         let channel = Channel::try_from(v);
-        assert_eq!(Channel::RC, channel.unwrap());
+        assert_eq!(Channel::Rc, channel.unwrap());
     }
 
     #[test]
@@ -134,8 +134,8 @@ mod tests {
 
     #[test]
     fn cmp_channels() {
-        assert!(Channel::Stable > Channel::RC);
-        assert!(Channel::RC > Channel::Beta);
+        assert!(Channel::Stable > Channel::Rc);
+        assert!(Channel::Rc > Channel::Beta);
         assert!(Channel::Beta > Channel::Alpha);
         assert!(Channel::Alpha > Channel::Dev);
     }
@@ -150,9 +150,9 @@ mod tests {
         assert!(Channel::Stable >= rc);
         assert!(Channel::Stable >= alpha);
         assert!(Channel::Stable >= beta);
-        assert!(Channel::RC >= rc);
-        assert!(Channel::RC >= beta);
-        assert!(Channel::RC >= alpha);
+        assert!(Channel::Rc >= rc);
+        assert!(Channel::Rc >= beta);
+        assert!(Channel::Rc >= alpha);
         assert!(Channel::Beta >= beta);
         assert!(Channel::Beta >= alpha);
         assert!(Channel::Alpha >= alpha);
