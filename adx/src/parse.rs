@@ -1,7 +1,7 @@
 use crate::{channel::Channel, package::MavenPackage};
 use roxmltree::{Document, NodeType};
 use semver::Version;
-use std::convert::{TryFrom, TryInto};
+use std::convert::TryFrom;
 use std::result::Result;
 
 /// Downloads the Maven master index for Google's Maven Repository
