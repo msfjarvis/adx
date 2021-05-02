@@ -2,7 +2,7 @@
 # It is not intended for manual editing.
 [[package]]
 name = "adx"
-version = "3.0.1-alpha01"
+version = "4.0.0-alpha01"
 dependencies = [
  "async-std",
  "clap",
