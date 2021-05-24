@@ -1,5 +1,8 @@
 name: Test Rust project
-on: [push]
+on:
+  push:
+    branches:
+      - develop
 jobs:
   test:
     runs-on: ubuntu-latest
