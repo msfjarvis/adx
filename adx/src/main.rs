@@ -1,12 +1,23 @@
 mod channel;
 mod package;
 mod parse;
+#[cfg(feature = "measure-alloc")]
+mod stats_alloc;
 
 use std::error::Error;
 
 use channel::Channel;
 use clap::{crate_authors, crate_description, crate_name, crate_version, AppSettings, Clap};
 use std::result::Result;
+
+#[cfg(feature = "measure-alloc")]
+use stats_alloc::{Region, StatsAlloc, INSTRUMENTED_SYSTEM};
+#[cfg(feature = "measure-alloc")]
+use std::alloc::System;
+
+#[cfg(feature = "measure-alloc")]
+#[global_allocator]
+static GLOBAL: &StatsAlloc<System> = &INSTRUMENTED_SYSTEM;
 
 #[derive(Clap)]
 #[clap(
@@ -28,6 +39,8 @@ pub(crate) struct Cli {
 
 #[async_std::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    #[cfg(feature = "measure-alloc")]
+    let reg = Region::new(&GLOBAL);
     let cli = Cli::parse();
     let packages = crate::parse::parse(&cli.search_term, cli.channel).await?;
     if packages.is_empty() {
@@ -37,5 +50,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             println!("{}", package);
         }
     };
+    #[cfg(feature = "measure-alloc")]
+    println!("Stats at end: {:#?}", reg.change());
     Ok(())
 }
