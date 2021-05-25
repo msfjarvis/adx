@@ -35,9 +35,7 @@
     unused_qualifications,
     missing_docs
 )]
-#![allow(
-	dead_code
-)]
+#![allow(dead_code)]
 #![cfg_attr(feature = "nightly", feature(const_fn))]
 #![cfg_attr(feature = "docs-rs", feature(allocator_api))]
 
@@ -255,19 +253,22 @@ unsafe impl<'a, T: GlobalAlloc + 'a> GlobalAlloc for &'a StatsAlloc<T> {
 unsafe impl<T: GlobalAlloc> GlobalAlloc for StatsAlloc<T> {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
         self.allocations.fetch_add(1, Ordering::SeqCst);
-        self.bytes_allocated.fetch_add(layout.size(), Ordering::SeqCst);
+        self.bytes_allocated
+            .fetch_add(layout.size(), Ordering::SeqCst);
         self.inner.alloc(layout)
     }
 
     unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
         self.deallocations.fetch_add(1, Ordering::SeqCst);
-        self.bytes_deallocated.fetch_add(layout.size(), Ordering::SeqCst);
+        self.bytes_deallocated
+            .fetch_add(layout.size(), Ordering::SeqCst);
         self.inner.dealloc(ptr, layout)
     }
 
     unsafe fn alloc_zeroed(&self, layout: Layout) -> *mut u8 {
         self.allocations.fetch_add(1, Ordering::SeqCst);
-        self.bytes_allocated.fetch_add(layout.size(), Ordering::SeqCst);
+        self.bytes_allocated
+            .fetch_add(layout.size(), Ordering::SeqCst);
         self.inner.alloc_zeroed(layout)
     }
 
@@ -278,10 +279,13 @@ unsafe impl<T: GlobalAlloc> GlobalAlloc for StatsAlloc<T> {
             self.bytes_allocated.fetch_add(difference, Ordering::SeqCst);
         } else if new_size < layout.size() {
             let difference = layout.size() - new_size;
-            self.bytes_deallocated.fetch_add(difference, Ordering::SeqCst);
+            self.bytes_deallocated
+                .fetch_add(difference, Ordering::SeqCst);
         }
-        self.bytes_reallocated
-            .fetch_add(new_size.wrapping_sub(layout.size()) as isize, Ordering::SeqCst);
+        self.bytes_reallocated.fetch_add(
+            new_size.wrapping_sub(layout.size()) as isize,
+            Ordering::SeqCst,
+        );
         self.inner.realloc(ptr, layout, new_size)
     }
 }
