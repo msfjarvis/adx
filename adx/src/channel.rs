@@ -1,4 +1,4 @@
-use semver::Version;
+use semver::{Prerelease, Version};
 use std::cmp::{Eq, PartialEq, PartialOrd};
 use std::convert::TryFrom;
 use std::fmt::Debug;
@@ -48,8 +48,8 @@ impl TryFrom<Version> for Channel {
         if value.pre.is_empty() {
             return Ok(Channel::Stable);
         };
-        if let Some(pre) = value.pre.get(0) {
-            let pre_str = pre.to_string();
+        if value.pre != Prerelease::EMPTY {
+            let pre_str = value.pre.to_string();
             if pre_str.starts_with("alpha") {
                 Ok(Channel::Alpha)
             } else if pre_str.starts_with("beta") {
@@ -70,7 +70,7 @@ impl TryFrom<Version> for Channel {
 #[cfg(test)]
 mod tests {
     use super::Channel;
-    use semver::{AlphaNumeric, Version};
+    use semver::{BuildMetadata, Prerelease, Version};
     use std::convert::TryFrom;
 
     #[test]
@@ -79,8 +79,8 @@ mod tests {
             major: 1,
             minor: 1,
             patch: 0,
-            pre: vec![AlphaNumeric("alpha01".to_owned())],
-            build: vec![],
+            pre: Prerelease::new("alpha01").unwrap(),
+            build: BuildMetadata::EMPTY,
         };
         let channel = Channel::try_from(v);
         assert_eq!(Channel::Alpha, channel.unwrap());
@@ -92,8 +92,8 @@ mod tests {
             major: 1,
             minor: 1,
             patch: 0,
-            pre: vec![AlphaNumeric("beta01".to_owned())],
-            build: vec![],
+            pre: Prerelease::new("beta01").unwrap(),
+            build: BuildMetadata::EMPTY,
         };
         let channel = Channel::try_from(v);
         assert_eq!(Channel::Beta, channel.unwrap());
@@ -105,8 +105,8 @@ mod tests {
             major: 1,
             minor: 1,
             patch: 0,
-            pre: vec![AlphaNumeric("dev01".to_owned())],
-            build: vec![],
+            pre: Prerelease::new("dev01").unwrap(),
+            build: BuildMetadata::EMPTY,
         };
         let channel = Channel::try_from(v);
         assert_eq!(Channel::Dev, channel.unwrap());
@@ -118,8 +118,8 @@ mod tests {
             major: 1,
             minor: 1,
             patch: 0,
-            pre: vec![AlphaNumeric("rc01".to_owned())],
-            build: vec![],
+            pre: Prerelease::new("rc01").unwrap(),
+            build: BuildMetadata::EMPTY,
         };
         let channel = Channel::try_from(v);
         assert_eq!(Channel::Rc, channel.unwrap());
