@@ -9,7 +9,7 @@ dependencies = [
  "async-std",
  "clap",
  "roxmltree",
- "semver 1.0.0-rc.2",
+ "semver 1.0.0",
  "surf",
  "thiserror",
 ]
@@ -1253,9 +1253,9 @@ dependencies = [
 
 [[package]]
 name = "semver"
-version = "1.0.0-rc.2"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f615cc6936069c96dec0a7d421825f006dd1f5047ed7d6b54816984d8bb8c06"
+checksum = "76b5842e81eb9bbea19276a9dbbda22ac042532f390a67ab08b895617978abf3"
 
 [[package]]
 name = "semver-parser"

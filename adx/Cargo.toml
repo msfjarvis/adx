@@ -16,7 +16,7 @@ readme = "README.md"
 async-std = { version = "1.9.0", features = ["attributes"] }
 clap = "3.0.0-beta.2"
 roxmltree = { version = "0.14.1", features = ["std"] }
-semver = "1.0.0-rc.2"
+semver = "1.0.0"
 surf = "2.2.0"
 thiserror = "1.0.25"
 
