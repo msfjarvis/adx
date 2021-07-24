@@ -8,7 +8,7 @@ description = "Poll Google's Maven repository to fetch the latest versions of An
 repository = "https://github.com/msfjarvis/androidx-release-watcher"
 homepage = "https://github.com/msfjarvis/androidx-release-watcher"
 keywords = ["maven", "androidx"]
-readme = "README.md"
+readme = "../README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
