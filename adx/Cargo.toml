@@ -14,7 +14,7 @@ readme = "../README.md"
 
 [dependencies]
 async-std = { version = "1.9.0", features = ["attributes"] }
-clap = "3.0.0-beta.2"
+clap = "3.0.0-beta.4"
 roxmltree = { version = "0.14.1", features = ["std"] }
 semver = "1.0.4"
 surf = "2.2.0"
