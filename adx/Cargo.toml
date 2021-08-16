@@ -18,7 +18,7 @@ clap = "3.0.0-beta.4"
 roxmltree = { version = "0.14.1", features = ["std"] }
 semver = "1.0.4"
 surf = "2.2.0"
-thiserror = "1.0.25"
+thiserror = "1.0.26"
 
 [badges]
 maintenance = { status = "actively-developed" }
