@@ -30,8 +30,14 @@ async fn get_group_index(group: &str) -> Result<String> {
 // `search_term`.
 fn filter_groups(doc: Document, search_term: &str) -> Vec<String> {
     let mut groups = vec![];
-    for i in doc.descendants() {
-        let tag = i.tag_name().name();
+    for node in doc
+        .descendants()
+        // Only keep elements
+        .filter(|node| node.node_type() == NodeType::Element)
+        // Skip the first one since it is junk
+        .skip(1)
+    {
+        let tag = node.tag_name().name();
         if tag.contains(search_term) {
             groups.push(tag.to_string());
         }
