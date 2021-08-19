@@ -1,27 +1,29 @@
 use crate::{channel::Channel, package::MavenPackage};
+use color_eyre::{eyre::eyre, Help, Result};
 use roxmltree::{Document, NodeType};
 use semver::Version;
 use std::convert::TryFrom;
-use std::result::Result;
 
 /// Downloads the Maven master index for Google's Maven Repository
 /// and returns the XML as a String
-async fn get_maven_index() -> surf::Result<String> {
+async fn get_maven_index() -> Result<String> {
     Ok(
         surf::get("https://dl.google.com/dl/android/maven2/master-index.xml")
             .recv_string()
-            .await?,
+            .await
+            .map_err(|e| eyre!(e))?,
     )
 }
 
 /// Downloads the group index for the given group.
-async fn get_group_index(group: &str) -> surf::Result<String> {
+async fn get_group_index(group: &str) -> Result<String> {
     Ok(surf::get(format!(
         "https://dl.google.com/dl/android/maven2/{}/group-index.xml",
         group.replace(".", "/")
     ))
     .recv_string()
-    .await?)
+    .await
+    .map_err(|e| eyre!(e))?)
 }
 
 /// Parses a given master-index.xml and filters the found packages based on
@@ -38,11 +40,12 @@ fn filter_groups(doc: Document, search_term: &str) -> Vec<String> {
 }
 
 /// Given a list of groups, returns a `Vec<MavenPackage>` of all artifacts.
-async fn parse_packages(groups: Vec<String>, channel: Channel) -> surf::Result<Vec<MavenPackage>> {
+async fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<MavenPackage>> {
     let mut packages = Vec::new();
     for group_name in groups.iter() {
         let group_index = get_group_index(group_name).await?;
-        let doc = Document::parse(&group_index)?;
+        let doc = Document::parse(&group_index)
+            .map_err(|e| eyre!(e).with_note(|| format!("group_name={}", group_name)))?;
         let mut is_next_root = false;
         let mut group = "";
         doc.descendants().for_each(|node| match node.node_type() {
@@ -85,10 +88,7 @@ async fn parse_packages(groups: Vec<String>, channel: Channel) -> surf::Result<V
     Ok(packages)
 }
 
-pub(crate) async fn parse(
-    search_term: &str,
-    channel: Channel,
-) -> Result<Vec<MavenPackage>, Box<dyn std::error::Error + 'static>> {
+pub(crate) async fn parse(search_term: &str, channel: Channel) -> Result<Vec<MavenPackage>> {
     let maven_index = get_maven_index().await?;
     let doc = Document::parse(&maven_index)?;
     let groups = filter_groups(doc, search_term);

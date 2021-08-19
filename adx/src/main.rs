@@ -4,11 +4,9 @@ mod parse;
 #[cfg(feature = "measure-alloc")]
 mod stats_alloc;
 
-use std::error::Error;
-
 use channel::Channel;
 use clap::{crate_authors, crate_description, crate_name, crate_version, AppSettings, Clap};
-use std::result::Result;
+use color_eyre::Result;
 
 #[cfg(feature = "measure-alloc")]
 use stats_alloc::{Region, StatsAlloc, INSTRUMENTED_SYSTEM};
@@ -38,7 +36,7 @@ pub(crate) struct Cli {
 }
 
 #[async_std::main]
-async fn main() -> Result<(), Box<dyn Error>> {
+async fn main() -> Result<()> {
     color_eyre::install()?;
     #[cfg(feature = "measure-alloc")]
     let reg = Region::new(&GLOBAL);
