@@ -6,6 +6,7 @@ use std::convert::TryFrom;
 
 /// Downloads the Maven master index for Google's Maven Repository
 /// and returns the XML as a String
+#[cfg(not(test))]
 async fn get_maven_index() -> Result<String> {
     Ok(
         surf::get("https://dl.google.com/dl/android/maven2/master-index.xml")
@@ -15,7 +16,13 @@ async fn get_maven_index() -> Result<String> {
     )
 }
 
+#[cfg(test)]
+async fn get_maven_index() -> Result<String> {
+    Ok(std::fs::read_to_string("../testdata/master-index.xml")?)
+}
+
 /// Downloads the group index for the given group.
+#[cfg(not(test))]
 async fn get_group_index(group: &str) -> Result<String> {
     Ok(surf::get(format!(
         "https://dl.google.com/dl/android/maven2/{}/group-index.xml",
@@ -26,6 +33,13 @@ async fn get_group_index(group: &str) -> Result<String> {
     .map_err(|e| eyre!(e))?)
 }
 
+#[cfg(test)]
+async fn get_group_index(group: &str) -> Result<String> {
+    Ok(std::fs::read_to_string(format!(
+        "../testdata/{}.xml",
+        group
+    ))?)
+}
 /// Parses a given master-index.xml and filters the found packages based on
 // `search_term`.
 fn filter_groups(doc: Document, search_term: &str) -> Vec<String> {
@@ -99,4 +113,29 @@ pub(crate) async fn parse(search_term: &str, channel: Channel) -> Result<Vec<Mav
     let doc = Document::parse(&maven_index)?;
     let groups = filter_groups(doc, search_term);
     Ok(parse_packages(groups, channel).await?)
+}
+
+#[cfg(test)]
+mod test {
+    use super::parse;
+    use super::Channel;
+    use color_eyre::eyre::eyre;
+    use futures::executor::block_on;
+
+    #[test]
+    fn check_filter_works() {
+        let res = block_on(parse("appcompat", Channel::Alpha))
+            .map_err(|e| eyre!(e))
+            .unwrap();
+        assert_eq!(res.len(), 2);
+        res.iter()
+            .for_each(|r| assert!(r.group_id.contains("appcompat")));
+    }
+
+    #[test]
+    fn check_all_packages_are_parsed() {
+        let res = block_on(parse("", Channel::Stable))
+            .expect("Parsing offline copies should always work");
+        assert_eq!(res.len(), 741);
+    }
 }

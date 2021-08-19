@@ -26,3 +26,6 @@ maintenance = { status = "actively-developed" }
 
 [features]
 measure-alloc = []
+
+[dev-dependencies]
+futures = "0.3.16"
