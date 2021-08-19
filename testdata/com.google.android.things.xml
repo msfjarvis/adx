@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.google.android.things>
+  <androidthings versions="0.6.1-devpreview,0.7-devpreview,0.8-devpreview,1.0"/>
+</com.google.android.things>

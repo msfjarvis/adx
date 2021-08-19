@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.google.mediapipe>
+  <facemesh versions="0.8.7-alpha-1"/>
+  <hands versions="0.8.6-alpha-1,0.8.7-alpha-1"/>
+  <solution-core versions="0.8.6-alpha-1,0.8.7-alpha-1"/>
+</com.google.mediapipe>

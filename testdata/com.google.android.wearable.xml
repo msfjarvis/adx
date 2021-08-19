@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.google.android.wearable>
+  <wearable versions="2.1.0,2.2.0,2.3.0,2.4.0,2.5.0,2.6.0,2.7.0,2.8.0,2.8.1"/>
+</com.google.android.wearable>

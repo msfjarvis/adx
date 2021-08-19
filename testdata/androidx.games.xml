@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<androidx.games>
+  <games-activity versions="1.0.0-alpha01,1.0.0-beta01,1.0.0-rc01,1.0.0"/>
+  <games-controller versions="1.0.0-alpha01,1.0.0-beta01,1.0.0-rc01,1.0.0-rc02,1.0.0"/>
+  <games-frame-pacing versions="1.5.0-alpha02,1.7.0-alpha01,1.7.0-beta01,1.7.0-beta02,1.7.0-rc01,1.7.0,1.9.0"/>
+  <games-performance-tuner versions="1.0.0-alpha02,1.1.0-alpha01,1.1.0-beta01,1.1.0-beta02,1.1.0-beta03,1.1.0-rc01,1.1.0,1.4.3,1.5.0-alpha01"/>
+  <games-text-input versions="1.0.0-alpha01,1.0.0-beta01,1.0.0-rc01,1.0.0"/>
+</androidx.games>

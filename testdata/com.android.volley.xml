@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.android.volley>
+  <volley versions="1.2.0-rc1,1.2.0,1.2.1-rc1"/>
+  <volley-cronet versions="1.2.1-rc1"/>
+</com.android.volley>

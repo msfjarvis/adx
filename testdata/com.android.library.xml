@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.android.library>
+  <com.android.library.gradle.plugin versions="4.2.0-alpha09,4.2.0-alpha10,4.2.0-alpha11,4.2.0-alpha12,4.2.0-alpha13,4.2.0-alpha14,4.2.0-alpha15,4.2.0-alpha16,4.2.0-beta01,4.2.0-beta02,4.2.0-beta03,4.2.0-beta04,4.2.0-beta05,4.2.0-beta06,4.2.0-rc01,4.2.0,4.2.1,4.2.2,7.0.0-alpha01,7.0.0-alpha02,7.0.0-alpha03,7.0.0-alpha04,7.0.0-alpha05,7.0.0-alpha06,7.0.0-alpha07,7.0.0-alpha08,7.0.0-alpha09,7.0.0-alpha10,7.0.0-alpha11,7.0.0-alpha12,7.0.0-alpha13,7.0.0-alpha14,7.0.0-alpha15,7.0.0-beta01,7.0.0-beta02,7.0.0-beta03,7.0.0-beta04,7.0.0-beta05,7.0.0-rc01,7.0.0,7.0.1,7.1.0-alpha01,7.1.0-alpha02,7.1.0-alpha03,7.1.0-alpha04,7.1.0-alpha05,7.1.0-alpha06,7.1.0-alpha07,7.1.0-alpha08"/>
+</com.android.library>
