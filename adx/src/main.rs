@@ -39,6 +39,7 @@ pub(crate) struct Cli {
 
 #[async_std::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    color_eyre::install()?;
     #[cfg(feature = "measure-alloc")]
     let reg = Region::new(&GLOBAL);
     let cli = Cli::parse();
