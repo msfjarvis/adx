@@ -39,7 +39,7 @@ pub(crate) struct Cli {
 async fn main() -> Result<()> {
     color_eyre::install()?;
     #[cfg(feature = "measure-alloc")]
-    let reg = Region::new(&GLOBAL);
+    let reg = Region::new(GLOBAL);
     let cli = Cli::parse();
     let packages = crate::parse::parse(&cli.search_term, cli.channel).await?;
     if packages.is_empty() {

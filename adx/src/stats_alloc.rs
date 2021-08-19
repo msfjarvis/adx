@@ -41,6 +41,7 @@
 
 use std::{
     alloc::{GlobalAlloc, Layout, System},
+    cmp::Ordering as CmpOrdering,
     ops,
     sync::atomic::{AtomicIsize, AtomicUsize, Ordering},
 };
@@ -274,13 +275,17 @@ unsafe impl<T: GlobalAlloc> GlobalAlloc for StatsAlloc<T> {
 
     unsafe fn realloc(&self, ptr: *mut u8, layout: Layout, new_size: usize) -> *mut u8 {
         self.reallocations.fetch_add(1, Ordering::SeqCst);
-        if new_size > layout.size() {
-            let difference = new_size - layout.size();
-            self.bytes_allocated.fetch_add(difference, Ordering::SeqCst);
-        } else if new_size < layout.size() {
-            let difference = layout.size() - new_size;
-            self.bytes_deallocated
-                .fetch_add(difference, Ordering::SeqCst);
+        match new_size.cmp(&layout.size()) {
+            CmpOrdering::Greater => {
+                let difference = new_size - layout.size();
+                self.bytes_allocated.fetch_add(difference, Ordering::SeqCst);
+            }
+            CmpOrdering::Less => {
+                let difference = layout.size() - new_size;
+                self.bytes_deallocated
+                    .fetch_add(difference, Ordering::SeqCst);
+            }
+            _ => {}
         }
         self.bytes_reallocated.fetch_add(
             new_size.wrapping_sub(layout.size()) as isize,
