@@ -62,7 +62,6 @@ fn filter_groups(doc: Document, search_term: &str) -> Vec<String> {
 
 /// Given a list of groups, returns a `Vec<MavenPackage>` of all artifacts.
 async fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<MavenPackage>> {
-    let mut packages = Vec::new();
     // Create a Vec<Future<_>>, this will allow us to run all tasks together without requiring us to spawn a new thread
     let group_futures = groups
         .iter()
@@ -71,14 +70,11 @@ async fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<Mav
     // Wait for all groups to complete to get a Vec<Vec<MavenPackage>>
     let merged_list = join_all::<_>(group_futures).await;
 
-    // Flatten Vec<Vec<MavenPackage>> to Vec<MavenPacakage> so we can pass it back
-    // TODO: Can we do this without using the packages vector?
-    merged_list.into_iter().for_each(|result| match result {
-        Ok(list) => packages.extend(list),
-        Err(_) => (),
-    });
-
-    Ok(packages)
+    Ok(merged_list
+        .into_iter()
+        .filter_map(|result| result.ok())
+        .flatten()
+        .collect())
 }
 
 /// Given a group, returns a `Vec<MavenPackage>` of all artifacts from this group.
