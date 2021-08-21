@@ -9,7 +9,7 @@ use thiserror::Error;
 /// Since we're deriving [PartialOrd] automatically, the order
 /// of these fields is crucial. Sort by stability, not alphabetical
 /// order.
-#[derive(Debug, Eq, PartialEq, PartialOrd)]
+#[derive(Debug, Eq, PartialEq, PartialOrd, Clone, Copy)]
 pub(crate) enum Channel {
     Dev,
     Alpha,

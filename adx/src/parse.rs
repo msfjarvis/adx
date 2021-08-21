@@ -1,5 +1,6 @@
 use crate::{channel::Channel, package::MavenPackage};
 use color_eyre::{eyre::eyre, Help, Result};
+use futures::future::join_all;
 use roxmltree::{Document, NodeType};
 use semver::Version;
 use std::convert::TryFrom;
@@ -62,50 +63,70 @@ fn filter_groups(doc: Document, search_term: &str) -> Vec<String> {
 /// Given a list of groups, returns a `Vec<MavenPackage>` of all artifacts.
 async fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<MavenPackage>> {
     let mut packages = Vec::new();
-    for group_name in groups.iter() {
-        let group_index = get_group_index(group_name).await?;
-        let doc = Document::parse(&group_index)
-            .map_err(|e| eyre!(e).with_note(|| format!("group_name={}", group_name)))?;
-        let mut is_next_root = false;
-        let mut group = "";
-        doc.descendants().for_each(|node| match node.node_type() {
-            NodeType::Root => is_next_root = true,
-            NodeType::Element => {
-                if is_next_root {
-                    group = node.tag_name().name();
-                    is_next_root = false;
-                } else if !group.is_empty() {
-                    let mut versions: Vec<Version> = node
-                        .attribute("versions")
-                        .unwrap()
-                        .split(',')
-                        .map(|v| Version::parse(v))
-                        // Only take values that were correctly parsed
-                        .take_while(|x| x.is_ok())
-                        // Unwrap values that were previously determined to be safe
-                        .map(|x| x.unwrap())
-                        .collect();
-                    versions.retain(|x| {
-                        if let Ok(c) = Channel::try_from(x.to_owned()) {
-                            c >= channel
-                        } else {
-                            false
-                        }
-                    });
-                    if !versions.is_empty() {
-                        versions.sort_by(|a, b| b.partial_cmp(a).unwrap());
-                        packages.push(MavenPackage {
-                            group_id: String::from(group),
-                            artifact_id: node.tag_name().name().to_string(),
-                            latest_version: versions.get(0).unwrap().to_string(),
-                        })
+    // Create a Vec<Future<_>>, this will allow us to run all tasks together without requiring us to spawn a new thread
+    let group_futures = groups
+        .iter()
+        .map(|group_name| parse_group(group_name, channel));
+
+    // Wait for all groups to complete to get a Vec<Vec<MavenPackage>>
+    let merged_list = join_all::<_>(group_futures).await;
+
+    // Flatten Vec<Vec<MavenPackage>> to Vec<MavenPacakage> so we can pass it back
+    // TODO: Can we do this without using the packages vector?
+    merged_list.into_iter().for_each(|result| match result {
+        Ok(list) => packages.extend(list),
+        Err(_) => (),
+    });
+
+    Ok(packages)
+}
+
+/// Given a group, returns a `Vec<MavenPackage>` of all artifacts from this group.
+async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPackage>> {
+    let mut packages = Vec::new();
+    let group_index = get_group_index(group_name).await?;
+    let doc = Document::parse(&group_index)
+        .map_err(|e| eyre!(e).with_note(|| format!("group_name={}", group_name)))?;
+    let mut is_next_root = false;
+    let mut group = "";
+    doc.descendants().for_each(|node| match node.node_type() {
+        NodeType::Root => is_next_root = true,
+        NodeType::Element => {
+            if is_next_root {
+                group = node.tag_name().name();
+                is_next_root = false;
+            } else if !group.is_empty() {
+                let mut versions: Vec<Version> = node
+                    .attribute("versions")
+                    .unwrap()
+                    .split(',')
+                    .map(|v| Version::parse(v))
+                    // Only take values that were correctly parsed
+                    .take_while(|x| x.is_ok())
+                    // Unwrap values that were previously determined to be safe
+                    .map(|x| x.unwrap())
+                    .collect();
+                versions.retain(|x| {
+                    if let Ok(c) = Channel::try_from(x.to_owned()) {
+                        c >= channel
+                    } else {
+                        false
                     }
+                });
+                if !versions.is_empty() {
+                    versions.sort_by(|a, b| b.partial_cmp(a).unwrap());
+                    packages.push(MavenPackage {
+                        group_id: String::from(group),
+                        artifact_id: node.tag_name().name().to_string(),
+                        latest_version: versions.get(0).unwrap().to_string(),
+                    })
                 }
             }
-            _ => (),
-        });
-    }
-    Ok(packages)
+        }
+        _ => (),
+    });
+
+    return Ok(packages);
 }
 
 pub(crate) async fn parse(search_term: &str, channel: Channel) -> Result<Vec<MavenPackage>> {
