@@ -28,6 +28,7 @@ static GLOBAL: &StatsAlloc<System> = &INSTRUMENTED_SYSTEM;
 )]
 pub(crate) struct Cli {
     /// search term to filter packages with
+    #[cfg(not(feature = "measure-alloc"))]
     #[clap(required = true)]
     pub(crate) search_term: String,
     /// the release channel to find packages from
@@ -41,6 +42,9 @@ async fn main() -> Result<()> {
     #[cfg(feature = "measure-alloc")]
     let reg = Region::new(GLOBAL);
     let cli = Cli::parse();
+    #[cfg(feature = "measure-alloc")]
+    let packages = crate::parse::parse("", cli.channel).await?;
+    #[cfg(not(feature = "measure-alloc"))]
     let packages = crate::parse::parse(&cli.search_term, cli.channel).await?;
     if packages.is_empty() {
         println!("No results found!");
@@ -50,6 +54,6 @@ async fn main() -> Result<()> {
         }
     };
     #[cfg(feature = "measure-alloc")]
-    println!("Stats at end: {:#?}", reg.change());
+    println!("{:#?}", reg.change());
     Ok(())
 }
