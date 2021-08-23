@@ -31,11 +31,11 @@ impl FromStr for Channel {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "alpha" => Ok(Channel::Alpha),
-            "beta" => Ok(Channel::Beta),
-            "dev" => Ok(Channel::Dev),
-            "rc" => Ok(Channel::Rc),
-            "stable" => Ok(Channel::Stable),
+            "alpha" | "a" => Ok(Channel::Alpha),
+            "beta" | "b" => Ok(Channel::Beta),
+            "dev" | "d" => Ok(Channel::Dev),
+            "rc" | "r" => Ok(Channel::Rc),
+            "stable" | "s" => Ok(Channel::Stable),
             _ => Err(ChannelError::NoMatchFound),
         }
     }

@@ -32,7 +32,7 @@ pub(crate) struct Cli {
     #[clap(required = true)]
     pub(crate) search_term: String,
     /// the release channel to find packages from
-    #[clap(short='c', long="channel", possible_values=&["dev", "alpha", "beta", "rc", "stable"], default_value="alpha")]
+    #[clap(short='c', long="channel", possible_values=&["alpha", "a", "beta", "b", "dev", "d", "rc", "r", "stable", "s"], default_value="a")]
     pub(crate) channel: Channel,
 }
 
