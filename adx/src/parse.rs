@@ -79,50 +79,45 @@ async fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<Mav
 
 /// Given a group, returns a `Vec<MavenPackage>` of all artifacts from this group.
 async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPackage>> {
-    let mut packages = Vec::new();
     let group_index = get_group_index(group_name).await?;
     let doc = Document::parse(&group_index)
         .map_err(|e| eyre!(e).with_note(|| format!("group_name={}", group_name)))?;
-    let mut is_next_root = false;
-    let mut group = "";
-    doc.descendants().for_each(|node| match node.node_type() {
-        NodeType::Root => is_next_root = true,
-        NodeType::Element => {
-            if is_next_root {
-                group = node.tag_name().name();
-                is_next_root = false;
-            } else if !group.is_empty() {
-                let mut versions: Vec<Version> = node
-                    .attribute("versions")
-                    .unwrap()
-                    .split(',')
-                    .map(|v| Version::parse(v))
-                    // Only take values that were correctly parsed
-                    .take_while(|x| x.is_ok())
-                    // Unwrap values that were previously determined to be safe
-                    .map(|x| x.unwrap())
-                    .collect();
-                versions.retain(|x| {
-                    if let Ok(c) = Channel::try_from(x.to_owned()) {
-                        c >= channel
-                    } else {
-                        false
+    Ok(doc
+        .descendants()
+        .filter(|node| node.node_type() == NodeType::Element)
+        .filter(|node| node.tag_name().name() == group_name)
+        .map(|node| {
+            let group = node.tag_name().name();
+            let mut packages: Vec<MavenPackage> = Vec::new();
+            node.children()
+                .filter(|node| node.node_type() == NodeType::Element)
+                .for_each(|node| {
+                    let mut versions = node
+                        .attribute("versions")
+                        .unwrap()
+                        .split(',')
+                        .filter_map(|v| Version::parse(v).ok())
+                        .filter(|v| {
+                            if let Ok(c) = Channel::try_from(v.to_owned()) {
+                                c >= channel
+                            } else {
+                                false
+                            }
+                        })
+                        .collect::<Vec<Version>>();
+                    if !versions.is_empty() {
+                        versions.sort_by(|a, b| b.partial_cmp(a).unwrap());
+                        packages.push(MavenPackage {
+                            group_id: String::from(group),
+                            artifact_id: node.tag_name().name().to_string(),
+                            latest_version: versions.get(0).unwrap().to_string(),
+                        })
                     }
                 });
-                if !versions.is_empty() {
-                    versions.sort_by(|a, b| b.partial_cmp(a).unwrap());
-                    packages.push(MavenPackage {
-                        group_id: String::from(group),
-                        artifact_id: node.tag_name().name().to_string(),
-                        latest_version: versions.get(0).unwrap().to_string(),
-                    })
-                }
-            }
-        }
-        _ => (),
-    });
-
-    return Ok(packages);
+            packages
+        })
+        .flatten()
+        .collect())
 }
 
 pub(crate) async fn parse(search_term: &str, channel: Channel) -> Result<Vec<MavenPackage>> {
@@ -153,6 +148,6 @@ mod test {
     fn check_all_packages_are_parsed() {
         let res = block_on(parse("", Channel::Stable))
             .expect("Parsing offline copies should always work");
-        assert_eq!(res.len(), 741);
+        assert_eq!(res.len(), 754);
     }
 }
