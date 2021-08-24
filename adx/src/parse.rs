@@ -68,7 +68,7 @@ async fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<Mav
         .map(|group_name| parse_group(group_name, channel));
 
     // Wait for all groups to complete to get a Vec<Vec<MavenPackage>>
-    let merged_list = join_all::<_>(group_futures).await;
+    let merged_list = join_all(group_futures).await;
 
     Ok(merged_list
         .into_iter()
