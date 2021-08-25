@@ -87,7 +87,6 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
         .filter(|node| node.node_type() == NodeType::Element)
         .filter(|node| node.tag_name().name() == group_name)
         .map(|node| {
-            let group = node.tag_name().name();
             node.children()
                 .filter(|node| node.node_type() == NodeType::Element)
                 .map(|node| {
@@ -107,7 +106,7 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
                     if !versions.is_empty() {
                         versions.sort_by(|a, b| b.partial_cmp(a).unwrap());
                         Some(MavenPackage {
-                            group_id: String::from(group),
+                            group_id: String::from(group_name),
                             artifact_id: node.tag_name().name().to_string(),
                             latest_version: versions.get(0).unwrap().to_string(),
                         })
