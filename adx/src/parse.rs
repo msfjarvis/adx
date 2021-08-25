@@ -142,7 +142,11 @@ mod test {
             .unwrap();
         assert_eq!(res.len(), 2);
         res.iter()
-            .for_each(|r| assert!(r.group_id.contains("appcompat")));
+            .for_each(|pkg| assert_eq!(pkg.group_id, "androidx.appcompat"));
+        assert!(res.iter().any(|pkg| pkg.artifact_id == "appcompat"));
+        assert!(res
+            .iter()
+            .any(|pkg| pkg.artifact_id == "appcompat-resources"));
     }
 
     #[test]
