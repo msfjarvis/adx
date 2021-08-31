@@ -114,7 +114,7 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
                         None
                     }
                 })
-                .filter_map(|pkg| pkg)
+                .flatten()
                 .collect::<Vec<MavenPackage>>()
         })
         .flatten()
