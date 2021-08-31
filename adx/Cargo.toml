@@ -20,7 +20,7 @@ roxmltree = { version = "0.14.1", features = ["std"] }
 semver = "1.0.4"
 surf = "2.3.1"
 thiserror = "1.0.28"
-futures = "0.3.16"
+futures = "0.3.17"
 
 [badges]
 maintenance = { status = "actively-developed" }
