@@ -1,9 +1,9 @@
 version: 2
 updates:
-- package-ecosystem: cargo
+- package-ecosystem: "cargo"
   directory: "/"
   schedule:
-    interval: daily
-    time: '11:00'
-    timezone: Asia/Kolkata
+    interval: "weekly"
+    time: "11:00"
+    timezone: "Asia/Kolkata"
   open-pull-requests-limit: 99
