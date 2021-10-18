@@ -5,7 +5,7 @@ mod parse;
 mod stats_alloc;
 
 use channel::Channel;
-use clap::{crate_authors, crate_description, crate_name, crate_version, AppSettings, Clap};
+use clap::{crate_authors, crate_description, crate_name, crate_version, AppSettings, Parser};
 use color_eyre::Result;
 
 #[cfg(feature = "measure-alloc")]
@@ -17,13 +17,12 @@ use std::alloc::System;
 #[global_allocator]
 static GLOBAL: &StatsAlloc<System> = &INSTRUMENTED_SYSTEM;
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap(
     name = crate_name!(),
     version = crate_version!(),
     author = crate_authors!(),
     about = crate_description!(),
-    setting = AppSettings::ColoredHelp,
     setting = AppSettings::DeriveDisplayOrder,
 )]
 pub(crate) struct Cli {
