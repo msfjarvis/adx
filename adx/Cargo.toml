@@ -2,7 +2,7 @@
 name = "adx"
 version = "4.1.0"
 authors = ["Harsh Shandilya <me@msfjarvis.dev>"]
-edition = "2018"
+edition = "2021"
 license = "MIT/Apache-2.0"
 description = "Poll Google's Maven repository to fetch the latest versions of AndroidX packages"
 repository = "https://github.com/msfjarvis/androidx-release-watcher"
