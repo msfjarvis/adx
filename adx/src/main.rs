@@ -35,7 +35,7 @@ pub(crate) struct Cli {
     pub(crate) channel: Channel,
 }
 
-#[async_std::main]
+#[tokio::main]
 async fn main() -> Result<()> {
     color_eyre::install()?;
     #[cfg(feature = "measure-alloc")]

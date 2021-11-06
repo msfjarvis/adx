@@ -10,8 +10,9 @@ use std::convert::TryFrom;
 #[cfg(not(test))]
 async fn get_maven_index() -> Result<String> {
     Ok(
-        surf::get("https://dl.google.com/dl/android/maven2/master-index.xml")
-            .recv_string()
+        reqwest::get("https://dl.google.com/dl/android/maven2/master-index.xml")
+            .await?
+            .text()
             .await
             .map_err(|e| eyre!(e))?,
     )
@@ -25,11 +26,12 @@ async fn get_maven_index() -> Result<String> {
 /// Downloads the group index for the given group.
 #[cfg(not(test))]
 async fn get_group_index(group: &str) -> Result<String> {
-    Ok(surf::get(format!(
+    Ok(reqwest::get(format!(
         "https://dl.google.com/dl/android/maven2/{}/group-index.xml",
         group.replace(".", "/")
     ))
-    .recv_string()
+    .await?
+    .text()
     .await
     .map_err(|e| eyre!(e))?)
 }
@@ -41,6 +43,7 @@ async fn get_group_index(group: &str) -> Result<String> {
         group
     ))?)
 }
+
 /// Parses a given master-index.xml and filters the found packages based on
 // `search_term`.
 fn filter_groups(doc: Document, search_term: &str) -> Vec<String> {
