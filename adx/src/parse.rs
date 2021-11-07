@@ -46,7 +46,7 @@ async fn get_group_index(group: &str) -> Result<String> {
 
 /// Parses a given master-index.xml and filters the found packages based on
 // `search_term`.
-fn filter_groups(doc: Document, search_term: &str) -> Vec<String> {
+fn filter_groups(doc: Document<'_>, search_term: &str) -> Vec<String> {
     let mut groups = vec![];
     for node in doc
         .descendants()
@@ -89,17 +89,17 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
         .descendants()
         .filter(|node| node.node_type() == NodeType::Element)
         .filter(|node| node.tag_name().name() == group_name)
-        .map(|node| {
+        .flat_map(|node| {
             node.children()
                 .filter(|node| node.node_type() == NodeType::Element)
-                .map(|node| {
+                .filter_map(|node| {
                     let mut versions = node
                         .attribute("versions")
                         .unwrap()
                         .split(',')
                         .filter_map(|v| Version::parse(v).ok())
                         .filter(|v| {
-                            if let Ok(c) = Channel::try_from(v.to_owned()) {
+                            if let Ok(c) = Channel::try_from(v.clone()) {
                                 c >= channel
                             } else {
                                 false
@@ -117,10 +117,8 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
                         None
                     }
                 })
-                .flatten()
                 .collect::<Vec<MavenPackage>>()
         })
-        .flatten()
         .collect())
 }
 
@@ -144,8 +142,9 @@ mod test {
             .map_err(|e| eyre!(e))
             .unwrap();
         assert_eq!(res.len(), 2);
-        res.iter()
-            .for_each(|pkg| assert_eq!(pkg.group_id, "androidx.appcompat"));
+        for pkg in res.iter() {
+            assert_eq!(pkg.group_id, "androidx.appcompat");
+        }
         assert!(res.iter().any(|pkg| pkg.artifact_id == "appcompat"));
         assert!(res
             .iter()

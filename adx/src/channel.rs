@@ -5,8 +5,8 @@ use std::fmt::Debug;
 use std::str::FromStr;
 use thiserror::Error;
 
-/// Release channels for AndroidX packages
-/// Since we're deriving [PartialOrd] automatically, the order
+/// Release channels for androidx packages
+/// Since we're deriving `PartialOrd` automatically, the order
 /// of these fields is crucial. Sort by stability, not alphabetical
 /// order.
 #[derive(Debug, Eq, PartialEq, PartialOrd, Clone, Copy)]
