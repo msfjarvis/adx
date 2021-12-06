@@ -45,6 +45,9 @@ ignore = false
 multiple-versions = "deny"
 wildcards = "deny"
 highlight = "all"
+skip = [
+  { name = "webpki" },
+]
 
 [sources]
 unknown-registry = "deny"
