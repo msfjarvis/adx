@@ -5,17 +5,18 @@ use roxmltree::{Document, NodeType};
 use semver::Version;
 use std::convert::TryFrom;
 
+#[cfg(not(test))]
+const BASE_MAVEN_URL: &str = "https://dl.google.com/dl/android/maven2";
+
 /// Downloads the Maven master index for Google's Maven Repository
 /// and returns the XML as a String
 #[cfg(not(test))]
 async fn get_maven_index() -> Result<String> {
-    Ok(
-        reqwest::get("https://dl.google.com/dl/android/maven2/master-index.xml")
-            .await?
-            .text()
-            .await
-            .map_err(|e| eyre!(e))?,
-    )
+    Ok(reqwest::get(format!("{}/master-index.xml", BASE_MAVEN_URL))
+        .await?
+        .text()
+        .await
+        .map_err(|e| eyre!(e))?)
 }
 
 #[cfg(test)]
@@ -27,7 +28,8 @@ async fn get_maven_index() -> Result<String> {
 #[cfg(not(test))]
 async fn get_group_index(group: &str) -> Result<String> {
     Ok(reqwest::get(format!(
-        "https://dl.google.com/dl/android/maven2/{}/group-index.xml",
+        "{}/{}/group-index.xml",
+        BASE_MAVEN_URL,
         group.replace(".", "/")
     ))
     .await?
