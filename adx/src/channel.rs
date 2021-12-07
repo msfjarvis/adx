@@ -48,7 +48,9 @@ impl TryFrom<Version> for Channel {
         if value.pre.is_empty() {
             return Ok(Channel::Stable);
         };
-        if value.pre != Prerelease::EMPTY {
+        if value.pre == Prerelease::EMPTY {
+            Ok(Channel::Stable)
+        } else {
             let pre_str = value.pre.to_string();
             if pre_str.starts_with("alpha") {
                 Ok(Channel::Alpha)
@@ -61,8 +63,6 @@ impl TryFrom<Version> for Channel {
             } else {
                 Err(ChannelError::FailedToParseVersion(value))
             }
-        } else {
-            Ok(Channel::Stable)
         }
     }
 }

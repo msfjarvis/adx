@@ -48,7 +48,7 @@ async fn main() -> Result<()> {
     if packages.is_empty() {
         println!("No results found!");
     } else {
-        for package in packages.iter() {
+        for package in &packages {
             println!("{}", package);
         }
     };

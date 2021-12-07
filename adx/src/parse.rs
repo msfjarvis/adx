@@ -20,6 +20,7 @@ async fn get_maven_index() -> Result<String> {
 }
 
 #[cfg(test)]
+#[allow(clippy::unused_async)]
 async fn get_maven_index() -> Result<String> {
     Ok(std::fs::read_to_string("../testdata/master-index.xml")?)
 }
@@ -39,6 +40,7 @@ async fn get_group_index(group: &str) -> Result<String> {
 }
 
 #[cfg(test)]
+#[allow(clippy::unused_async)]
 async fn get_group_index(group: &str) -> Result<String> {
     Ok(std::fs::read_to_string(format!(
         "../testdata/{}.xml",
@@ -48,7 +50,7 @@ async fn get_group_index(group: &str) -> Result<String> {
 
 /// Parses a given master-index.xml and filters the found packages based on
 // `search_term`.
-fn filter_groups(doc: Document<'_>, search_term: &str) -> Vec<String> {
+fn filter_groups(doc: &Document<'_>, search_term: &str) -> Vec<String> {
     let mut groups = vec![];
     for node in doc
         .descendants()
@@ -77,7 +79,7 @@ async fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<Mav
 
     Ok(merged_list
         .into_iter()
-        .filter_map(|result| result.ok())
+        .filter_map(std::result::Result::ok)
         .flatten()
         .collect())
 }
@@ -108,15 +110,15 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
                             }
                         })
                         .collect::<Vec<Version>>();
-                    if !versions.is_empty() {
+                    if versions.is_empty() {
+                        None
+                    } else {
                         versions.sort_by(|a, b| b.partial_cmp(a).unwrap());
                         Some(MavenPackage {
                             group_id: String::from(group_name),
                             artifact_id: node.tag_name().name().to_string(),
                             latest_version: versions.get(0).unwrap().to_string(),
                         })
-                    } else {
-                        None
                     }
                 })
                 .collect::<Vec<MavenPackage>>()
@@ -127,7 +129,7 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
 pub(crate) async fn parse(search_term: &str, channel: Channel) -> Result<Vec<MavenPackage>> {
     let maven_index = get_maven_index().await?;
     let doc = Document::parse(&maven_index)?;
-    let groups = filter_groups(doc, search_term);
+    let groups = filter_groups(&doc, search_term);
     Ok(parse_packages(groups, channel).await?)
 }
 
@@ -144,7 +146,7 @@ mod test {
             .map_err(|e| eyre!(e))
             .unwrap();
         assert_eq!(res.len(), 2);
-        for pkg in res.iter() {
+        for pkg in &res {
             assert_eq!(pkg.group_id, "androidx.appcompat");
         }
         assert!(res.iter().any(|pkg| pkg.artifact_id == "appcompat"));
