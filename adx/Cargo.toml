@@ -13,7 +13,7 @@ readme = "../README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = { version = "3.0.0-beta.5", features = ["color"] }
+clap = { version = "3.0.0-rc.4", features = ["color", "derive"] }
 color-eyre = { version = "0.5.11", default-features = false }
 futures = "0.3.18"
 reqwest = { version = "0.11.7", default-features = false, features = ["rustls-tls"] }

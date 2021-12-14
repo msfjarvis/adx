@@ -5,7 +5,7 @@ mod parse;
 mod stats_alloc;
 
 use channel::Channel;
-use clap::{crate_authors, crate_description, crate_name, crate_version, AppSettings, Parser};
+use clap::{AppSettings, Parser};
 use color_eyre::Result;
 
 #[cfg(feature = "measure-alloc")]
@@ -18,13 +18,8 @@ use std::alloc::System;
 static GLOBAL: &StatsAlloc<System> = &INSTRUMENTED_SYSTEM;
 
 #[derive(Parser)]
-#[clap(
-    name = crate_name!(),
-    version = crate_version!(),
-    author = crate_authors!(),
-    about = crate_description!(),
-    setting = AppSettings::DeriveDisplayOrder,
-)]
+#[clap(author, version, about)]
+#[clap(global_setting(AppSettings::DeriveDisplayOrder))]
 pub(crate) struct Cli {
     /// search term to filter packages with
     #[cfg(not(feature = "measure-alloc"))]
