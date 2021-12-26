@@ -31,7 +31,7 @@ async fn get_group_index(group: &str) -> Result<String> {
     Ok(reqwest::get(format!(
         "{}/{}/group-index.xml",
         BASE_MAVEN_URL,
-        group.replace(".", "/")
+        group.replace('.', "/")
     ))
     .await?
     .text()
