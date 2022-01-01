@@ -28,6 +28,7 @@ exceptions = [
   { allow = ["MIT", "ISC", "OpenSSL"], name = "ring", version = "*" },
   { allow = ["ISC"], name = "untrusted", version = "*" },
   { allow = ["ISC"], name = "webpki", version = "*" },
+  { allow = ["Apache-2.0", "MIT", "BSD-3-Clause"], name = "encoding_rs", version = "*" },
 ]
 
 [[licenses.clarify]]
@@ -36,6 +37,13 @@ version = "*"
 expression = "MIT AND ISC AND OpenSSL"
 license-files = [
   { path = "LICENSE", hash = 0xbd0eed23 }
+]
+[[licenses.clarify]]
+name = "encoding_rs"
+version = "*"
+expression = "(Apache-2.0 OR MIT) AND BSD-3-Clause"
+license-files = [
+    { path = "COPYRIGHT", hash = 0x39f8ad31 }
 ]
 
 [licenses.private]
