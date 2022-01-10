@@ -55,6 +55,7 @@ wildcards = "deny"
 highlight = "all"
 skip = [
   { name = "webpki" },
+  { name = "itoa" },
 ]
 
 [sources]
