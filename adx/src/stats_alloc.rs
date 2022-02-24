@@ -35,7 +35,7 @@
     unused_qualifications,
     missing_docs
 )]
-#![allow(dead_code)]
+#![allow(dead_code, unsafe_code)]
 #![cfg_attr(feature = "nightly", feature(const_fn))]
 #![cfg_attr(feature = "docs-rs", feature(allocator_api))]
 
@@ -185,7 +185,7 @@ impl ops::SubAssign for Stats {
 /// A snapshot of the allocation statistics, which can be used to determine
 /// allocation changes while the `Region` is alive.
 #[derive(Debug)]
-pub struct Region<'a, T: GlobalAlloc + 'a> {
+pub struct Region<'a, T: GlobalAlloc> {
     alloc: &'a StatsAlloc<T>,
     initial_stats: Stats,
 }
