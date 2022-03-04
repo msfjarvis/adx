@@ -12,23 +12,23 @@ const BASE_MAVEN_URL: &str = "https://dl.google.com/dl/android/maven2";
 /// and returns the XML as a String
 #[cfg(not(test))]
 async fn get_maven_index() -> Result<String> {
-    Ok(reqwest::get(format!("{}/master-index.xml", BASE_MAVEN_URL))
+    reqwest::get(format!("{}/master-index.xml", BASE_MAVEN_URL))
         .await?
         .text()
         .await
-        .map_err(|e| eyre!(e))?)
+        .map_err(|e| eyre!(e))
 }
 
 #[cfg(test)]
 #[allow(clippy::unused_async)]
 async fn get_maven_index() -> Result<String> {
-    Ok(std::fs::read_to_string("../testdata/master-index.xml")?)
+    std::fs::read_to_string("../testdata/master-index.xml").map_err(|e| eyre!(e))
 }
 
 /// Downloads the group index for the given group.
 #[cfg(not(test))]
 async fn get_group_index(group: &str) -> Result<String> {
-    Ok(reqwest::get(format!(
+    reqwest::get(format!(
         "{}/{}/group-index.xml",
         BASE_MAVEN_URL,
         group.replace('.', "/")
@@ -36,16 +36,13 @@ async fn get_group_index(group: &str) -> Result<String> {
     .await?
     .text()
     .await
-    .map_err(|e| eyre!(e))?)
+    .map_err(|e| eyre!(e))
 }
 
 #[cfg(test)]
 #[allow(clippy::unused_async)]
 async fn get_group_index(group: &str) -> Result<String> {
-    Ok(std::fs::read_to_string(format!(
-        "../testdata/{}.xml",
-        group
-    ))?)
+    std::fs::read_to_string(format!("../testdata/{}.xml", group)).map_err(|e| eyre!(e))
 }
 
 /// Parses a given master-index.xml and filters the found packages based on
@@ -130,7 +127,7 @@ pub(crate) async fn parse(search_term: &str, channel: Channel) -> Result<Vec<Mav
     let maven_index = get_maven_index().await?;
     let doc = Document::parse(&maven_index)?;
     let groups = filter_groups(&doc, search_term);
-    Ok(parse_packages(groups, channel).await?)
+    parse_packages(groups, channel).await
 }
 
 #[cfg(test)]
