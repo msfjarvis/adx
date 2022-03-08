@@ -46,9 +46,6 @@ impl TryFrom<Version> for Channel {
   type Error = ChannelError;
 
   fn try_from(value: Version) -> Result<Self, Self::Error> {
-    if value.pre.is_empty() {
-      return Ok(Channel::Stable);
-    };
     if value.pre == Prerelease::EMPTY {
       Ok(Channel::Stable)
     } else {
