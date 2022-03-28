@@ -53,10 +53,6 @@ ignore = false
 multiple-versions = "deny"
 wildcards = "deny"
 highlight = "all"
-skip = [
-  { name = "webpki" },
-  { name = "itoa" },
-]
 
 [sources]
 unknown-registry = "deny"
