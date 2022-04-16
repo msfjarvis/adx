@@ -168,11 +168,9 @@ mod test {
       assert_eq!(pkg.group_id, "androidx.appcompat");
     }
     assert!(res.iter().any(|pkg| pkg.artifact_id == "appcompat"));
-    assert!(
-      res
-        .iter()
-        .any(|pkg| pkg.artifact_id == "appcompat-resources")
-    );
+    assert!(res
+      .iter()
+      .any(|pkg| pkg.artifact_id == "appcompat-resources"));
   }
 
   #[test]
