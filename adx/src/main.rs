@@ -21,33 +21,33 @@ static GLOBAL: &StatsAlloc<System> = &INSTRUMENTED_SYSTEM;
 #[clap(author, version, about)]
 #[clap(global_setting(AppSettings::DeriveDisplayOrder))]
 pub(crate) struct Cli {
-  /// search term to filter packages with
-  #[cfg(not(feature = "measure-alloc"))]
-  #[clap(required = true)]
-  pub(crate) search_term: String,
-  /// the release channel to find packages from
-  #[clap(short='c', long="channel", possible_values=&["alpha", "a", "beta", "b", "dev", "d", "rc", "r", "stable", "s"], default_value="a")]
-  pub(crate) channel: Channel,
+    /// search term to filter packages with
+    #[cfg(not(feature = "measure-alloc"))]
+    #[clap(required = true)]
+    pub(crate) search_term: String,
+    /// the release channel to find packages from
+    #[clap(short='c', long="channel", possible_values=&["alpha", "a", "beta", "b", "dev", "d", "rc", "r", "stable", "s"], default_value="a")]
+    pub(crate) channel: Channel,
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
-  color_eyre::install()?;
-  #[cfg(feature = "measure-alloc")]
-  let reg = Region::new(GLOBAL);
-  let cli = Cli::parse();
-  #[cfg(feature = "measure-alloc")]
-  let packages = crate::parse::parse("", cli.channel).await?;
-  #[cfg(not(feature = "measure-alloc"))]
-  let packages = crate::parse::parse(&cli.search_term, cli.channel).await?;
-  if packages.is_empty() {
-    println!("No results found!");
-  } else {
-    for package in &packages {
-      println!("{}", package);
-    }
-  };
-  #[cfg(feature = "measure-alloc")]
-  println!("{:#?}", reg.change());
-  Ok(())
+    color_eyre::install()?;
+    #[cfg(feature = "measure-alloc")]
+    let reg = Region::new(GLOBAL);
+    let cli = Cli::parse();
+    #[cfg(feature = "measure-alloc")]
+    let packages = crate::parse::parse("", cli.channel).await?;
+    #[cfg(not(feature = "measure-alloc"))]
+    let packages = crate::parse::parse(&cli.search_term, cli.channel).await?;
+    if packages.is_empty() {
+        println!("No results found!");
+    } else {
+        for package in &packages {
+            println!("{}", package);
+        }
+    };
+    #[cfg(feature = "measure-alloc")]
+    println!("{:#?}", reg.change());
+    Ok(())
 }
