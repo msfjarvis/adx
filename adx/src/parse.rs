@@ -81,7 +81,7 @@ async fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<Mav
 
     Ok(merged_list
         .into_iter()
-        .filter_map(std::result::Result::ok)
+        .filter_map(Result::ok)
         .flatten()
         .collect())
 }

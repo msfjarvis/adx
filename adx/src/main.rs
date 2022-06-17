@@ -8,7 +8,7 @@ mod stats_alloc;
 use std::alloc::System;
 
 use channel::Channel;
-use clap::{AppSettings, Parser};
+use clap::{builder::PossibleValuesParser, AppSettings, Parser};
 use color_eyre::Result;
 #[cfg(feature = "measure-alloc")]
 use stats_alloc::{Region, StatsAlloc, INSTRUMENTED_SYSTEM};
@@ -26,7 +26,7 @@ pub(crate) struct Cli {
     #[clap(required = true)]
     pub(crate) search_term: String,
     /// the release channel to find packages from
-    #[clap(short='c', long="channel", possible_values=&["alpha", "a", "beta", "b", "dev", "d", "rc", "r", "stable", "s"], default_value="a")]
+    #[clap(short='c', long="channel", value_parser=PossibleValuesParser::new(&["alpha", "a", "beta", "b", "dev", "d", "rc", "r", "stable", "s"]), default_value="a")]
     pub(crate) channel: Channel,
 }
 
@@ -37,9 +37,9 @@ async fn main() -> Result<()> {
     let reg = Region::new(GLOBAL);
     let cli = Cli::parse();
     #[cfg(feature = "measure-alloc")]
-    let packages = crate::parse::parse("", cli.channel).await?;
+    let packages = parse::parse("", cli.channel).await?;
     #[cfg(not(feature = "measure-alloc"))]
-    let packages = crate::parse::parse(&cli.search_term, cli.channel).await?;
+    let packages = parse::parse(&cli.search_term, cli.channel).await?;
     if packages.is_empty() {
         println!("No results found!");
     } else {
