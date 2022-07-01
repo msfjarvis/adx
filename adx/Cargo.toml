@@ -18,7 +18,7 @@ color-eyre = { version = "0.6.1", default-features = false }
 futures = "0.3.21"
 reqwest = { version = "0.11.11", default-features = false, features = ["rustls-tls"] }
 roxmltree = { version = "0.14.1", features = ["std"] }
-semver = "1.0.11"
+semver = "1.0.12"
 thiserror = "1.0.31"
 tokio = { version = "1.19.2", features = ["macros", "rt-multi-thread"] }
 
