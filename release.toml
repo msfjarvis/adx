@@ -7,5 +7,5 @@ pre-release-commit-message = "chore(release): bump {{crate_name}} to version {{v
 post-release-commit-message = "chore(release): start next development iteration {{next_version}}"
 sign-commit = true
 sign-tag = true
-tag-message = "{[crate_name]} version {{version}}"
+tag-message = "{{crate_name}} version {{version}}"
 tag-name = "v{{version}}"
