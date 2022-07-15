@@ -8,7 +8,7 @@ mod stats_alloc;
 use std::alloc::System;
 
 use channel::Channel;
-use clap::{builder::PossibleValuesParser, AppSettings, Parser};
+use clap::{AppSettings, Parser};
 use color_eyre::Result;
 #[cfg(feature = "measure-alloc")]
 use stats_alloc::{Region, StatsAlloc, INSTRUMENTED_SYSTEM};
@@ -26,7 +26,7 @@ pub(crate) struct Cli {
     #[clap(required = true)]
     pub(crate) search_term: String,
     /// the release channel to find packages from
-    #[clap(short='c', long="channel", value_parser=PossibleValuesParser::new(&["alpha", "a", "beta", "b", "dev", "d", "rc", "r", "stable", "s"]), default_value="a")]
+    #[clap(short = 'c', long = "channel", value_parser, default_value = "alpha")]
     pub(crate) channel: Channel,
 }
 
