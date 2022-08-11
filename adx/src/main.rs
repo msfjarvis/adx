@@ -51,3 +51,13 @@ async fn main() -> Result<()> {
     println!("{:#?}", reg.change());
     Ok(())
 }
+
+#[cfg(test)]
+mod test {
+    use super::Cli;
+
+    #[test]
+    fn cli_assert() {
+        <Cli as clap::CommandFactory>::command().debug_assert()
+    }
+}
