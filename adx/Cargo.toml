@@ -19,7 +19,7 @@ futures = "0.3.24"
 reqwest = { version = "0.11.12", default-features = false, features = ["rustls-tls"] }
 roxmltree = { version = "0.15.0", features = ["std"] }
 semver = "1.0.14"
-thiserror = "1.0.35"
+thiserror = "1.0.36"
 tokio = { version = "1.21.1", features = ["macros", "rt-multi-thread"] }
 
 [badges]
