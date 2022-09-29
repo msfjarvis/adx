@@ -1,16 +1,16 @@
+use clap::ValueEnum;
+use semver::{Prerelease, Version};
 use std::cmp::{Eq, PartialEq, PartialOrd};
 use std::convert::TryFrom;
 use std::fmt::Debug;
 use std::str::FromStr;
-
-use semver::{Prerelease, Version};
 use thiserror::Error;
 
 /// Release channels for androidx packages
 /// Since we're deriving `PartialOrd` automatically, the order
 /// of these fields is crucial. Sort by stability, not alphabetical
 /// order.
-#[derive(Debug, Eq, PartialEq, PartialOrd, Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, PartialOrd, Clone, Copy, ValueEnum)]
 pub(crate) enum Channel {
     Dev,
     Alpha,

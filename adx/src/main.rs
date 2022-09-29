@@ -8,7 +8,7 @@ mod stats_alloc;
 use std::alloc::System;
 
 use channel::Channel;
-use clap::{AppSettings, Parser};
+use clap::Parser;
 use color_eyre::Result;
 #[cfg(feature = "measure-alloc")]
 use stats_alloc::{Region, StatsAlloc, INSTRUMENTED_SYSTEM};
@@ -18,15 +18,14 @@ use stats_alloc::{Region, StatsAlloc, INSTRUMENTED_SYSTEM};
 static GLOBAL: &StatsAlloc<System> = &INSTRUMENTED_SYSTEM;
 
 #[derive(Parser)]
-#[clap(author, version, about)]
-#[clap(global_setting(AppSettings::DeriveDisplayOrder))]
+#[command(author, version, about)]
 pub(crate) struct Cli {
     /// search term to filter packages with
     #[cfg(not(feature = "measure-alloc"))]
-    #[clap(required = true)]
+    #[arg(required = true)]
     pub(crate) search_term: String,
     /// the release channel to find packages from
-    #[clap(short = 'c', long = "channel", value_parser, default_value = "alpha")]
+    #[arg(value_enum, long, short, default_value_t = Channel::Alpha)]
     pub(crate) channel: Channel,
 }
 
