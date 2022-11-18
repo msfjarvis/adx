@@ -20,7 +20,7 @@ reqwest = { version = "0.11.13", default-features = false, features = ["rustls-t
 roxmltree = { version = "0.15.1", features = ["std"] }
 semver = "1.0.14"
 thiserror = "1.0.37"
-tokio = { version = "1.21.2", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.22.0", features = ["macros", "rt-multi-thread"] }
 
 [badges]
 maintenance = { status = "actively-developed" }
