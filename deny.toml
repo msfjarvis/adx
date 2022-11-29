@@ -54,6 +54,10 @@ ignore = false
 multiple-versions = "deny"
 wildcards = "deny"
 highlight = "all"
+skip = [
+  { name = "windows-sys", version = "0.36.1" },
+  { name = "windows_x86_64_msvc", version = "0.36.1" },
+]
 
 [sources]
 unknown-registry = "deny"
