@@ -18,7 +18,7 @@ cargo install --path .
 
 ## Usage
 
-### Find latest release of a package
+### Find the latest release of a package
 
 ```shell
 $ adx appcompat
@@ -26,7 +26,7 @@ androidx.appcompat:appcompat:1.3.0-alpha02
 androidx.appcompat:appcompat-resources:1.3.0-alpha02
 ```
 
-### Find latest stable version of a package
+### Find the latest stable version of a package
 
 ```shell
 $ adx --channel stable appcompat
