@@ -6,7 +6,7 @@ Rust binary that polls Google's Maven repository and finds the latest version of
 
 ### Using `cargo`
 
-Run `cargo install adx` on a terminal.
+Run `cargo install --locked adx` on a terminal.
 
 ### From source
 
