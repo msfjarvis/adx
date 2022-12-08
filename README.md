@@ -11,9 +11,9 @@ Run `cargo install --locked adx` on a terminal.
 ### From source
 
 ```shell
-git clone https://github.com/msfjarvis/androidx-release-watcher
-cd androidx-release-watcher
-cargo install --path .
+git clone https://github.com/msfjarvis/adx
+cd adx
+cargo install --path adx
 ```
 
 ## Usage
