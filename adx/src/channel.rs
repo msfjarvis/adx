@@ -1,3 +1,4 @@
+use clap::builder::PossibleValue;
 use clap::ValueEnum;
 use semver::{Prerelease, Version};
 use std::cmp::{Eq, PartialEq, PartialOrd};
@@ -10,13 +11,29 @@ use thiserror::Error;
 /// Since we're deriving `PartialOrd` automatically, the order
 /// of these fields is crucial. Sort by stability, not alphabetical
 /// order.
-#[derive(Debug, Eq, PartialEq, PartialOrd, Clone, Copy, ValueEnum)]
+#[derive(Debug, Eq, PartialEq, PartialOrd, Clone, Copy)]
 pub(crate) enum Channel {
     Dev,
     Alpha,
     Beta,
     Rc,
     Stable,
+}
+
+impl ValueEnum for Channel {
+    fn value_variants<'a>() -> &'a [Self] {
+        &[Self::Dev, Self::Alpha, Self::Beta, Self::Rc, Self::Stable]
+    }
+
+    fn to_possible_value(&self) -> Option<PossibleValue> {
+        match self {
+            Channel::Dev => Some(PossibleValue::new("dev").alias("d")),
+            Channel::Alpha => Some(PossibleValue::new("alpha").alias("a")),
+            Channel::Beta => Some(PossibleValue::new("beta").alias("b")),
+            Channel::Stable => Some(PossibleValue::new("stable").alias("s")),
+            Channel::Rc => Some(PossibleValue::new("rc").alias("r")),
+        }
+    }
 }
 
 #[derive(Debug, Error)]
