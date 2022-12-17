@@ -6,6 +6,11 @@
 
     flake-utils = { url = "github:numtide/flake-utils"; };
 
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
+
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs = {
@@ -17,6 +22,7 @@
     crane = {
       url = "github:ipetkov/crane";
       inputs = {
+        flake-compat.follows = "flake-compat";
         flake-utils.follows = "flake-utils";
         nixpkgs.follows = "nixpkgs";
         rust-overlay.follows = "rust-overlay";
