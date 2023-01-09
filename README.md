@@ -1,4 +1,4 @@
-# androidx-release-watcher
+# androidx-release-watcher [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 Rust binary that polls Google's Maven repository and finds the latest version of the requested dependencies.
 
