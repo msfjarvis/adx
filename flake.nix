@@ -2,9 +2,9 @@
   description = "adx";
 
   inputs = {
-    nixpkgs = { url = "github:NixOS/nixpkgs/nixpkgs-unstable"; };
+    nixpkgs = {url = "github:NixOS/nixpkgs/nixpkgs-unstable";};
 
-    flake-utils = { url = "github:numtide/flake-utils"; };
+    flake-utils = {url = "github:numtide/flake-utils";};
 
     flake-compat = {
       url = "github:edolstra/flake-compat";
@@ -35,54 +35,60 @@
     };
   };
 
-  outputs =
-    { self, nixpkgs, crane, flake-utils, advisory-db, rust-overlay, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [ (import rust-overlay) ];
-        };
+  outputs = {
+    self,
+    nixpkgs,
+    crane,
+    flake-utils,
+    advisory-db,
+    rust-overlay,
+    ...
+  }:
+    flake-utils.lib.eachDefaultSystem (system: let
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [(import rust-overlay)];
+      };
 
-        rustStable =
-          pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
-        craneLib = (crane.mkLib pkgs).overrideToolchain rustStable;
-        src = ./.;
-        cargoArtifacts = craneLib.buildDepsOnly { inherit src buildInputs; };
-        buildInputs = [ ];
+      rustStable =
+        pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
+      craneLib = (crane.mkLib pkgs).overrideToolchain rustStable;
+      src = ./.;
+      cargoArtifacts = craneLib.buildDepsOnly {inherit src buildInputs;};
+      buildInputs = [];
 
-        adx = craneLib.buildPackage {
-          inherit src;
-          doCheck = false;
-        };
-        adx-clippy = craneLib.cargoClippy {
-          inherit cargoArtifacts src buildInputs;
-          cargoClippyExtraArgs = "--all-targets -- --deny warnings";
-        };
-        adx-fmt = craneLib.cargoFmt { inherit src; };
-        adx-audit = craneLib.cargoAudit { inherit src advisory-db; };
-        adx-nextest = craneLib.cargoNextest {
-          inherit cargoArtifacts src buildInputs;
-          partitions = 1;
-          partitionType = "count";
-        };
-      in {
-        checks = {
-          inherit adx adx-audit adx-clippy adx-fmt adx-nextest;
-        };
+      adx = craneLib.buildPackage {
+        inherit src;
+        doCheck = false;
+      };
+      adx-clippy = craneLib.cargoClippy {
+        inherit cargoArtifacts src buildInputs;
+        cargoClippyExtraArgs = "--all-targets -- --deny warnings";
+      };
+      adx-fmt = craneLib.cargoFmt {inherit src;};
+      adx-audit = craneLib.cargoAudit {inherit src advisory-db;};
+      adx-nextest = craneLib.cargoNextest {
+        inherit cargoArtifacts src buildInputs;
+        partitions = 1;
+        partitionType = "count";
+      };
+    in {
+      checks = {
+        inherit adx adx-audit adx-clippy adx-fmt adx-nextest;
+      };
 
-        packages.default = adx;
+      packages.default = adx;
 
-        apps.default = flake-utils.lib.mkApp { drv = adx; };
+      apps.default = flake-utils.lib.mkApp {drv = adx;};
 
-        devShells.default = pkgs.mkShell {
-          inputsFrom = builtins.attrValues self.checks;
+      devShells.default = pkgs.mkShell {
+        inputsFrom = builtins.attrValues self.checks;
 
-          nativeBuildInputs = with pkgs; [
-            cargo-nextest
-            cargo-release
-            rustStable
-          ];
-        };
-      });
+        nativeBuildInputs = with pkgs; [
+          cargo-nextest
+          cargo-release
+          rustStable
+        ];
+      };
+    });
 }
