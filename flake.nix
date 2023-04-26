@@ -59,7 +59,6 @@
         nativeBuildInputs = [];
         cargoClippyExtraArgs = "--all-targets -- --deny warnings";
         cargoToml = ./adx/Cargo.toml;
-        CARGO_REGISTRIES_CRATES_IO_PROTOCOL = "sparse";
       };
       cargoArtifacts = craneLib.buildDepsOnly (commonArgs // {doCheck = false;});
 
