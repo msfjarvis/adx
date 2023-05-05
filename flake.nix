@@ -53,15 +53,24 @@
       rustStable =
         pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
       craneLib = (crane.mkLib pkgs).overrideToolchain rustStable;
+      xmlFilter = path: _type: builtins.match ".*xml$" path != null;
+      xmlOrCargo = path: type:
+        (xmlFilter path type) || (craneLib.filterCargoSources path type);
+
+      workspaceName = craneLib.crateNameFromCargoToml {cargoToml = ./adx/Cargo.toml;};
       commonArgs = {
-        src = craneLib.cleanCargoSource ./.;
+        inherit (workspaceName) pname version;
+        src = pkgs.lib.cleanSourceWith {
+          src = craneLib.path ./.;
+          filter = xmlOrCargo;
+        };
         buildInputs = [];
         nativeBuildInputs = [];
         cargoClippyExtraArgs = "--all-targets -- --deny warnings";
         cargoToml = ./adx/Cargo.toml;
       };
-      cargoArtifacts = craneLib.buildDepsOnly (commonArgs // {doCheck = false;});
 
+      cargoArtifacts = craneLib.buildDepsOnly (commonArgs // {doCheck = false;});
       adx = craneLib.buildPackage (commonArgs // {doCheck = false;});
       adx-clippy = craneLib.cargoClippy (commonArgs
         // {
@@ -72,7 +81,6 @@
       adx-nextest = craneLib.cargoNextest (commonArgs
         // {
           inherit cargoArtifacts;
-          src = ./.;
           partitions = 1;
           partitionType = "count";
         });
@@ -86,7 +94,7 @@
       apps.default = flake-utils.lib.mkApp {drv = adx;};
 
       devShells.default = pkgs.mkShell {
-        inputsFrom = builtins.attrValues self.checks;
+        inputsFrom = builtins.attrValues self.checks.${system};
 
         nativeBuildInputs = with pkgs; [
           cargo-nextest
