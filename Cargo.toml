@@ -1,7 +1,5 @@
 [workspace]
-members = [
-  "adx",
-]
+members = ["adx"]
 
 [profile.release]
 codegen-units = 1
@@ -13,4 +11,3 @@ panic = "abort"
 inherits = "release"
 debug = true
 split-debuginfo = "packed"
-
