@@ -13,6 +13,10 @@
   inputs.crane.inputs.flake-utils.follows = "flake-utils";
   inputs.crane.inputs.nixpkgs.follows = "nixpkgs";
 
+  inputs.devshell.url = "github:numtide/devshell";
+  inputs.devshell.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.devshell.inputs.systems.follows = "systems";
+
   inputs.fenix.url = "github:nix-community/fenix";
   inputs.fenix.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -27,12 +31,16 @@
     nixpkgs,
     advisory-db,
     crane,
+    devshell,
     fenix,
     flake-utils,
     ...
   }:
     flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = import nixpkgs {inherit system;};
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [devshell.overlays.default];
+      };
 
       rustStable = (import fenix {inherit pkgs;}).fromToolchainFile {
         file = ./rust-toolchain.toml;
@@ -80,16 +88,21 @@
 
       apps.default = flake-utils.lib.mkApp {drv = adx;};
 
-      devShells.default = pkgs.mkShell {
-        inputsFrom = builtins.attrValues self.checks.${system};
+      devShells.default = pkgs.devshell.mkShell {
+        bash = {interactive = "";};
 
-        nativeBuildInputs = with pkgs; [
+        env = [
+          {
+            name = "DEVSHELL_NO_MOTD";
+            value = 1;
+          }
+        ];
+
+        packages = with pkgs; [
           cargo-nextest
           cargo-release
           rustStable
         ];
-
-        CARGO_REGISTRIES_CRATES_IO_PROTOCOL = "sparse";
       };
     });
 }
