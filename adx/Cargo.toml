@@ -21,7 +21,7 @@ reqwest = { version = "0.11.18", default-features = false, features = [
 ] }
 roxmltree = { version = "0.18.0", features = ["std"] }
 semver = "1.0.17"
-thiserror = "1.0.40"
+thiserror = "1.0.41"
 tokio = { version = "1.29.1", features = ["macros", "rt-multi-thread"] }
 
 [badges]
