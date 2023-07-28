@@ -106,7 +106,7 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
                         .split(',')
                         .filter_map(|v| Version::parse(v).ok())
                         .filter(|v| {
-                            if let Ok(c) = Channel::try_from(v.clone()) {
+                            if let Ok(c) = Channel::try_from(v) {
                                 c >= channel
                             } else {
                                 false

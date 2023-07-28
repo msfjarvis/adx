@@ -59,10 +59,10 @@ impl FromStr for Channel {
     }
 }
 
-impl TryFrom<Version> for Channel {
+impl TryFrom<&Version> for Channel {
     type Error = ChannelError;
 
-    fn try_from(value: Version) -> Result<Self, Self::Error> {
+    fn try_from(value: &Version) -> Result<Self, Self::Error> {
         if value.pre == Prerelease::EMPTY {
             Ok(Channel::Stable)
         } else {
@@ -76,7 +76,7 @@ impl TryFrom<Version> for Channel {
             } else if pre_str.starts_with("rc") {
                 Ok(Channel::Rc)
             } else {
-                Err(ChannelError::FailedToParseVersion(value))
+                Err(ChannelError::FailedToParseVersion(value.to_owned()))
             }
         }
     }
@@ -99,7 +99,7 @@ mod tests {
             pre: Prerelease::new("alpha01").unwrap(),
             build: BuildMetadata::EMPTY,
         };
-        let channel = Channel::try_from(v);
+        let channel = Channel::try_from(&v);
         assert_eq!(Channel::Alpha, channel.unwrap());
     }
 
@@ -112,7 +112,7 @@ mod tests {
             pre: Prerelease::new("beta01").unwrap(),
             build: BuildMetadata::EMPTY,
         };
-        let channel = Channel::try_from(v);
+        let channel = Channel::try_from(&v);
         assert_eq!(Channel::Beta, channel.unwrap());
     }
 
@@ -125,7 +125,7 @@ mod tests {
             pre: Prerelease::new("dev01").unwrap(),
             build: BuildMetadata::EMPTY,
         };
-        let channel = Channel::try_from(v);
+        let channel = Channel::try_from(&v);
         assert_eq!(Channel::Dev, channel.unwrap());
     }
 
@@ -138,14 +138,14 @@ mod tests {
             pre: Prerelease::new("rc01").unwrap(),
             build: BuildMetadata::EMPTY,
         };
-        let channel = Channel::try_from(v);
+        let channel = Channel::try_from(&v);
         assert_eq!(Channel::Rc, channel.unwrap());
     }
 
     #[test]
     fn stable_version() {
         let v = Version::new(1, 1, 1);
-        let channel = Channel::try_from(v);
+        let channel = Channel::try_from(&v);
         assert_eq!(Channel::Stable, channel.unwrap());
     }
 
@@ -159,10 +159,10 @@ mod tests {
 
     #[test]
     fn cmp_parsed_versions() {
-        let stable = Channel::try_from(Version::parse("1.1.0").unwrap()).unwrap();
-        let rc = Channel::try_from(Version::parse("1.1.0-rc01").unwrap()).unwrap();
-        let alpha = Channel::try_from(Version::parse("1.1.0-alpha01").unwrap()).unwrap();
-        let beta = Channel::try_from(Version::parse("1.1.0-beta01").unwrap()).unwrap();
+        let stable = Channel::try_from(&Version::parse("1.1.0").unwrap()).unwrap();
+        let rc = Channel::try_from(&Version::parse("1.1.0-rc01").unwrap()).unwrap();
+        let alpha = Channel::try_from(&Version::parse("1.1.0-alpha01").unwrap()).unwrap();
+        let beta = Channel::try_from(&Version::parse("1.1.0-beta01").unwrap()).unwrap();
         assert!(Channel::Stable >= stable);
         assert!(Channel::Stable >= rc);
         assert!(Channel::Stable >= alpha);
