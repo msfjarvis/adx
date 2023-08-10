@@ -105,13 +105,21 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
                         .attribute("versions")
                         .unwrap()
                         .split(',')
-                        .map(|v| {
+                        .flat_map(|v| {
                             if let Ok(sem_ver) = Semver::parse(v) {
-                                Version::SemVer(sem_ver)
+                                Some(Version::SemVer(sem_ver))
                             } else {
                                 let components: Vec<u16> =
                                     v.split('.').take(3).flat_map(str::parse).collect();
-                                Version::CalVer((components[0], components[1], components[2]))
+                                if components.len() == 3 {
+                                    Some(Version::CalVer((
+                                        components[0],
+                                        components[1],
+                                        components[2],
+                                    )))
+                                } else {
+                                    None
+                                }
                             }
                         })
                         .filter(|v| {
@@ -171,6 +179,6 @@ mod test {
     fn check_all_packages_are_parsed() {
         let res = block_on(parse("", Channel::Stable))
             .expect("Parsing offline copies should always work");
-        assert_eq!(res.len(), 754);
+        assert_eq!(res.len(), 770);
     }
 }
