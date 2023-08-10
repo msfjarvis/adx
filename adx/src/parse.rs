@@ -105,7 +105,7 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
                         .attribute("versions")
                         .unwrap()
                         .split(',')
-                        .flat_map(|v| {
+                        .filter_map(|v| {
                             if let Ok(sem_ver) = Semver::parse(v) {
                                 Some(Version::SemVer(sem_ver))
                             } else {
