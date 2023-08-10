@@ -1,6 +1,7 @@
+use crate::version::Version;
 use clap::builder::PossibleValue;
 use clap::ValueEnum;
-use semver::{Prerelease, Version};
+use semver::Prerelease;
 use std::cmp::{Eq, PartialEq, PartialOrd};
 use std::convert::TryFrom;
 use std::fmt::Debug;
@@ -63,88 +64,99 @@ impl TryFrom<&Version> for Channel {
     type Error = ChannelError;
 
     fn try_from(value: &Version) -> Result<Self, Self::Error> {
-        if value.pre == Prerelease::EMPTY {
-            Ok(Channel::Stable)
-        } else {
-            let pre_str = value.pre.to_string();
-            if pre_str.starts_with("alpha") {
-                Ok(Channel::Alpha)
-            } else if pre_str.starts_with("beta") {
-                Ok(Channel::Beta)
-            } else if pre_str.starts_with("dev") {
-                Ok(Channel::Dev)
-            } else if pre_str.starts_with("rc") {
-                Ok(Channel::Rc)
-            } else {
-                Err(ChannelError::FailedToParseVersion(value.to_owned()))
+        match value {
+            Version::SemVer(version) => {
+                if version.pre == Prerelease::EMPTY {
+                    Ok(Channel::Stable)
+                } else {
+                    let pre_str = version.pre.to_string();
+                    if pre_str.starts_with("alpha") {
+                        Ok(Channel::Alpha)
+                    } else if pre_str.starts_with("beta") {
+                        Ok(Channel::Beta)
+                    } else if pre_str.starts_with("dev") {
+                        Ok(Channel::Dev)
+                    } else if pre_str.starts_with("rc") {
+                        Ok(Channel::Rc)
+                    } else {
+                        Err(ChannelError::FailedToParseVersion(value.clone()))
+                    }
+                }
             }
+            Version::CalVer(_) => Ok(Channel::Stable),
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use std::convert::TryFrom;
-
-    use semver::{BuildMetadata, Prerelease, Version};
-
     use super::Channel;
+    use crate::version::Version;
+    use semver::{BuildMetadata, Prerelease, Version as Semver};
+    use std::convert::TryFrom;
 
     #[test]
     fn alpha_version() {
-        let v = Version {
+        let v = Version::SemVer(Semver {
             major: 1,
             minor: 1,
             patch: 0,
             pre: Prerelease::new("alpha01").unwrap(),
             build: BuildMetadata::EMPTY,
-        };
+        });
         let channel = Channel::try_from(&v);
         assert_eq!(Channel::Alpha, channel.unwrap());
     }
 
     #[test]
     fn beta_version() {
-        let v = Version {
+        let v = Version::SemVer(Semver {
             major: 1,
             minor: 1,
             patch: 0,
             pre: Prerelease::new("beta01").unwrap(),
             build: BuildMetadata::EMPTY,
-        };
+        });
         let channel = Channel::try_from(&v);
         assert_eq!(Channel::Beta, channel.unwrap());
     }
 
     #[test]
     fn dev_version() {
-        let v = Version {
+        let v = Version::SemVer(Semver {
             major: 1,
             minor: 1,
             patch: 0,
             pre: Prerelease::new("dev01").unwrap(),
             build: BuildMetadata::EMPTY,
-        };
+        });
         let channel = Channel::try_from(&v);
         assert_eq!(Channel::Dev, channel.unwrap());
     }
 
     #[test]
     fn rc_version() {
-        let v = Version {
+        let v = Version::SemVer(Semver {
             major: 1,
             minor: 1,
             patch: 0,
             pre: Prerelease::new("rc01").unwrap(),
             build: BuildMetadata::EMPTY,
-        };
+        });
         let channel = Channel::try_from(&v);
         assert_eq!(Channel::Rc, channel.unwrap());
     }
 
     #[test]
     fn stable_version() {
-        let v = Version::new(1, 1, 1);
+        let v = Version::SemVer(Semver::new(1, 1, 1));
+        let channel = Channel::try_from(&v);
+        assert_eq!(Channel::Stable, channel.unwrap());
+    }
+
+    #[test]
+    fn calver() {
+        let v = Version::CalVer((2023, 4, 0));
         let channel = Channel::try_from(&v);
         assert_eq!(Channel::Stable, channel.unwrap());
     }
@@ -159,10 +171,12 @@ mod tests {
 
     #[test]
     fn cmp_parsed_versions() {
-        let stable = Channel::try_from(&Version::parse("1.1.0").unwrap()).unwrap();
-        let rc = Channel::try_from(&Version::parse("1.1.0-rc01").unwrap()).unwrap();
-        let alpha = Channel::try_from(&Version::parse("1.1.0-alpha01").unwrap()).unwrap();
-        let beta = Channel::try_from(&Version::parse("1.1.0-beta01").unwrap()).unwrap();
+        let stable = Channel::try_from(&Version::SemVer(Semver::parse("1.1.0").unwrap())).unwrap();
+        let rc = Channel::try_from(&Version::SemVer(Semver::parse("1.1.0-rc01").unwrap())).unwrap();
+        let alpha =
+            Channel::try_from(&Version::SemVer(Semver::parse("1.1.0-alpha01").unwrap())).unwrap();
+        let beta =
+            Channel::try_from(&Version::SemVer(Semver::parse("1.1.0-beta01").unwrap())).unwrap();
         assert!(Channel::Stable >= stable);
         assert!(Channel::Stable >= rc);
         assert!(Channel::Stable >= alpha);

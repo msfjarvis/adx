@@ -4,10 +4,11 @@ use color_eyre::eyre::eyre;
 use color_eyre::{Help, Result};
 use futures::future::join_all;
 use roxmltree::{Document, NodeType};
-use semver::Version;
+use semver::Version as Semver;
 
 use crate::channel::Channel;
 use crate::package::MavenPackage;
+use crate::version::Version;
 
 #[cfg(not(test))]
 const BASE_MAVEN_URL: &str = "https://dl.google.com/dl/android/maven2";
@@ -16,7 +17,7 @@ const BASE_MAVEN_URL: &str = "https://dl.google.com/dl/android/maven2";
 /// and returns the XML as a String
 #[cfg(not(test))]
 async fn get_maven_index() -> Result<String> {
-    reqwest::get(format!("{}/master-index.xml", BASE_MAVEN_URL))
+    reqwest::get(format!("{BASE_MAVEN_URL}/master-index.xml"))
         .await?
         .text()
         .await
@@ -46,7 +47,7 @@ async fn get_group_index(group: &str) -> Result<String> {
 #[cfg(test)]
 #[allow(clippy::unused_async)]
 async fn get_group_index(group: &str) -> Result<String> {
-    std::fs::read_to_string(format!("../testdata/{}.xml", group)).map_err(|e| eyre!(e))
+    std::fs::read_to_string(format!("../testdata/{group}.xml")).map_err(|e| eyre!(e))
 }
 
 /// Parses a given master-index.xml and filters the found packages based on
@@ -91,7 +92,7 @@ async fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<Mav
 async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPackage>> {
     let group_index = get_group_index(group_name).await?;
     let doc = Document::parse(&group_index)
-        .map_err(|e| eyre!(e).with_note(|| format!("group_name={}", group_name)))?;
+        .map_err(|e| eyre!(e).with_note(|| format!("group_name={group_name}")))?;
     Ok(doc
         .descendants()
         .filter(|node| node.node_type() == NodeType::Element)
@@ -104,7 +105,15 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
                         .attribute("versions")
                         .unwrap()
                         .split(',')
-                        .filter_map(|v| Version::parse(v).ok())
+                        .map(|v| {
+                            if let Ok(sem_ver) = Semver::parse(v) {
+                                Version::SemVer(sem_ver)
+                            } else {
+                                let components: Vec<u16> =
+                                    v.split('.').take(3).flat_map(str::parse).collect();
+                                Version::CalVer((components[0], components[1], components[2]))
+                            }
+                        })
                         .filter(|v| {
                             if let Ok(c) = Channel::try_from(v) {
                                 c >= channel

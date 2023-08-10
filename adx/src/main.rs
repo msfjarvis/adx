@@ -3,6 +3,7 @@ mod package;
 mod parse;
 #[cfg(feature = "measure-alloc")]
 mod stats_alloc;
+mod version;
 
 #[cfg(feature = "measure-alloc")]
 use std::alloc::System;
@@ -43,7 +44,7 @@ async fn main() -> Result<()> {
         println!("No results found!");
     } else {
         for package in &packages {
-            println!("{}", package);
+            println!("{package}");
         }
     };
     #[cfg(feature = "measure-alloc")]
