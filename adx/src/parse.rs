@@ -137,7 +137,7 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
                         Some(MavenPackage {
                             group_id: String::from(group_name),
                             artifact_id: node.tag_name().name().to_string(),
-                            latest_version: versions.get(0).unwrap().to_string(),
+                            latest_version: versions.first().unwrap().to_string(),
                         })
                     }
                 })
