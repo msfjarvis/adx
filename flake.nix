@@ -100,6 +100,7 @@
           cargo-nextest
           cargo-release
           rustStable
+          stdenv.cc
         ];
       };
     });
