@@ -79,7 +79,9 @@
         });
     in {
       checks = {
-        inherit adx adx-audit adx-clippy adx-fmt adx-nextest;
+        inherit adx adx-clippy adx-fmt adx-nextest;
+        # TODO: Re-enable once https://github.com/NixOS/nixpkgs/issues/288064 is fixed
+        # inherit adx-audit;
       };
 
       packages.default = adx;
