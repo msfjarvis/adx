@@ -79,7 +79,9 @@
         });
     in {
       checks = {
-        inherit adx adx-clippy adx-fmt adx-nextest;
+        inherit adx adx-clippy adx-fmt;
+        # TODO: figure out how to support insta-cmd here
+        # inherit adx-nextest;
         # TODO: Re-enable once https://github.com/NixOS/nixpkgs/issues/288064 is fixed
         # inherit adx-audit;
       };
@@ -99,6 +101,7 @@
         ];
 
         packages = with pkgs; [
+          cargo-insta
           cargo-nextest
           cargo-release
           rustStable

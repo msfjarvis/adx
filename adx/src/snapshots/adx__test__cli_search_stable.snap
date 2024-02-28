@@ -1,0 +1,16 @@
+---
+source: adx/src/main.rs
+info:
+  program: adx
+  args:
+    - "--channel"
+    - stable
+    - appcompat
+---
+success: true
+exit_code: 0
+----- stdout -----
+androidx.appcompat:appcompat:1.6.1
+androidx.appcompat:appcompat-resources:1.6.1
+
+----- stderr -----
