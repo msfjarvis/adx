@@ -46,16 +46,17 @@
       };
 
       craneLib = (crane.mkLib pkgs).overrideToolchain rustStable;
-      xmlFilter = path: _type: builtins.match ".*xml$" path != null;
-      xmlOrCargo = path: type:
-        (xmlFilter path type) || (craneLib.filterCargoSources path type);
+      xmlFilter = path: builtins.match ".*xml$" path != null;
+      instaFilter = path: builtins.match ".*snap$" path != null;
+      filter = path: type:
+        (xmlFilter path) || (instaFilter path) || (craneLib.filterCargoSources path type);
 
       workspaceName = craneLib.crateNameFromCargoToml {cargoToml = ./adx/Cargo.toml;};
       commonArgs = {
         inherit (workspaceName) pname version;
         src = pkgs.lib.cleanSourceWith {
           src = craneLib.path ./.;
-          filter = xmlOrCargo;
+          inherit filter;
         };
         buildInputs = [];
         nativeBuildInputs = [];
@@ -63,8 +64,17 @@
         cargoToml = ./adx/Cargo.toml;
       };
 
-      cargoArtifacts = craneLib.buildDepsOnly (commonArgs // {doCheck = false;});
-      adx = craneLib.buildPackage (commonArgs // {doCheck = false;});
+      cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+      adx-build = craneLib.cargoBuild (commonArgs
+        // {
+          inherit cargoArtifacts;
+          CARGO_BUILD_RUSTFLAGS = "--cfg nix_check";
+        });
+      adx = craneLib.buildPackage (commonArgs
+        // {
+          cargoArtifacts = adx-build;
+          doCheck = false;
+        });
       adx-clippy = craneLib.cargoClippy (commonArgs
         // {
           inherit cargoArtifacts;
@@ -73,9 +83,10 @@
       adx-audit = craneLib.cargoAudit (commonArgs // {inherit advisory-db;});
       adx-nextest = craneLib.cargoNextest (commonArgs
         // {
-          inherit cargoArtifacts;
+          cargoArtifacts = adx-build;
           partitions = 1;
           partitionType = "count";
+          CARGO_BUILD_RUSTFLAGS = "--cfg nix_check";
         });
     in {
       checks = {
@@ -99,6 +110,7 @@
         ];
 
         packages = with pkgs; [
+          cargo-insta
           cargo-nextest
           cargo-release
           rustStable

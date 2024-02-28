@@ -10,12 +10,12 @@ use crate::channel::Channel;
 use crate::package::MavenPackage;
 use crate::version::Version;
 
-#[cfg(not(test))]
+#[cfg(not(any(test, nix_check)))]
 const BASE_MAVEN_URL: &str = "https://dl.google.com/dl/android/maven2";
 
 /// Downloads the Maven master index for Google's Maven Repository
 /// and returns the XML as a String
-#[cfg(not(test))]
+#[cfg(not(any(test, nix_check)))]
 async fn get_maven_index() -> Result<String> {
     reqwest::get(format!("{BASE_MAVEN_URL}/master-index.xml"))
         .await?
@@ -24,14 +24,14 @@ async fn get_maven_index() -> Result<String> {
         .map_err(|e| eyre!(e))
 }
 
-#[cfg(test)]
+#[cfg(any(test, nix_check))]
 #[allow(clippy::unused_async)]
 async fn get_maven_index() -> Result<String> {
     std::fs::read_to_string("../testdata/master-index.xml").map_err(|e| eyre!(e))
 }
 
 /// Downloads the group index for the given group.
-#[cfg(not(test))]
+#[cfg(not(any(test, nix_check)))]
 async fn get_group_index(group: &str) -> Result<String> {
     reqwest::get(format!(
         "{}/{}/group-index.xml",
@@ -44,7 +44,7 @@ async fn get_group_index(group: &str) -> Result<String> {
     .map_err(|e| eyre!(e))
 }
 
-#[cfg(test)]
+#[cfg(any(test, nix_check))]
 #[allow(clippy::unused_async)]
 async fn get_group_index(group: &str) -> Result<String> {
     std::fs::read_to_string(format!("../testdata/{group}.xml")).map_err(|e| eyre!(e))

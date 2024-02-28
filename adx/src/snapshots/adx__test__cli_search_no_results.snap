@@ -1,0 +1,13 @@
+---
+source: adx/src/main.rs
+info:
+  program: adx
+  args:
+    - qtc
+---
+success: true
+exit_code: 0
+----- stdout -----
+No results found!
+
+----- stderr -----

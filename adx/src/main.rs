@@ -55,9 +55,34 @@ async fn main() -> Result<()> {
 #[cfg(test)]
 mod test {
     use super::Cli;
+    use insta_cmd::{assert_cmd_snapshot, get_cargo_bin};
+    use std::process::Command;
 
     #[test]
     fn cli_assert() {
         <Cli as clap::CommandFactory>::command().debug_assert();
+    }
+
+    #[test]
+    fn cli_help() {
+        assert_cmd_snapshot!(Command::new(get_cargo_bin("adx")).arg("--help"));
+    }
+
+    #[test]
+    fn cli_search() {
+        assert_cmd_snapshot!(Command::new(get_cargo_bin("adx")).arg("appcompat"));
+    }
+
+    #[test]
+    fn cli_search_stable() {
+        assert_cmd_snapshot!(Command::new(get_cargo_bin("adx"))
+            .arg("--channel")
+            .arg("stable")
+            .arg("appcompat"));
+    }
+
+    #[test]
+    fn cli_search_no_results() {
+        assert_cmd_snapshot!(Command::new(get_cargo_bin("adx")).arg("qtc"));
     }
 }

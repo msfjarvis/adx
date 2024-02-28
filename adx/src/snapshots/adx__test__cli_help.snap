@@ -1,0 +1,23 @@
+---
+source: adx/src/main.rs
+info:
+  program: adx
+  args:
+    - "--help"
+---
+success: true
+exit_code: 0
+----- stdout -----
+Poll Google's Maven repository to fetch the latest versions of AndroidX packages
+
+Usage: adx [OPTIONS] <SEARCH_TERM>
+
+Arguments:
+  <SEARCH_TERM>  search term to filter packages with
+
+Options:
+  -c, --channel <CHANNEL>  the release channel to find packages from [default: alpha] [possible values: dev, alpha, beta, rc, stable]
+  -h, --help               Print help
+  -V, --version            Print version
+
+----- stderr -----
