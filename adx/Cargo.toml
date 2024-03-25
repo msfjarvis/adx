@@ -16,7 +16,7 @@ readme = "../README.md"
 clap = { version = "4.5.3", features = ["color", "deprecated", "derive"] }
 color-eyre = { version = "0.6.3", default-features = false }
 futures = "0.3.30"
-reqwest = { version = "0.12.1", default-features = false, features = [
+reqwest = { version = "0.12.2", default-features = false, features = [
   "rustls-tls",
 ] }
 roxmltree = { version = "0.19.0", features = ["std"] }
