@@ -1,0 +1,20 @@
+{
+  "build": {
+    "path_prefix": "adx"
+  },
+  "components": {
+    "changelog": false,
+    "artifacts": {
+      "auto": true,
+      "package_managers": {
+        "preferred": {
+          "nix flake": "nix profile install github:msfjarvis/adx",
+          "cargo": "cargo install adx --locked --profile=dist"
+        },
+        "additional": {
+          "binstall": "cargo binstall adx"
+        }
+      }
+    }
+  }
+}
