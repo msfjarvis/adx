@@ -4,5 +4,6 @@
     "config:base",
     "github>msfjarvis/shared-workflows//renovate/rust",
     "github>msfjarvis/shared-workflows//renovate/automerge"
-  ]
+  ],
+  "ignorePaths": [".github/workflows/release.yml", ".github/workflows/web.yml"]
 }
