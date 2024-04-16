@@ -110,9 +110,11 @@
         ];
 
         packages = with pkgs; [
+          cargo-dist
           cargo-insta
           cargo-nextest
           cargo-release
+          oranda
           rustStable
           stdenv.cc
         ];
