@@ -1,4 +1,7 @@
 {
+  "project": {
+    "name": "adx"
+  },
   "build": {
     "path_prefix": "adx"
   },
