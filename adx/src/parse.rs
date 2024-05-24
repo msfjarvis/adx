@@ -52,25 +52,19 @@ async fn get_group_index(group: &str) -> Result<String> {
 
 /// Parses a given master-index.xml and filters the found packages based on
 // `search_term`.
-fn filter_groups(doc: &Document<'_>, search_term: &str) -> Vec<String> {
-    let mut groups = vec![];
-    for node in doc
-        .descendants()
+fn parse_groups<'a>(doc: &'a Document<'_>) -> Vec<&'a str> {
+    doc.descendants()
         // Only keep elements
         .filter(|node| node.node_type() == NodeType::Element)
         // Skip the first one since it is junk
         .skip(1)
-    {
-        let tag = node.tag_name().name();
-        if tag.contains(search_term) {
-            groups.push(tag.to_string());
-        }
-    }
-    groups
+        .map(|node| node.tag_name())
+        .map(|node| node.name())
+        .collect()
 }
 
 /// Given a list of groups, returns a `Vec<MavenPackage>` of all artifacts.
-async fn parse_packages(groups: Vec<String>, channel: Channel) -> Result<Vec<MavenPackage>> {
+async fn parse_packages(groups: Vec<&str>, channel: Channel) -> Result<Vec<MavenPackage>> {
     // Create a Vec<Future<_>>, this will allow us to run all tasks together
     // without requiring us to spawn a new thread
     let group_futures = groups
@@ -149,8 +143,20 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
 pub(crate) async fn parse(search_term: &str, channel: Channel) -> Result<Vec<MavenPackage>> {
     let maven_index = get_maven_index().await?;
     let doc = Document::parse(&maven_index)?;
-    let groups = filter_groups(&doc, search_term);
-    parse_packages(groups, channel).await
+    let groups = parse_groups(&doc);
+    let packages = parse_packages(groups, channel).await;
+    packages.map(|packages| {
+        if search_term.is_empty() {
+            packages
+        } else {
+            packages
+                .into_iter()
+                .filter(|pkg| {
+                    pkg.group_id.contains(search_term) || pkg.artifact_id.contains(search_term)
+                })
+                .collect()
+        }
+    })
 }
 
 #[cfg(test)]
@@ -159,20 +165,50 @@ mod test {
     use futures::executor::block_on;
 
     use super::{parse, Channel};
+    use std::{
+        collections::{hash_map::Entry, HashMap},
+        hash::Hash,
+    };
+
+    // Stolen from this lovely person https://users.rust-lang.org/t/assert-vectors-equal-in-any-order/38716/12
+    fn iters_equal_anyorder<T: Eq + Hash>(
+        i1: impl Iterator<Item = T>,
+        i2: impl Iterator<Item = T>,
+    ) -> bool {
+        fn get_lookup<T: Eq + Hash>(iter: impl Iterator<Item = T>) -> HashMap<T, usize> {
+            let mut lookup = HashMap::<T, usize>::new();
+            for value in iter {
+                match lookup.entry(value) {
+                    Entry::Occupied(entry) => {
+                        *entry.into_mut() += 1;
+                    }
+                    Entry::Vacant(entry) => {
+                        entry.insert(0);
+                    }
+                }
+            }
+            lookup
+        }
+        get_lookup(i1) == get_lookup(i2)
+    }
 
     #[test]
     fn check_filter_works() {
         let res = block_on(parse("appcompat", Channel::Alpha))
             .map_err(|e| eyre!(e))
             .unwrap();
-        assert_eq!(res.len(), 2);
-        for pkg in &res {
-            assert_eq!(pkg.group_id, "androidx.appcompat");
-        }
-        assert!(res.iter().any(|pkg| pkg.artifact_id == "appcompat"));
-        assert!(res
-            .iter()
-            .any(|pkg| pkg.artifact_id == "appcompat-resources"));
+        assert_eq!(res.len(), 5);
+        iters_equal_anyorder(
+            [
+                "appcompat",
+                "appcompat-resources",
+                "emoji-appcompat",
+                "appcompat-v7",
+                "support-emoji-appcompat",
+            ]
+            .into_iter(),
+            res.iter().map(|pkg| pkg.artifact_id.as_str()),
+        );
     }
 
     #[test]
