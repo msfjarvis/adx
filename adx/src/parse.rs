@@ -161,8 +161,8 @@ pub(crate) async fn parse(search_term: &str, channel: Channel) -> Result<Vec<Mav
 
 #[cfg(test)]
 mod test {
-    use futures::executor::block_on;
     use super::{parse, Channel};
+    use futures::executor::block_on;
 
     #[test]
     fn check_all_packages_are_parsed() {
