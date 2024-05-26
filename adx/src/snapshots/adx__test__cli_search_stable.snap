@@ -12,5 +12,8 @@ exit_code: 0
 ----- stdout -----
 androidx.appcompat:appcompat:1.3.1
 androidx.appcompat:appcompat-resources:1.3.1
+androidx.emoji:emoji-appcompat:1.1.0
+com.android.support:appcompat-v7:28.0.0
+com.android.support:support-emoji-appcompat:28.0.0
 
 ----- stderr -----

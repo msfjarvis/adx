@@ -161,55 +161,8 @@ pub(crate) async fn parse(search_term: &str, channel: Channel) -> Result<Vec<Mav
 
 #[cfg(test)]
 mod test {
-    use color_eyre::eyre::eyre;
     use futures::executor::block_on;
-
     use super::{parse, Channel};
-    use std::{
-        collections::{hash_map::Entry, HashMap},
-        hash::Hash,
-    };
-
-    // Stolen from this lovely person https://users.rust-lang.org/t/assert-vectors-equal-in-any-order/38716/12
-    fn iters_equal_anyorder<T: Eq + Hash>(
-        i1: impl Iterator<Item = T>,
-        i2: impl Iterator<Item = T>,
-    ) -> bool {
-        fn get_lookup<T: Eq + Hash>(iter: impl Iterator<Item = T>) -> HashMap<T, usize> {
-            let mut lookup = HashMap::<T, usize>::new();
-            for value in iter {
-                match lookup.entry(value) {
-                    Entry::Occupied(entry) => {
-                        *entry.into_mut() += 1;
-                    }
-                    Entry::Vacant(entry) => {
-                        entry.insert(0);
-                    }
-                }
-            }
-            lookup
-        }
-        get_lookup(i1) == get_lookup(i2)
-    }
-
-    #[test]
-    fn check_filter_works() {
-        let res = block_on(parse("appcompat", Channel::Alpha))
-            .map_err(|e| eyre!(e))
-            .unwrap();
-        assert_eq!(res.len(), 5);
-        iters_equal_anyorder(
-            [
-                "appcompat",
-                "appcompat-resources",
-                "emoji-appcompat",
-                "appcompat-v7",
-                "support-emoji-appcompat",
-            ]
-            .into_iter(),
-            res.iter().map(|pkg| pkg.artifact_id.as_str()),
-        );
-    }
 
     #[test]
     fn check_all_packages_are_parsed() {
