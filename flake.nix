@@ -68,7 +68,7 @@
       adx-build = craneLib.cargoBuild (commonArgs
         // {
           inherit cargoArtifacts;
-          CARGO_BUILD_RUSTFLAGS = "--cfg nix_check";
+          CARGO_BUILD_RUSTFLAGS = "--cfg feature=\"nix-check\"";
         });
       adx = craneLib.buildPackage (commonArgs
         // {
@@ -86,7 +86,7 @@
           cargoArtifacts = adx-build;
           partitions = 1;
           partitionType = "count";
-          CARGO_BUILD_RUSTFLAGS = "--cfg nix_check";
+          CARGO_BUILD_RUSTFLAGS = "--cfg feature=\"nix-check\"";
         });
     in {
       checks = {

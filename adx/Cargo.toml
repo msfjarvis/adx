@@ -35,6 +35,7 @@ maintenance = { status = "actively-developed" }
 
 [features]
 measure-alloc = []
+nix-check = []
 
 [dev-dependencies]
 insta-cmd = "0.6.0"
