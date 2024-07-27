@@ -10,6 +10,12 @@ homepage = "https://github.com/msfjarvis/androidx-release-watcher"
 keywords = ["maven", "androidx"]
 readme = "../README.md"
 
+[package.metadata.wix]
+upgrade-guid = "5DC39FB8-D56C-487A-B63D-3EF7915BEBF5"
+path-guid = "F3357E63-B623-4603-A3FE-FE1E5AEB4B82"
+license = false
+eula = false
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
