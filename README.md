@@ -1,4 +1,4 @@
-# androidx-release-watcher [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/) [![Built with Garnix](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2Fmsfjarvis%2Fadx%3Fbranch%3Dmain)](https://garnix.io)
+# androidx-release-watcher [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 Rust binary that polls Google's Maven repository and finds the latest version of the requested dependencies.
 
