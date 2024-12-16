@@ -1,2 +1,4 @@
 a718672d04e5967f3f7ce9313a3d2becbe50e7a2 # Format with custom config
 dafee9a48be0abc11e63569217104d579304cffd # Undo custom formatting
+# Reformatting Nix files with nixfmt-rfc-style
+c7684a3e52e0e2c8737e56214b0b33a7d0ffe294
