@@ -24,7 +24,6 @@
 
   outputs =
     {
-      self,
       nixpkgs,
       advisory-db,
       crane,
@@ -47,18 +46,20 @@
         };
 
         craneLib = (crane.mkLib pkgs).overrideToolchain rustStable;
-        xmlFilter = path: builtins.match ".*xml$" path != null;
-        instaFilter = path: builtins.match ".*snap$" path != null;
-        filter =
-          path: type: (xmlFilter path) || (instaFilter path) || (craneLib.filterCargoSources path type);
 
         workspaceName = craneLib.crateNameFromCargoToml { cargoToml = ./adx/Cargo.toml; };
         commonArgs = {
           inherit (workspaceName) pname version;
-          src = pkgs.lib.cleanSourceWith {
-            src = craneLib.path ./.;
-            inherit filter;
-          };
+          src =
+            with pkgs.lib.fileset;
+            toSource {
+              root = ./.;
+              fileset = unions [
+                (fileFilter (file: file.hasExt "xml") ./.)
+                (fileFilter (file: file.hasExt "snap") ./.)
+                (craneLib.fileset.commonCargoSources ./.)
+              ];
+            };
           buildInputs = [ ];
           nativeBuildInputs = [ ];
           cargoClippyExtraArgs = "--all-targets -- --deny warnings";
