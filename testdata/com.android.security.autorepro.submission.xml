@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.android.security.autorepro.submission>
+  <com.android.security.autorepro.submission.gradle.plugin versions="1.0.0-alpha1"/>
+</com.android.security.autorepro.submission>

@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<androidx.xr.runtime>
+  <runtime versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <runtime-openxr versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <runtime-testing versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+</androidx.xr.runtime>

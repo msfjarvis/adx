@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <com.android.ndk.thirdparty>
-  <curl versions="7.68.0-alpha-1,7.69.1-alpha-1"/>
-  <jsoncpp versions="1.8.4-alpha-1"/>
+  <curl versions="7.68.0-alpha-1,7.69.1-alpha-1,7.79.1-beta-1,7.83.1-beta-1,7.85.0-beta-1"/>
+  <googletest versions="1.11.0-beta-1"/>
+  <jsoncpp versions="1.8.4-alpha-1,1.9.5-beta-1"/>
   <libpng versions="1.6.37-alpha-1"/>
-  <openssl versions="1.1.1d-alpha-1,1.1.1f-alpha-1,1.1.1g-alpha-1"/>
+  <openssl versions="1.1.1d-alpha-1,1.1.1f-alpha-1,1.1.1g-alpha-1,1.1.1l-beta-1,1.1.1p-beta-1,1.1.1q-beta-1"/>
 </com.android.ndk.thirdparty>

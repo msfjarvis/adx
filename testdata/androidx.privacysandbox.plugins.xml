@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<androidx.privacysandbox.plugins>
+  <plugins-privacysandbox-library versions="1.0.0-alpha01,1.0.0-alpha02"/>
+</androidx.privacysandbox.plugins>

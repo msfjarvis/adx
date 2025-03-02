@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.google.ai.edge.litert>
+  <litert versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
+  <litert-api versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
+  <litert-gpu versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
+  <litert-gpu-api versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
+  <litert-metadata versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
+  <litert-support versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
+  <litert-support-api versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
+</com.google.ai.edge.litert>

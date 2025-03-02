@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.android.identity>
+  <identity versions="202408.1,202411.1"/>
+  <identity-android versions="202408.1,202411.1"/>
+  <identity-android-legacy versions="202408.1,202411.1"/>
+  <identity-credential versions="20230420,20231002"/>
+  <identity-credential-android versions="20231002"/>
+  <identity-doctypes versions="202408.1,202411.1"/>
+  <identity-doctypes-iosarm64 versions="202408.1,202411.1"/>
+  <identity-doctypes-iossimulatorarm64 versions="202408.1,202411.1"/>
+  <identity-doctypes-iosx64 versions="202408.1,202411.1"/>
+  <identity-doctypes-jvm versions="202408.1,202411.1"/>
+  <identity-iosarm64 versions="202408.1,202411.1"/>
+  <identity-iossimulatorarm64 versions="202408.1,202411.1"/>
+  <identity-iosx64 versions="202408.1,202411.1"/>
+  <identity-jvm versions="202408.1,202411.1"/>
+  <identity-mdoc versions="202408.1,202411.1"/>
+  <identity-mdoc-iosarm64 versions="202408.1,202411.1"/>
+  <identity-mdoc-iossimulatorarm64 versions="202408.1,202411.1"/>
+  <identity-mdoc-iosx64 versions="202408.1,202411.1"/>
+  <identity-mdoc-jvm versions="202408.1,202411.1"/>
+  <processor-annotations versions="202408.1,202411.1"/>
+  <processor-annotations-iosarm64 versions="202408.1,202411.1"/>
+  <processor-annotations-iossimulatorarm64 versions="202408.1,202411.1"/>
+  <processor-annotations-iosx64 versions="202408.1,202411.1"/>
+  <processor-annotations-jvm versions="202408.1,202411.1"/>
+</com.android.identity>

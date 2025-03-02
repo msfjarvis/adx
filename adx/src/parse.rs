@@ -168,6 +168,6 @@ mod test {
     fn check_all_packages_are_parsed() {
         let res = block_on(parse("", Channel::Stable))
             .expect("Parsing offline copies should always work");
-        assert_eq!(res.len(), 770);
+        assert_eq!(res.len(), 1367);
     }
 }

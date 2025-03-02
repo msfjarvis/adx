@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<androidx.health.connect>
+  <connect-client versions="1.0.0-alpha04,1.0.0-alpha05,1.0.0-alpha06,1.0.0-alpha07,1.0.0-alpha08,1.0.0-alpha09,1.0.0-alpha10,1.0.0-alpha11,1.1.0-alpha01,1.1.0-alpha02,1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-alpha08,1.1.0-alpha09,1.1.0-alpha10,1.1.0-alpha11,1.1.0-alpha12"/>
+  <connect-client-external-protobuf versions="1.1.0-alpha08,1.1.0-alpha09,1.1.0-alpha10,1.1.0-alpha11,1.1.0-alpha12"/>
+  <connect-client-proto versions="1.1.0-alpha08,1.1.0-alpha09,1.1.0-alpha10,1.1.0-alpha11,1.1.0-alpha12"/>
+  <connect-testing versions="1.0.0-alpha01,1.0.0-alpha02"/>
+</androidx.health.connect>

@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<androidx.performance>
+  <performance-annotation versions="1.0.0-alpha01"/>
+  <performance-annotation-android versions="1.0.0-alpha01"/>
+  <performance-annotation-iosarm64 versions="1.0.0-alpha01"/>
+  <performance-annotation-iossimulatorarm64 versions="1.0.0-alpha01"/>
+  <performance-annotation-iosx64 versions="1.0.0-alpha01"/>
+  <performance-annotation-jvm versions="1.0.0-alpha01"/>
+  <performance-annotation-linuxarm64 versions="1.0.0-alpha01"/>
+  <performance-annotation-linuxx64 versions="1.0.0-alpha01"/>
+  <performance-annotation-macosarm64 versions="1.0.0-alpha01"/>
+  <performance-annotation-macosx64 versions="1.0.0-alpha01"/>
+  <performance-annotation-mingwx64 versions="1.0.0-alpha01"/>
+  <performance-annotation-tvosarm64 versions="1.0.0-alpha01"/>
+  <performance-annotation-tvossimulatorarm64 versions="1.0.0-alpha01"/>
+  <performance-annotation-tvosx64 versions="1.0.0-alpha01"/>
+  <performance-annotation-watchosarm32 versions="1.0.0-alpha01"/>
+  <performance-annotation-watchosarm64 versions="1.0.0-alpha01"/>
+  <performance-annotation-watchosdevicearm64 versions="1.0.0-alpha01"/>
+  <performance-annotation-watchossimulatorarm64 versions="1.0.0-alpha01"/>
+  <performance-annotation-watchosx64 versions="1.0.0-alpha01"/>
+  <performance-unsafe versions="1.0.0-alpha01"/>
+</androidx.performance>

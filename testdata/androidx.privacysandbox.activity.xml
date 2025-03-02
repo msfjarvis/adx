@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<androidx.privacysandbox.activity>
+  <activity-client versions="1.0.0-alpha01"/>
+  <activity-core versions="1.0.0-alpha01"/>
+  <activity-provider versions="1.0.0-alpha01"/>
+</androidx.privacysandbox.activity>

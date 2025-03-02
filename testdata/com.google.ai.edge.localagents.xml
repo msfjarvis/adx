@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.google.ai.edge.localagents>
+  <localagents-rag versions="0.0.1-alpha-1,0.0.1-alpha-2"/>
+</com.google.ai.edge.localagents>

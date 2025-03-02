@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.google.net.cronet>
+  <cronet-okhttp versions="0.1.0"/>
+</com.google.net.cronet>

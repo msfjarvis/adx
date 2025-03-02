@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.google.android.libraries.cloud.telco.subgraph>
+  <cloud_telco_subgraph versions="0.0.2,0.0.3,0.5.0,0.5.1,0.5.2,0.5.3,0.5.4,0.5.5"/>
+</com.google.android.libraries.cloud.telco.subgraph>

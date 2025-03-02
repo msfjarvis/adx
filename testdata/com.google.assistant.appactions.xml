@@ -1,4 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <com.google.assistant.appactions>
-  <suggestions versions="1.0.0-beta01"/>
+  <suggestions versions="1.0.0-beta01,1.0.0"/>
+  <testing versions="1.0.0"/>
+  <widgets versions="0.0.1"/>
 </com.google.assistant.appactions>

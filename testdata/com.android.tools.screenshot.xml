@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.android.tools.screenshot>
+  <screenshot-validation-junit-engine versions="0.0.1-alpha01,0.0.1-alpha02,0.0.1-alpha03,0.0.1-alpha04,0.0.1-alpha05,0.0.1-alpha06,0.0.1-alpha07,0.0.1-alpha08,0.0.1-alpha09"/>
+</com.android.tools.screenshot>

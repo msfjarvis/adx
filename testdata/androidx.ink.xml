@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<androidx.ink>
+  <ink-authoring versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-authoring-android versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-brush versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-brush-android versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-brush-jvm versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-geometry versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-geometry-android versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-geometry-jvm versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-nativeloader versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-nativeloader-android versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-nativeloader-jvm versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-rendering versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-rendering-android versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-storage versions="1.0.0-alpha03"/>
+  <ink-storage-android versions="1.0.0-alpha03"/>
+  <ink-storage-jvm versions="1.0.0-alpha03"/>
+  <ink-strokes versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-strokes-android versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <ink-strokes-jvm versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+</androidx.ink>

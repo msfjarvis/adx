@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.google.d2c>
+  <com.google.d2c.gradle.plugin versions="0.2.05,0.2.06"/>
+  <d2c-gradle-plugin versions="0.2.05,0.2.06"/>
+</com.google.d2c>

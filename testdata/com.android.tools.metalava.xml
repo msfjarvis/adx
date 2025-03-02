@@ -1,4 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <com.android.tools.metalava>
-  <metalava versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04"/>
+  <metalava versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.0.0-alpha05,1.0.0-alpha06,1.0.0-alpha07,1.0.0-alpha08,1.0.0-alpha09,1.0.0-alpha10,1.0.0-alpha11,1.0.0-alpha12"/>
+  <metalava-model versions="1.0.0-alpha09,1.0.0-alpha10,1.0.0-alpha11,1.0.0-alpha12"/>
+  <metalava-model-psi versions="1.0.0-alpha09,1.0.0-alpha10,1.0.0-alpha11,1.0.0-alpha12"/>
+  <metalava-model-source versions="1.0.0-alpha09,1.0.0-alpha10,1.0.0-alpha11,1.0.0-alpha12"/>
+  <metalava-model-text versions="1.0.0-alpha09,1.0.0-alpha10,1.0.0-alpha11,1.0.0-alpha12"/>
+  <metalava-model-turbine versions="1.0.0-alpha09,1.0.0-alpha11,1.0.0-alpha12"/>
+  <metalava-reporter versions="1.0.0-alpha09,1.0.0-alpha10,1.0.0-alpha11,1.0.0-alpha12"/>
 </com.android.tools.metalava>
