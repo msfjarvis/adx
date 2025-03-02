@@ -4,6 +4,10 @@ Rust binary that polls Google's Maven repository and finds the latest version of
 
 ## Installation
 
+### From GitHub releases
+
+Head over to the [latest release](https://github.com/msfjarvis/adx/releases/latest) and follow the instructions for your platform.
+
 ### Using `cargo`
 
 Run `cargo install --locked adx` on a terminal.
