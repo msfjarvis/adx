@@ -46,7 +46,7 @@ async fn main() -> Result<()> {
         for package in &packages {
             println!("{package}");
         }
-    };
+    }
     #[cfg(feature = "measure-alloc")]
     println!("{:#?}", reg.change());
     Ok(())
