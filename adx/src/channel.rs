@@ -1,6 +1,6 @@
 use crate::version::Version;
-use clap::builder::PossibleValue;
 use clap::ValueEnum;
+use clap::builder::PossibleValue;
 use semver::Prerelease;
 use std::cmp::{Eq, PartialEq, PartialOrd};
 use std::convert::TryFrom;

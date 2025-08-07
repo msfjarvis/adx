@@ -161,7 +161,7 @@ pub(crate) async fn parse(search_term: &str, channel: Channel) -> Result<Vec<Mav
 
 #[cfg(test)]
 mod test {
-    use super::{parse, Channel};
+    use super::{Channel, parse};
     use futures::executor::block_on;
 
     #[test]

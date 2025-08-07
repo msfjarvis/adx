@@ -2,7 +2,7 @@
 name = "adx"
 version = "5.0.4"
 authors = ["Harsh Shandilya <me@msfjarvis.dev>"]
-edition = "2021"
+edition = "2024"
 license = "MIT/Apache-2.0"
 description = "Poll Google's Maven repository to fetch the latest versions of AndroidX packages"
 repository = "https://github.com/msfjarvis/androidx-release-watcher"
@@ -23,7 +23,7 @@ clap = { version = "4.5.4", features = ["color", "deprecated", "derive"] }
 color-eyre = { version = "0.6.3", default-features = false }
 futures = "0.3.30"
 reqwest = { version = "0.12.4", default-features = false, features = [
-  "rustls-tls",
+    "rustls-tls",
 ] }
 roxmltree = { version = "0.20.0", features = ["std"] }
 semver = "1.0.22"

@@ -12,7 +12,7 @@ use channel::Channel;
 use clap::Parser;
 use color_eyre::Result;
 #[cfg(feature = "measure-alloc")]
-use stats_alloc::{Region, StatsAlloc, INSTRUMENTED_SYSTEM};
+use stats_alloc::{INSTRUMENTED_SYSTEM, Region, StatsAlloc};
 
 #[cfg(feature = "measure-alloc")]
 #[global_allocator]
@@ -75,10 +75,12 @@ mod test {
 
     #[test]
     fn cli_search_stable() {
-        assert_cmd_snapshot!(Command::new(get_cargo_bin("adx"))
-            .arg("--channel")
-            .arg("stable")
-            .arg("appcompat"));
+        assert_cmd_snapshot!(
+            Command::new(get_cargo_bin("adx"))
+                .arg("--channel")
+                .arg("stable")
+                .arg("appcompat")
+        );
     }
 
     #[test]
