@@ -1,4 +1,4 @@
-use crate::{channel::Channel::Alpha, parse::parse};
+use crate::parse::get_packages;
 use clap::{ValueEnum, builder::PossibleValue};
 use std::fmt::Write;
 
@@ -22,7 +22,7 @@ impl ValueEnum for PrintType {
 }
 
 pub(crate) async fn print_inclusions(print_type: PrintType) {
-    let packages = parse("", Alpha).await;
+    let packages = get_packages().await;
     let Ok(packages) = packages else { return };
     let mut rules = String::new();
     match print_type {
