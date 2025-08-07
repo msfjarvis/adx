@@ -1,14 +1,10 @@
-use std::convert::TryFrom;
-
+use crate::package::MavenPackage;
+use crate::version::Version;
 use color_eyre::eyre::eyre;
 use color_eyre::{Help, Result};
 use futures::future::join_all;
 use roxmltree::{Document, NodeType};
 use semver::Version as Semver;
-
-use crate::channel::Channel;
-use crate::package::MavenPackage;
-use crate::version::Version;
 
 #[cfg(not(any(test, feature = "nix-check")))]
 const BASE_MAVEN_URL: &str = "https://dl.google.com/dl/android/maven2";
@@ -64,12 +60,10 @@ fn parse_groups<'a>(doc: &'a Document<'_>) -> Vec<&'a str> {
 }
 
 /// Given a list of groups, returns a `Vec<MavenPackage>` of all artifacts.
-async fn parse_packages(groups: Vec<&str>, channel: Channel) -> Result<Vec<MavenPackage>> {
+async fn parse_packages(groups: Vec<&str>) -> Result<Vec<MavenPackage>> {
     // Create a Vec<Future<_>>, this will allow us to run all tasks together
     // without requiring us to spawn a new thread
-    let group_futures = groups
-        .iter()
-        .map(|group_name| parse_group(group_name, channel));
+    let group_futures = groups.iter().map(|group_name| parse_group(group_name));
 
     // Wait for all groups to complete to get a Vec<Vec<MavenPackage>>
     let merged_list = join_all(group_futures).await;
@@ -83,7 +77,7 @@ async fn parse_packages(groups: Vec<&str>, channel: Channel) -> Result<Vec<Maven
 
 /// Given a group, returns a `Vec<MavenPackage>` of all artifacts from this
 /// group.
-async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPackage>> {
+async fn parse_group(group_name: &str) -> Result<Vec<MavenPackage>> {
     let group_index = get_group_index(group_name).await?;
     let doc = Document::parse(&group_index)
         .map_err(|e| eyre!(e).with_note(|| format!("group_name={group_name}")))?;
@@ -116,13 +110,6 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
                                 }
                             }
                         })
-                        .filter(|v| {
-                            if let Ok(c) = Channel::try_from(v) {
-                                c >= channel
-                            } else {
-                                false
-                            }
-                        })
                         .collect::<Vec<Version>>();
                     if versions.is_empty() {
                         None
@@ -131,7 +118,7 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
                         Some(MavenPackage {
                             group_id: String::from(group_name),
                             artifact_id: node.tag_name().name().to_string(),
-                            latest_version: versions.first().unwrap().to_string(),
+                            versions,
                         })
                     }
                 })
@@ -140,11 +127,15 @@ async fn parse_group(group_name: &str, channel: Channel) -> Result<Vec<MavenPack
         .collect())
 }
 
-pub(crate) async fn parse(search_term: &str, channel: Channel) -> Result<Vec<MavenPackage>> {
+pub(crate) async fn get_packages() -> Result<Vec<MavenPackage>> {
     let maven_index = get_maven_index().await?;
     let doc = Document::parse(&maven_index)?;
     let groups = parse_groups(&doc);
-    let packages = parse_packages(groups, channel).await;
+
+    parse_packages(groups).await
+}
+pub(crate) async fn parse(search_term: &str) -> Result<Vec<MavenPackage>> {
+    let packages = get_packages().await;
     packages.map(|packages| {
         if search_term.is_empty() {
             packages
@@ -161,13 +152,12 @@ pub(crate) async fn parse(search_term: &str, channel: Channel) -> Result<Vec<Mav
 
 #[cfg(test)]
 mod test {
-    use super::{Channel, parse};
+    use super::parse;
     use futures::executor::block_on;
 
     #[test]
     fn check_all_packages_are_parsed() {
-        let res = block_on(parse("", Channel::Stable))
-            .expect("Parsing offline copies should always work");
-        assert_eq!(res.len(), 1367);
+        let res = block_on(parse("")).expect("Parsing offline copies should always work");
+        assert_eq!(res.len(), 1906);
     }
 }

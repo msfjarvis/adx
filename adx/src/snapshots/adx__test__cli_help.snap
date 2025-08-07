@@ -16,8 +16,10 @@ Arguments:
   <SEARCH_TERM>  search term to filter packages with
 
 Options:
-  -c, --channel <CHANNEL>  the release channel to find packages from [default: alpha] [possible values: dev, alpha, beta, rc, stable]
-  -h, --help               Print help
-  -V, --version            Print version
+  -c, --channel <CHANNEL>        the release channel to find packages from [default: alpha] [possible values: dev, alpha, beta, rc, stable]
+      --print-includes           search term to filter packages with
+      --print-type <PRINT_TYPE>  stuff [default: group] [possible values: group, module]
+  -h, --help                     Print help
+  -V, --version                  Print version
 
 ----- stderr -----

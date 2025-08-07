@@ -4,7 +4,7 @@ mod package;
 mod parse;
 mod version;
 
-use crate::exclusions::print_inclusions;
+use crate::{exclusions::print_inclusions, package::LatestPackage};
 use channel::Channel;
 use clap::Parser;
 use color_eyre::Result;
@@ -35,7 +35,11 @@ async fn main() -> Result<()> {
         print_inclusions(cli.print_type).await;
         return Ok(());
     }
-    let packages = parse::parse(&cli.search_term, cli.channel).await?;
+    let packages = parse::parse(&cli.search_term).await?;
+    let packages = packages
+        .iter()
+        .filter_map(|p| p.latest(cli.channel))
+        .collect::<Vec<LatestPackage>>();
     if packages.is_empty() {
         println!("No results found!");
     } else {
