@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<androidx.camera.featurecombinationquery>
+  <featurecombinationquery versions="1.5.0-beta01,1.5.0-beta02"/>
+  <featurecombinationquery-play-services versions="1.5.0-beta01,1.5.0-beta02"/>
+</androidx.camera.featurecombinationquery>

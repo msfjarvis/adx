@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.google.android.wearable.watchface.validator>
+  <validator-push versions="1.0.0-alpha03,1.0.0-alpha06"/>
+  <validator-push-android versions="1.0.0-alpha06"/>
+  <validator-push-cli versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha06"/>
+</com.google.android.wearable.watchface.validator>

@@ -152,12 +152,18 @@ pub(crate) async fn parse(search_term: &str) -> Result<Vec<MavenPackage>> {
 
 #[cfg(test)]
 mod test {
-    use super::parse;
+    use crate::{
+        channel::Channel::Stable,
+        package::{LatestPackage, MavenPackage},
+        parse::parse,
+    };
     use futures::executor::block_on;
 
     #[test]
     fn check_all_packages_are_parsed() {
-        let res = block_on(parse("")).expect("Parsing offline copies should always work");
-        assert_eq!(res.len(), 1906);
+        let res: Vec<MavenPackage> =
+            block_on(parse("")).expect("Parsing offline copies should always work");
+        let res: Vec<LatestPackage> = res.iter().filter_map(|pkg| pkg.latest(Stable)).collect();
+        assert_eq!(res.len(), 1684);
     }
 }

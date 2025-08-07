@@ -11,6 +11,7 @@
   <androidx.ads/>
   <androidx.annotation/>
   <androidx.appcompat/>
+  <androidx.appfunctions/>
   <androidx.appsearch/>
   <androidx.arch.core/>
   <androidx.asynclayoutinflater/>
@@ -24,6 +25,7 @@
   <androidx.bluetooth/>
   <androidx.browser/>
   <androidx.camera/>
+  <androidx.camera.featurecombinationquery/>
   <androidx.camera.media3/>
   <androidx.camera.viewfinder/>
   <androidx.car/>
@@ -46,6 +48,7 @@
   <androidx.core/>
   <androidx.core.uwb/>
   <androidx.credentials/>
+  <androidx.credentials.providerevents/>
   <androidx.credentials.registry/>
   <androidx.cursoradapter/>
   <androidx.customview/>
@@ -89,11 +92,14 @@
   <androidx.navigation/>
   <androidx.navigation.safeargs/>
   <androidx.navigation.safeargs.kotlin/>
+  <androidx.navigation3/>
+  <androidx.navigationevent/>
   <androidx.paging/>
   <androidx.palette/>
   <androidx.pdf/>
   <androidx.percentlayout/>
   <androidx.performance/>
+  <androidx.photopicker/>
   <androidx.preference/>
   <androidx.print/>
   <androidx.privacysandbox.activity/>
@@ -139,6 +145,7 @@
   <androidx.wear.protolayout/>
   <androidx.wear.tiles/>
   <androidx.wear.watchface/>
+  <androidx.wear.watchfacepush/>
   <androidx.webkit/>
   <androidx.window/>
   <androidx.window.extensions.core/>
@@ -162,6 +169,7 @@
   <com.android.designcompose/>
   <com.android.dynamic-feature/>
   <com.android.experimental.built-in-kotlin/>
+  <com.android.extensions.xr/>
   <com.android.fused-library/>
   <com.android.identity/>
   <com.android.installreferrer/>
@@ -205,6 +213,7 @@
   <com.android.tools.external.org-jetbrains/>
   <com.android.tools.fakeadbserver/>
   <com.android.tools.internal.build.test/>
+  <com.android.tools.journeys/>
   <com.android.tools.layoutlib/>
   <com.android.tools.lint/>
   <com.android.tools.metalava/>
@@ -224,6 +233,7 @@
   <com.google.ambient.crossdevice/>
   <com.google.android.ads/>
   <com.google.android.ads.consent/>
+  <com.google.android.appcrawler/>
   <com.google.android.apps.common.testing.accessibility.framework/>
   <com.google.android.car.connectionservice/>
   <com.google.android.datatransport/>
@@ -234,6 +244,7 @@
   <com.google.android.flexbox/>
   <com.google.android.games/>
   <com.google.android.gms/>
+  <com.google.android.gms.oss-licenses-plugin/>
   <com.google.android.gms.strict-version-matcher-plugin/>
   <com.google.android.instantapps/>
   <com.google.android.instantapps.thirdpartycompat/>
@@ -265,6 +276,7 @@
   <com.google.android.tv.tvpanelframework/>
   <com.google.android.ump/>
   <com.google.android.wearable/>
+  <com.google.android.wearable.watchface.validator/>
   <com.google.androidbrowserhelper/>
   <com.google.ar/>
   <com.google.ar.sceneform/>
@@ -289,6 +301,7 @@
   <com.google.mlkit/>
   <com.google.net.cronet/>
   <com.google.oboe/>
+  <com.google.play.policy.insights/>
   <com.google.prefab/>
   <com.google.relay/>
   <com.google.test.platform/>
@@ -296,6 +309,7 @@
   <io.fabric.sdk.android/>
   <org.chromium.net/>
   <org.jetbrains.kotlin/>
+  <org.multipaz/>
   <tools.base.build-system.debug/>
   <zipflinger/>
 </metadata>

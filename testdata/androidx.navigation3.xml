@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<androidx.navigation3>
+  <navigation3-runtime versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.0.0-alpha05,1.0.0-alpha06"/>
+  <navigation3-runtime-android versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.0.0-alpha05,1.0.0-alpha06"/>
+  <navigation3-runtime-jvmstubs versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.0.0-alpha05,1.0.0-alpha06"/>
+  <navigation3-runtime-linuxx64stubs versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.0.0-alpha05,1.0.0-alpha06"/>
+  <navigation3-ui versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.0.0-alpha05,1.0.0-alpha06"/>
+  <navigation3-ui-android versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.0.0-alpha05,1.0.0-alpha06"/>
+  <navigation3-ui-jvmstubs versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.0.0-alpha05,1.0.0-alpha06"/>
+  <navigation3-ui-linuxx64stubs versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.0.0-alpha05,1.0.0-alpha06"/>
+</androidx.navigation3>

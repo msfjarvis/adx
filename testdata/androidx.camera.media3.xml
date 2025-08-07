@@ -1,4 +1,4 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <androidx.camera.media3>
-  <media3-effect versions="1.0.0-alpha01"/>
+  <media3-effect versions="1.0.0-alpha01,1.0.0-alpha03"/>
 </androidx.camera.media3>

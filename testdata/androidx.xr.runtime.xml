@@ -1,6 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <androidx.xr.runtime>
-  <runtime versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
-  <runtime-openxr versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
-  <runtime-testing versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03"/>
+  <runtime versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.0.0-alpha05"/>
+  <runtime-guava versions="1.0.0-alpha05"/>
+  <runtime-manifest versions="1.0.0-alpha05"/>
+  <runtime-openxr versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.0.0-alpha05"/>
+  <runtime-rxjava3 versions="1.0.0-alpha05"/>
+  <runtime-testing versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.0.0-alpha05"/>
 </androidx.xr.runtime>

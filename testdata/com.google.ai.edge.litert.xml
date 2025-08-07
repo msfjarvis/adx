@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <com.google.ai.edge.litert>
-  <litert versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
-  <litert-api versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
-  <litert-gpu versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
-  <litert-gpu-api versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
-  <litert-metadata versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
-  <litert-support versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
-  <litert-support-api versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2"/>
+  <litert versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2,1.2.0,1.3.0,1.4.0,2.0.0-alpha,2.0.0-alpha.1,2.0.1-alpha"/>
+  <litert-api versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2,1.2.0,1.3.0,1.4.0"/>
+  <litert-gpu versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2,1.2.0,1.3.0,1.4.0"/>
+  <litert-gpu-api versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2,1.2.0,1.3.0,1.4.0"/>
+  <litert-metadata versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2,1.2.0,1.3.0,1.4.0"/>
+  <litert-support versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2,1.2.0,1.3.0,1.4.0"/>
+  <litert-support-api versions="0.1.0,1.0.0,1.0.1,1.1.0,1.1.1,1.1.2,1.2.0,1.3.0,1.4.0"/>
 </com.google.ai.edge.litert>
