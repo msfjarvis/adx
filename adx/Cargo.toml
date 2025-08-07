@@ -34,7 +34,6 @@ tokio = { version = "1.37.0", features = ["macros", "rt-multi-thread"] }
 maintenance = { status = "actively-developed" }
 
 [features]
-measure-alloc = []
 nix-check = []
 
 [dev-dependencies]
