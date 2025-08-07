@@ -1,4 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <com.google.fhir>
+  <fhir-model versions="1.0.0-alpha01"/>
+  <fhir-model-android versions="1.0.0-alpha01"/>
+  <fhir-model-iosarm64 versions="1.0.0-alpha01"/>
+  <fhir-model-iossimulatorarm64 versions="1.0.0-alpha01"/>
+  <fhir-model-iosx64 versions="1.0.0-alpha01"/>
+  <fhir-model-js versions="1.0.0-alpha01"/>
+  <fhir-model-jvm versions="1.0.0-alpha01"/>
+  <fhir-model-wasm-js versions="1.0.0-alpha01"/>
+  <fhir-model-wasm-wasi versions="1.0.0-alpha01"/>
   <r4 versions="0.6.1"/>
 </com.google.fhir>

@@ -6,9 +6,14 @@
   <camera versions="16.0.0-beta1,16.0.0-beta2,16.0.0-beta3"/>
   <common versions="16.0.0,16.0.1,16.1.0,17.0.0,17.1.0,17.1.1,17.2.0,17.3.0,17.4.0,17.5.0,18.0.0,18.1.0,18.2.0,18.3.0,18.4.0,18.5.0,18.6.0,18.7.0,18.8.0,18.9.0,18.10.0,18.11.0"/>
   <digital-ink-recognition versions="16.0.0,16.1.0,16.2.0,17.0.0,17.0.1,18.0.0,18.1.0"/>
-  <entity-extraction versions="16.0.0-beta1,16.0.0-beta2,16.0.0-beta3,16.0.0-beta4,16.0.0-beta5"/>
+  <entity-extraction versions="16.0.0-beta1,16.0.0-beta2,16.0.0-beta3,16.0.0-beta4,16.0.0-beta5,16.0.0-beta6"/>
   <face-detection versions="16.0.0,16.0.1,16.0.2,16.0.3,16.0.4,16.0.5,16.0.6,16.0.7,16.1.0,16.1.1,16.1.2,16.1.3,16.1.4,16.1.5,16.1.6,16.1.7"/>
   <face-mesh-detection versions="16.0.0-beta1,16.0.0-beta2,16.0.0-beta3"/>
+  <genai-common versions="1.0.0-beta1"/>
+  <genai-image-description versions="1.0.0-beta1"/>
+  <genai-proofreading versions="1.0.0-beta1"/>
+  <genai-rewriting versions="1.0.0-beta1"/>
+  <genai-summarization versions="1.0.0-beta1"/>
   <image-labeling versions="16.0.0,16.1.0,16.2.0,17.0.0,17.0.1,17.0.2,17.0.3,17.0.4,17.0.5,17.0.6,17.0.7,17.0.8,17.0.9"/>
   <image-labeling-automl versions="16.0.0,16.1.0,16.2.0,16.2.1"/>
   <image-labeling-common versions="16.0.0,16.1.0,16.2.0,16.2.1,17.0.0,17.1.0,17.2.0,18.0.0,18.1.0"/>

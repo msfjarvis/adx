@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.google.android.gms.oss-licenses-plugin>
+  <com.google.android.gms.oss-licenses-plugin.gradle.plugin versions="0.10.7"/>
+</com.google.android.gms.oss-licenses-plugin>

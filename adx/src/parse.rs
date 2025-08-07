@@ -163,6 +163,6 @@ mod test {
             .iter()
             .filter_map(|pkg| pkg.latest(Channel::Stable))
             .collect();
-        assert_eq!(res.len(), 1367);
+        assert_eq!(res.len(), 1684);
     }
 }

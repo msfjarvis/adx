@@ -1,4 +1,4 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <com.google.android.tv.tvpanelframework>
-  <tvpanelframework versions="1.0.0"/>
+  <tvpanelframework versions="1.0.0,1.0.1"/>
 </com.google.android.tv.tvpanelframework>

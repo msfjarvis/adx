@@ -10,8 +10,9 @@ info:
 success: true
 exit_code: 0
 ----- stdout -----
-androidx.appcompat:appcompat:1.7.0
-androidx.appcompat:appcompat-resources:1.7.0
+androidx.appcompat:appcompat:1.7.1
+androidx.appcompat:appcompat-resources:1.7.1
+androidx.asynclayoutinflater:asynclayoutinflater-appcompat:1.1.0
 androidx.emoji:emoji-appcompat:1.1.0
 com.android.support:appcompat-v7:28.0.0
 com.android.support:support-emoji-appcompat:28.0.0

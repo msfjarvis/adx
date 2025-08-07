@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.android.tools.journeys>
+  <com.android.tools.journeys.gradle.plugin versions="0.0.1-alpha02,0.0.1-alpha03"/>
+  <journeys-gradle-plugin versions="0.0.1-alpha02,0.0.1-alpha03"/>
+  <journeys-junit-engine versions="0.0.1-alpha02,0.0.1-alpha03"/>
+</com.android.tools.journeys>

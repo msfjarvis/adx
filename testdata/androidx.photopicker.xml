@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<androidx.photopicker>
+  <photopicker versions="1.0.0-alpha01"/>
+  <photopicker-compose versions="1.0.0-alpha01"/>
+  <photopicker-testing versions="1.0.0-alpha01"/>
+</androidx.photopicker>

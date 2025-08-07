@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <androidx.appsearch>
-  <appsearch versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.1.0-alpha01,1.1.0-alpha02,1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01"/>
-  <appsearch-builtin-types versions="1.1.0-alpha01,1.1.0-alpha02,1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01"/>
-  <appsearch-compiler versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.1.0-alpha01,1.1.0-alpha02,1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01"/>
-  <appsearch-debug-view versions="1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01"/>
-  <appsearch-external-protobuf versions="1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01"/>
-  <appsearch-ktx versions="1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01"/>
-  <appsearch-local-storage versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.1.0-alpha01,1.1.0-alpha02,1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01"/>
-  <appsearch-platform-storage versions="1.0.0-alpha03,1.0.0-alpha04,1.1.0-alpha01,1.1.0-alpha02,1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01"/>
-  <appsearch-play-services-storage versions="1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01"/>
+  <appsearch versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.1.0-alpha01,1.1.0-alpha02,1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01,1.1.0-rc01,1.1.0"/>
+  <appsearch-builtin-types versions="1.1.0-alpha01,1.1.0-alpha02,1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01,1.1.0-rc01,1.1.0"/>
+  <appsearch-compiler versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.1.0-alpha01,1.1.0-alpha02,1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01,1.1.0-rc01,1.1.0"/>
+  <appsearch-debug-view versions="1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01,1.1.0-rc01,1.1.0"/>
+  <appsearch-external-protobuf versions="1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01,1.1.0-rc01,1.1.0"/>
+  <appsearch-ktx versions="1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01,1.1.0-rc01,1.1.0"/>
+  <appsearch-local-storage versions="1.0.0-alpha01,1.0.0-alpha02,1.0.0-alpha03,1.0.0-alpha04,1.1.0-alpha01,1.1.0-alpha02,1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01,1.1.0-rc01,1.1.0"/>
+  <appsearch-platform-storage versions="1.0.0-alpha03,1.0.0-alpha04,1.1.0-alpha01,1.1.0-alpha02,1.1.0-alpha03,1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01,1.1.0-rc01,1.1.0"/>
+  <appsearch-play-services-storage versions="1.1.0-alpha04,1.1.0-alpha05,1.1.0-alpha06,1.1.0-alpha07,1.1.0-beta01,1.1.0-rc01,1.1.0"/>
 </androidx.appsearch>
