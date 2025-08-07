@@ -1,11 +1,14 @@
 mod channel;
+mod exclusions;
 mod package;
 mod parse;
 mod version;
 
+use crate::exclusions::print_inclusions;
 use channel::Channel;
 use clap::Parser;
 use color_eyre::Result;
+use exclusions::PrintType;
 
 #[derive(Parser)]
 #[command(author, version, about)]
@@ -16,12 +19,22 @@ pub(crate) struct Cli {
     /// the release channel to find packages from
     #[arg(value_enum, long, short, default_value_t = Channel::Alpha)]
     pub(crate) channel: Channel,
+    /// search term to filter packages with
+    #[arg(required = false, long, default_value_t = false)]
+    pub(crate) print_includes: bool,
+    /// stuff
+    #[arg(value_enum, long, default_value_t = PrintType::IncludeGroup)]
+    pub(crate) print_type: PrintType,
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
     color_eyre::install()?;
     let cli = Cli::parse();
+    if cli.print_includes {
+        print_inclusions(cli.print_type).await;
+        return Ok(());
+    }
     let packages = parse::parse(&cli.search_term, cli.channel).await?;
     if packages.is_empty() {
         println!("No results found!");
