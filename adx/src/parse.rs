@@ -131,9 +131,9 @@ pub(crate) async fn get_packages() -> Result<Vec<MavenPackage>> {
     let maven_index = get_maven_index().await?;
     let doc = Document::parse(&maven_index)?;
     let groups = parse_groups(&doc);
-
     parse_packages(groups).await
 }
+
 pub(crate) async fn parse(search_term: &str) -> Result<Vec<MavenPackage>> {
     let packages = get_packages().await;
     packages.map(|packages| {
