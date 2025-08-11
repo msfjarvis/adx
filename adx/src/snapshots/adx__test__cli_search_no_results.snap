@@ -8,6 +8,7 @@ info:
 success: true
 exit_code: 0
 ----- stdout -----
+Searching for qtc
 No results found!
 
 ----- stderr -----

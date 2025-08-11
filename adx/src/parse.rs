@@ -22,7 +22,8 @@ async fn get_maven_index() -> Result<String> {
 #[cfg(any(test, feature = "nix-check"))]
 #[allow(clippy::unused_async)]
 async fn get_maven_index() -> Result<String> {
-    std::fs::read_to_string("../testdata/master-index.xml").map_err(|e| eyre!(e))
+    std::fs::read_to_string("../testdata/master-index.xml")
+        .map_err(|e| eyre!(e).with_note(|| format!("maven-index")))
 }
 
 /// Downloads the group index for the given group.
@@ -42,7 +43,8 @@ async fn get_group_index(group: &str) -> Result<String> {
 #[cfg(any(test, feature = "nix-check"))]
 #[allow(clippy::unused_async)]
 async fn get_group_index(group: &str) -> Result<String> {
-    std::fs::read_to_string(format!("../testdata/{group}.xml")).map_err(|e| eyre!(e))
+    std::fs::read_to_string(format!("../testdata/{group}.xml"))
+        .map_err(|e| eyre!(e).with_note(|| format!("group_name={group}")))
 }
 
 /// Parses a given master-index.xml and filters the found packages based on
@@ -93,8 +95,8 @@ async fn parse_group(group_name: &str) -> Result<Vec<MavenPackage>> {
                         .unwrap()
                         .split(',')
                         .filter_map(|v| {
-                            if let Ok(sem_ver) = Semver::parse(v) {
-                                Some(Version::SemVer(sem_ver))
+                            if let Ok(semver) = Semver::parse(v) {
+                                Some(Version::SemVer(semver))
                             } else {
                                 let components: Vec<u16> =
                                     v.split('.').take(3).flat_map(str::parse).collect();
@@ -134,6 +136,7 @@ pub(crate) async fn get_packages() -> Result<Vec<MavenPackage>> {
 }
 
 pub(crate) async fn parse(search_term: &str) -> Result<Vec<MavenPackage>> {
+    println!("Searching for {search_term}");
     let packages = get_packages().await;
     packages.map(|packages| {
         if search_term.is_empty() {
