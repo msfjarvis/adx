@@ -4,8 +4,7 @@ mod package;
 mod parse;
 mod version;
 
-use crate::{exclusions::print_inclusions, package::LatestPackage};
-use channel::Channel;
+use crate::{channel::Channel, exclusions::print_inclusions, package::LatestPackage};
 use clap::Parser;
 use color_eyre::Result;
 use exclusions::PrintType;

@@ -1,5 +1,4 @@
-use crate::package::MavenPackage;
-use crate::version::Version;
+use crate::{package::MavenPackage, version::Version};
 use color_eyre::eyre::eyre;
 use color_eyre::{Help, Result};
 use futures::future::join_all;
