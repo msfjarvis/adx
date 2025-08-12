@@ -23,7 +23,7 @@ async fn get_maven_index() -> Result<String> {
 #[allow(clippy::unused_async)]
 async fn get_maven_index() -> Result<String> {
     std::fs::read_to_string("../testdata/master-index.xml")
-        .map_err(|e| eyre!(e).with_note(|| format!("maven-index")))
+        .map_err(|e| eyre!(e).with_note(|| "maven-index".to_string()))
 }
 
 /// Downloads the group index for the given group.
