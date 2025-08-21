@@ -8,6 +8,8 @@ pub(crate) enum PrintType {
     IncludeModule,
 }
 
+const EXCLUDED_GROUPS: [&str; 1] = ["org.jetbrains.kotlin"];
+
 impl ValueEnum for PrintType {
     fn value_variants<'a>() -> &'a [Self] {
         &[Self::IncludeGroup, Self::IncludeModule]
@@ -30,6 +32,9 @@ pub(crate) async fn print_inclusions(print_type: PrintType) {
             groups.sort();
             groups.dedup();
             for group_id in groups {
+                if EXCLUDED_GROUPS.contains(&group_id.as_str()) {
+                    continue;
+                }
                 let _ = writeln!(rules, "includeGroup(\"{group_id}\")");
             }
         }
@@ -37,6 +42,9 @@ pub(crate) async fn print_inclusions(print_type: PrintType) {
             let packages = get_packages().await;
             let Ok(packages) = packages else { return };
             for pkg in packages {
+                if EXCLUDED_GROUPS.contains(&pkg.group_id.as_str()) {
+                    continue;
+                }
                 let _ = writeln!(
                     rules,
                     "includeModule(\"{}\", \"{}\")",
