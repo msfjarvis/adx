@@ -1,7 +1,7 @@
 use crate::{package::MavenPackage, version::Version};
 use color_eyre::eyre::eyre;
 use color_eyre::{Help, Result};
-use futures::future::join_all;
+use futures::stream::{self, StreamExt};
 use roxmltree::{Document, NodeType};
 use semver::Version as Semver;
 
@@ -62,14 +62,15 @@ fn parse_groups<'a>(doc: &'a Document<'_>) -> Vec<&'a str> {
 
 /// Given a list of groups, returns a `Vec<MavenPackage>` of all artifacts.
 async fn parse_packages(groups: Vec<&str>) -> Result<Vec<MavenPackage>> {
-    // Create a Vec<Future<_>>, this will allow us to run all tasks together
-    // without requiring us to spawn a new thread
-    let group_futures = groups.iter().map(|group_name| parse_group(group_name));
+    // Limit concurrent requests to avoid overwhelming the remote and hitting
+    // local resource limits which can lead to silent drops.
+    let concurrency: usize = 32;
+    let results = stream::iter(groups.into_iter().map(parse_group))
+        .buffer_unordered(concurrency)
+        .collect::<Vec<_>>()
+        .await;
 
-    // Wait for all groups to complete to get a Vec<Vec<MavenPackage>>
-    let merged_list = join_all(group_futures).await;
-
-    Ok(merged_list
+    Ok(results
         .into_iter()
         .filter_map(Result::ok)
         .flatten()
@@ -133,6 +134,17 @@ pub(crate) async fn get_packages() -> Result<Vec<MavenPackage>> {
     let doc = Document::parse(&maven_index)?;
     let groups = parse_groups(&doc);
     parse_packages(groups).await
+}
+
+/// Fetch and return all group IDs from the master index.
+pub(crate) async fn get_groups() -> Result<Vec<String>> {
+    let maven_index = get_maven_index().await?;
+    let doc = Document::parse(&maven_index)?;
+    let groups = parse_groups(&doc);
+    Ok(groups
+        .into_iter()
+        .map(std::string::ToString::to_string)
+        .collect())
 }
 
 pub(crate) async fn parse(search_term: &str) -> Result<Vec<MavenPackage>> {
