@@ -84,4 +84,26 @@ mod test {
     fn cli_search_no_results() {
         assert_cmd_snapshot!(Command::new(get_cargo_bin("adx")).arg("qtc"));
     }
+
+    #[test]
+    fn cli_inclusions_groups() {
+        assert_cmd_snapshot!(
+            Command::new(get_cargo_bin("adx"))
+                .arg("''")
+                .arg("--print-includes")
+                .arg("--print-type")
+                .arg("group")
+        );
+    }
+
+    #[test]
+    fn cli_inclusions_modules() {
+        assert_cmd_snapshot!(
+            Command::new(get_cargo_bin("adx"))
+                .arg("''")
+                .arg("--print-includes")
+                .arg("--print-type")
+                .arg("module")
+        );
+    }
 }
