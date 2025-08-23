@@ -27,10 +27,9 @@ pub(crate) async fn print_inclusions(print_type: PrintType) {
     let mut rules = String::new();
     match print_type {
         PrintType::IncludeGroup => {
-            let groups = get_groups().await;
-            let Ok(mut groups) = groups else { return };
-            groups.sort();
-            groups.dedup();
+            let Ok(groups) = get_groups().await else {
+                return;
+            };
             for group_id in groups {
                 if EXCLUDED_GROUPS.contains(&group_id.as_str()) {
                     continue;
