@@ -147,6 +147,14 @@ pub(crate) async fn get_groups() -> Result<Vec<String>> {
         .collect())
 }
 
+fn matches_search_term(pkg: &MavenPackage, search_term: &str) -> bool {
+    if let Some((group_id, artifact_id)) = search_term.split_once(':') {
+        pkg.group_id.contains(group_id) && pkg.artifact_id.contains(artifact_id)
+    } else {
+        pkg.group_id.contains(search_term) || pkg.artifact_id.contains(search_term)
+    }
+}
+
 pub(crate) async fn parse(search_term: &str) -> Result<Vec<MavenPackage>> {
     println!("Searching for {search_term}");
     let packages = get_packages().await;
@@ -156,9 +164,7 @@ pub(crate) async fn parse(search_term: &str) -> Result<Vec<MavenPackage>> {
         } else {
             packages
                 .into_iter()
-                .filter(|pkg| {
-                    pkg.group_id.contains(search_term) || pkg.artifact_id.contains(search_term)
-                })
+                .filter(|pkg| matches_search_term(pkg, search_term))
                 .collect()
         }
     })
@@ -178,5 +184,25 @@ mod test {
             .filter_map(|pkg| pkg.latest(Channel::Stable))
             .collect();
         assert_eq!(res.len(), 1684);
+    }
+
+    #[test]
+    fn parses_group_and_module_search_terms() {
+        let res = block_on(parse("androidx.activity:activity-compose"))
+            .expect("Parsing offline copies should always work");
+
+        assert_eq!(res.len(), 1);
+        assert_eq!(res[0].group_id, "androidx.activity");
+        assert_eq!(res[0].artifact_id, "activity-compose");
+    }
+
+    #[test]
+    fn parses_group_search_terms() {
+        let res = block_on(parse("androidx.activity"))
+            .expect("Parsing offline copies should always work");
+
+        assert_eq!(res.len(), 3);
+        assert_eq!(res[0].group_id, "androidx.activity");
+        assert_eq!(res[0].artifact_id, "activity");
     }
 }
