@@ -37,4 +37,4 @@ maintenance = { status = "actively-developed" }
 nix-check = []
 
 [dev-dependencies]
-insta-cmd = "0.6.0"
+insta-cmd = "0.7.0"
